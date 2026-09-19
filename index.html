@@ -710,7 +710,7 @@
                                     <label class="form-label"><i class="fas fa-brain"></i> Cycle</label>
                                     <select class="form-select" id="cycle">
                                         <option value="6ème et 5ème">Premier Cycle (6ème-5ème)</option>
-                                        <option value="4ème et 3ème">Second Cycle (4ème-3ème-1ere-Tle)</option>
+                                        <option value="4ème-3ème- 1ère- Tle">Second Cycle (4ème-3ème-1ere-Tle)</option>
                                     </select>
                                 </div>
                             </div>
@@ -1249,39 +1249,89 @@
             });
         }
         
+        // ============================================================
+        // SAUVEGARDE AUTOMATIQUE DANS LE LOCALSTORAGE
+        // Deux niveaux de sauvegarde :
+        //   1. Objet complet sous la clé 'promptData_PCT_v2' (compatibilité)
+        //   2. Chaque champ individuellement sous la clé 'pct_<id>'
+        //      pour récupération facile par grille_correction.html
+        // ============================================================
+        const PCT_KEY_PREFIX = 'pct_';
+        
         function sauvegarderDonnees() {
             const formData = {};
             const inputs = document.querySelectorAll('#promptForm input, #promptForm textarea, #promptForm select');
+            
             inputs.forEach(input => {
-                if (input.type === 'checkbox') {
-                    formData[input.id] = input.checked;
-                } else {
-                    formData[input.id] = input.value;
-                }
+                const valeur = (input.type === 'checkbox') ? input.checked : input.value;
+                formData[input.id] = valeur;
+                // Sauvegarde individuelle avec préfixe pour lecture directe par grille_correction.html
+                try {
+                    localStorage.setItem(PCT_KEY_PREFIX + input.id, JSON.stringify(valeur));
+                } catch(e) { /* ignore quota errors */ }
             });
-            localStorage.setItem('promptData_PCT_v2', JSON.stringify(formData));
+            
+            // Sauvegarde globale (compatibilité avec le code existant)
+            try {
+                localStorage.setItem('promptData_PCT_v2', JSON.stringify(formData));
+            } catch(e) { /* ignore quota errors */ }
         }
 
         function chargerDonnees() {
             const savedData = localStorage.getItem('promptData_PCT_v2');
             if (savedData) {
-                const formData = JSON.parse(savedData);
-                for (const id in formData) {
-                    const el = document.getElementById(id);
-                    if (el) {
-                        if (el.type === 'checkbox') {
-                            el.checked = formData[id];
-                        } else {
-                            el.value = formData[id];
+                try {
+                    const formData = JSON.parse(savedData);
+                    for (const id in formData) {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = formData[id];
+                            } else {
+                                el.value = formData[id];
+                            }
                         }
                     }
-                }
+                } catch(e) { /* ignore parse errors */ }
             }
             toggleDisciplineContainers();
             if(hasImagesSimple) imagesSimpleConfig.style.display = hasImagesSimple.checked ? 'block' : 'none';
             if(hasImagesChimie) imagesChimieConfig.style.display = hasImagesChimie.checked ? 'block' : 'none';
             if(hasImagesPhysique) imagesPhysiqueConfig.style.display = hasImagesPhysique.checked ? 'block' : 'none';
         }
+        
+        // ============================================================
+        // API PUBLIQUE pour grille_correction.html
+        // Permet de récupérer toutes les données ou un champ précis.
+        // Exemple d'utilisation dans grille_correction.html :
+        //     const data = getPCTData();
+        //     console.log(data.etablissement);
+        //     // ou
+        //     const etab = getPCTField('etablissement');
+        // ============================================================
+        window.PCT_KEY_PREFIX = PCT_KEY_PREFIX;
+        window.getPCTData = function() {
+            const data = {};
+            // Récupère d'abord l'objet global s'il existe
+            const savedData = localStorage.getItem('promptData_PCT_v2');
+            if (savedData) {
+                try { Object.assign(data, JSON.parse(savedData)); } catch(e) {}
+            }
+            // Complète/écrase avec les clés individuelles (source la plus fiable)
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(PCT_KEY_PREFIX)) {
+                    const fieldId = key.substring(PCT_KEY_PREFIX.length);
+                    try { data[fieldId] = JSON.parse(localStorage.getItem(key)); } catch(e) {}
+                }
+            }
+            return data;
+        };
+        window.getPCTField = function(fieldId, defaultValue) {
+            const raw = localStorage.getItem(PCT_KEY_PREFIX + fieldId);
+            if (raw === null) return (defaultValue !== undefined ? defaultValue : '');
+            try { return JSON.parse(raw); } catch(e) { return raw; }
+        };
 
         document.getElementById('promptForm').addEventListener('change', sauvegarderDonnees);
         document.getElementById('promptForm').addEventListener('input', sauvegarderDonnees);
@@ -1543,7 +1593,16 @@ AUCUN BARÈME ni points.
         function resetForm() {
             if(confirm("Voulez-vous vraiment réinitialiser tout le formulaire ?")) {
                 document.getElementById('promptForm').reset();
+                // Supprimer l'objet global
                 localStorage.removeItem('promptData_PCT_v2');
+                // Supprimer toutes les clés individuelles pct_
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith(PCT_KEY_PREFIX)) keysToRemove.push(key);
+                }
+                keysToRemove.forEach(k => localStorage.removeItem(k));
+                
                 document.querySelectorAll('.form-check-input').forEach(cb => cb.checked = false);
                 document.getElementById('promptResult').innerHTML = '<i class="fas fa-info-circle"></i> Formulaire réinitialisé.';
                 toggleDisciplineContainers();

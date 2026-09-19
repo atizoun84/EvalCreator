@@ -222,6 +222,135 @@
         .card-header h3, .card-header h4 {
             margin: 0;
         }
+
+        /* ====== CARTES DES INFOS GÉNÉRALES ====== */
+        .info-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+        .info-card .info-title {
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .info-card .info-label {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        .info-card .info-value {
+            font-weight: 500;
+            color: var(--dark);
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: block;
+            margin-top: 4px;
+        }
+        .coef-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            text-align: center;
+        }
+        .coef-badge .tot-score {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* ====== BOUTONS ET ACTIONS ====== */
+        .btn-prompt-generate {
+            background: linear-gradient(135deg, #134074 0%, #0b2545 100%);
+            color: #ffffff;
+            border: 1px solid var(--accent);
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(11, 37, 69, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-prompt-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(201, 169, 97, 0.35);
+            background: linear-gradient(135deg, #0b2545 0%, #134074 100%);
+            color: var(--accent-light);
+        }
+        .btn-reset-info {
+            background: rgba(178, 58, 72, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-reset-info:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* ====== ÉTAPES À SUIVRE ====== */
+        .steps-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid rgba(201, 169, 97, 0.25);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .step-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+            align-items: flex-start;
+        }
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        .step-number {
+            background: var(--primary);
+            color: var(--accent);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            border: 1px solid var(--accent);
+        }
+        .step-text h6 {
+            margin: 0 0 4px 0;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .step-text p {
+            margin: 0;
+            color: #475569;
+            font-size: 0.92rem;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -237,18 +366,17 @@
         
         /* ====== SECTION EN DÉVELOPPEMENT ====== */
         .dev-section {
-            padding: 40px 20px 60px 20px;
+            padding: 20px 20px 40px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 45vh;
         }
         .dev-card {
             background: #ffffff;
             border-radius: 18px;
             border: 1px solid rgba(201, 169, 97, 0.35);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 55px 45px;
+            padding: 45px 35px;
             text-align: center;
             max-width: 780px;
             width: 100%;
@@ -268,17 +396,17 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: linear-gradient(135deg, rgba(201, 169, 97, 0.18), rgba(29, 91, 140, 0.25));
             border: 1px solid rgba(201, 169, 97, 0.55);
-            margin-bottom: 26px;
+            margin-bottom: 22px;
             box-shadow: 0 0 40px rgba(201, 169, 97, 0.2);
             animation: pulse-emblem 2.6s ease-in-out infinite;
         }
         .dev-emblem i {
-            font-size: 2.3rem;
+            font-size: 2.1rem;
             color: var(--accent);
         }
         @keyframes pulse-emblem {
@@ -288,9 +416,9 @@
         .dev-title {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
-            font-size: clamp(1.55rem, 3.5vw, 2rem);
+            font-size: clamp(1.45rem, 3.2vw, 1.85rem);
             color: var(--primary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             letter-spacing: 0.3px;
             line-height: 1.3;
         }
@@ -300,11 +428,11 @@
         }
         .dev-subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+            font-size: clamp(1rem, 1.8vw, 1.15rem);
             color: #475569;
             max-width: 620px;
-            margin: 0 auto 30px auto;
-            line-height: 1.7;
+            margin: 0 auto 24px auto;
+            line-height: 1.6;
             font-weight: 500;
             letter-spacing: 0.2px;
         }
@@ -315,16 +443,16 @@
             background: linear-gradient(135deg, rgba(201, 169, 97, 0.15), rgba(29, 91, 140, 0.12));
             border: 1px solid rgba(201, 169, 97, 0.5);
             color: var(--primary);
-            padding: 12px 26px;
+            padding: 10px 22px;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             letter-spacing: 0.4px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
         .dev-badge i {
             color: var(--accent);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
         .dev-badge .dot {
             display: inline-block;
@@ -342,16 +470,16 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             margin-top: 8px;
         }
         .dev-features .feature-chip {
             background: rgba(11, 37, 69, 0.05);
             border: 1px solid rgba(201, 169, 97, 0.4);
             color: var(--primary);
-            padding: 10px 18px;
+            padding: 8px 16px;
             border-radius: 30px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 500;
             display: inline-flex;
             align-items: center;
@@ -366,19 +494,19 @@
         }
         .dev-features .feature-chip i {
             color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .dev-back-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-top: 34px;
+            margin-top: 28px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: #fff !important;
-            padding: 12px 30px;
+            padding: 10px 24px;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             letter-spacing: 0.3px;
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -467,6 +595,86 @@
             color: var(--accent);
             margin-right: 3px;
             font-size: 0.53rem;
+        }
+
+        /* ====== MODAL PROMPT ====== */
+        .prompt-modal .modal-content {
+            border-radius: 16px;
+            border: 1px solid rgba(201, 169, 97, 0.45);
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            background: #ffffff;
+        }
+        .prompt-modal .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+            border-bottom: 2px solid var(--accent);
+            padding: 16px 24px;
+        }
+        .prompt-modal .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .prompt-modal .modal-title i {
+            color: var(--accent);
+        }
+        .prompt-modal .btn-close {
+            filter: invert(1) brightness(2);
+            opacity: 0.85;
+        }
+        .prompt-modal .modal-body {
+            padding: 24px;
+            background: #f8fafc;
+        }
+        .prompt-textarea {
+            width: 100%;
+            height: 380px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #1e293b;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 16px;
+            resize: vertical;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .prompt-textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(19, 64, 116, 0.2);
+        }
+        .prompt-modal .modal-footer {
+            background: #ffffff;
+            border-top: 1px solid rgba(201, 169, 97, 0.25);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-copy-prompt {
+            background: linear-gradient(135deg, var(--success) 0%, #1e563d 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-copy-prompt:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(46, 125, 91, 0.35);
+            color: #fff;
         }
 
         /* ====== MODAL À PROPOS ====== */
@@ -658,6 +866,98 @@
         </div>
     </header>
 
+    <div class="container my-4">
+        <!-- ====== SECTION INFORMATIONS GÉNÉRALES & CONFIGURATION ====== -->
+        <div class="info-card">
+            <div class="info-title">
+                <span><i class="fas fa-info-circle text-warning me-2"></i>Informations Générales de l'Épreuve</span>
+                <button class="btn-reset-info" onclick="resetGeneralInfo()">
+                    <i class="fas fa-undo me-1"></i> Réinitialiser
+                </button>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-school me-1"></i> Établissement :</label>
+                    <span id="displayEtablissement" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-calendar-alt me-1"></i> Année Scolaire :</label>
+                    <span id="displayAnnee" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-graduation-cap me-1"></i> Classe :</label>
+                    <span id="displayClasse" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-file-signature me-1"></i> Type d'évaluation :</label>
+                    <span id="displayTypeEval" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-business-time me-1"></i> Période / Semestre :</label>
+                    <span id="displayPeriode" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-layer-group me-1"></i> Niveau & Discipline :</label>
+                    <span id="displayDiscipline" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-sitemap me-1"></i> Cycle :</label>
+                    <span id="displayCycle" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-clock me-1"></i> Durée :</label>
+                    <span id="displayDuree" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-calculator me-1"></i> Coefficient de la pondération :</label>
+                    <input type="number" id="inputCoefficient" class="form-control mt-1" value="1" min="1" step="0.5" onchange="updatePonderationCalculated()" onkeyup="updatePonderationCalculated()">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                    <div class="coef-badge w-100">
+                        <div>Score total de correction :</div>
+                        <div class="tot-score"><span id="calculatedTotalScore">20</span> / <span id="calculatedTotalScoreMax">20</span> pts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOUTON D'ACTION PRINCIPAL -->
+            <div class="text-center mt-4">
+                <button class="btn-prompt-generate" onclick="openPromptModal()">
+                    <i class="fas fa-code"></i> Générer le Prompt Grille LaTeX
+                </button>
+            </div>
+        </div>
+
+        <!-- ====== ÉTAPES À SUIVRE APRÈS LA COPIE DU PROMPT ====== -->
+        <div class="steps-card">
+            <h5 class="fw-bold mb-3" style="color: var(--primary);">
+                <i class="fas fa-route text-warning me-2"></i>Étapes à suivre pour générer la grille
+            </h5>
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <h6>Copier le Prompt intelligent</h6>
+                    <p>Cliquez sur le bouton ci-dessus pour ouvrir la fenêtre et copier l'intégralité du prompt de configuration APC.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <h6>Soumettre le Prompt à votre Intelligence Artificielle</h6>
+                    <p>Collez le prompt copié dans ChatGPT, Gemini, Claude ou l'IA de votre choix en y joignant votre sujet d'épreuve pour obtenir le code LaTeX exact.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <h6>Compilation sur Overleaf / LaTeX</h6>
+                    <p>Collez le code LaTeX généré directement sur votre projet Overleaf (format Landscape A4) pour obtenir votre grille parfaite sans aucun débordement.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ====== CONTENU EN DÉVELOPPEMENT ====== -->
     <section class="dev-section">
         <div class="container d-flex justify-content-center">
@@ -666,12 +966,11 @@
                     <i class="fas fa-tools"></i>
                 </div>
                 <h2 class="dev-title">
-                    Page en <span class="gold">cours de développement</span>
+                    Module d'édition visuelle en <span class="gold">cours de développement</span>
                 </h2>
                 <p class="dev-subtitle">
-                    Nous préparons actuellement un outil puissant pour générer automatiquement
-                    les corrigés types et les grilles de correction détaillées de vos épreuves PCT,
-                    en parfaite conformité avec les exigences de l'approche par compétences.
+                    Nous préparons actuellement un outil interactif avancé pour éditer et personnaliser directement
+                    en ligne les grilles de correction avant export PDF/LaTeX.
                 </p>
                 <div class="dev-badge">
                     <span class="dot"></span>
@@ -706,6 +1005,35 @@
             </div>
         </div>
     </footer>
+
+    <!-- ====== MODAL FENÊTRE PROMPT ÉLÉGANTE ====== -->
+    <div class="modal fade prompt-modal" id="promptModal" tabindex="-1" aria-labelledby="promptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="promptModalLabel">
+                        <i class="fas fa-terminal"></i>
+                        Prompt de génération de Grille de Correction LaTeX (APC)
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">
+                        <i class="fas fa-info-circle me-1"></i> Ce prompt intègre automatiquement vos paramètres généraux ci-dessus. Copiez-le et fournissez-le à votre IA.
+                    </p>
+                    <textarea id="promptTextarea" class="prompt-textarea" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Fermer
+                    </button>
+                    <button type="button" class="btn-copy-prompt" onclick="copyPromptToClipboard()">
+                        <i class="fas fa-copy"></i> Copier le Prompt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ====== MODAL À PROPOS ====== -->
     <div class="modal fade about-modal" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
@@ -778,6 +1106,271 @@
             console.log('Application installée');
             installBanner.style.display = 'none';
         });
+
+        // ====== SCRIPT DE GESTION DYNAMIQUE ET DES INFORMATIONS ====== //
+        const defaultPromptTemplate = `% ============================================================
+% PROMPT POUR LA GÉNÉRATION D'UNE GRILLE DE CORRECTION LaTeX
+% (Approche Par Compétences - APC - Bénin)
+% Format paysage A4 — Tableau parfaitement ajusté sans débordement
+% Total de l'épreuve : 20 points (Base de pondération : [SCORE_PONDERATION] points)
+% ============================================================
+
+Tu es une intelligence artificielle experte en Physique-Chimie-Technologie (PCT),
+spécialisée dans la conception de grilles de correction rigoureuses selon
+l'approche par compétences (APC) du système éducatif béninois.
+
+Ta tâche est de produire le CODE LaTeX COMPLET d'une GRILLE DE CORRECTION
+détaillée, en respectant SCRUPULEUSEMENT :
+  - la CLÉ DE RÉPARTITION OFFICIELLE DES POINTS (Section III) ;
+  - la STRUCTURE DE TABLEAU ANTI-DÉBORDEMENT décrite à la section II ;
+  - les INFORMATIONS GÉNÉRALES et le CONTENU PÉDAGOGIQUE du sujet d'épreuve
+    fourni (établissement, année, classe, cycle, type d'évaluation, période, discipline, coefficient, durée, consignes, etc.) ;
+  - les PARAMÈTRES DE MISE EN FORME LaTeX de la section IV.
+
+------------------------------------------------------------
+I. INFORMATIONS GÉNÉRALES
+------------------------------------------------------------
+À REPRENDRE INTÉGRALEMENT depuis le sujet d'épreuve fourni :
+  - Établissement : [ETAB] ;
+  - Année scolaire : [ANNEE] ;
+  - Classe : [CLASSE] ;
+  - Cycle : [CYCLE] ;
+  - Type d'évaluation : [TYPE_EVAL] ;
+  - Période / Semestre : [PERIODE] ;
+  - Discipline / Structure : [DISCIPLINE] ;
+  - Coefficient : [COEF] ;
+  - Durée : [DUREE] ;
+  - Barème total de correction des copies : [SCORE_PONDERATION] points ;
+  - Discipline(s) et partie(s) évaluée(s) ;
+  - Nombre exact de parties et de questions (1-1, 1-2, 2-1, 2-2, etc.).
+
+------------------------------------------------------------
+II. STRUCTURE DE LA GRILLE (ANTI-DÉBORDEMENT A4 PAYSAGE)
+------------------------------------------------------------
+La grille reproduit EXACTEMENT l'architecture suivante :
+
+1. DIMENSIONNEMENT ET COMPATIBILITÉ OVERLEAF :
+   Pour éviter TOUT débordement horizontal en orientation Paysage A4 (largeur utile ~27,7 cm),
+   utiliser impérativement une classe 10pt avec des marges de 1 cm, \`tabcolsep=3pt\`,
+   et fixer la somme totale des largeurs de colonnes à 25,1 cm max :
+     - Cons ............................... 1,0 cm  (code/numéro de question)
+     - Éléments de réponse ................ 11,2 cm (contenu pédagogique attendu)
+     - Pts (total question) ............... 0,7 cm  (chiffres uniquement)
+     - Critère 1 (texte) .................. 3,3 cm  (La production se rapporte à la consigne)
+     - Pts critère 1 ...................... 0,6 cm  (chiffres uniquement)
+     - Critère 2 (texte) .................. 3,3 cm  (La production utilise les ressources...)
+     - Pts critère 2 ...................... 0,6 cm  (chiffres uniquement)
+     - Critère 3 (texte) .................. 3,8 cm  (La production est bien raisonnée)
+     - Pts critère 3 ...................... 0,6 cm  (chiffres uniquement)
+
+2. ORGANISATION HIÉRARCHIQUE DES LIGNES :
+   - Ligne de titre de discipline (fusion multicolumn=9) : « A- PHYSIQUE ET TECHNOLOGIE »
+   - Lignes de parties (fusion multicolumn=9) : 
+     « PARTIE 1 : MOBILISATION DES RESSOURCES »
+     « PARTIE 2 : RÉSOLUTION DE PROBLÈMES » (divisée en Sous-tâche 1 et Sous-tâche 2 si 6e/5e).
+   - Questions numérotées : 1-1, 1-2... / 2-1, 2-2...
+
+3. GESTION MULTI-PAGES (IMPÉRATIF) :
+   - Tableau principal obligatoirement en environnement \`longtable\`.
+   - Utiliser \`\\endfirsthead\` et \`\\endhead\` pour répéter automatiquement l'en-tête de 9 colonnes en haut de chaque page.
+
+4. TABLEAU FINAL DES CRITÈRES DE PERFECTIONNEMENT / INDICATEURS TRANSVERSAUX :
+   Un tableau secondaire de 2 colonnes sous la \`longtable\` (largeur totale ajustée) :
+   - Formulat 1 (Premier cycle) : 2 points attribués pour la présentation et la langue.
+   - Formulat 2 (Second cycle) : 1 point attribué pour les critères de perfectionnement.
+
+------------------------------------------------------------
+III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
+------------------------------------------------------------
+La somme des points du barème sur 20 doit STRICTEMENT respecter la classe de l'épreuve :
+
+1. CLASSES DE 6ème ET 5ème (Total = 20 pts) :
+   - Partie 1 (Mobilisation des ressources) .................. : 6 pts
+   - Partie 2 (Résolution de problème) :
+       • Sous-tâche 1 ..................................... : 6 pts
+       • Sous-tâche 2 ..................................... : 6 pts
+   - Critères de perfectionnement (Présentation / Langue) ... : 2 pts
+
+2. CLASSES DE 4ème ET 3ème (Total = 20 pts) :
+   - Chimie et Technologie ................................. : 6 pts
+       • Ressources : 2 pts  |  Résolution de problème : 4 pts
+   - Physique et Technologie ............................... : 12 pts
+       • Ressources : 4 pts  |  Résolution de problème : 8 pts
+   - Critères de perfectionnement (Présentation / Langue) ... : 2 pts
+
+3. SECOND CYCLE - SÉRIE D (Total = 20 pts) :
+   - Mobilisation des ressources ........................... : 7 pts
+   - Chimie et Technologie (Résolution de problème) ........ : 6 pts
+   - Physique et Technologie (Résolution de problème) ...... : 6 pts
+   - Critères de perfectionnement .......................... : 1 pt
+
+4. SECOND CYCLE - SÉRIE C (Total = 20 pts) :
+   - Mobilisation des ressources ........................... : 6 pts
+   - Chimie et Technologie (Résolution de problème) ........ : 6 pts
+   - Physique et Technologie (Résolution de problème) ...... : 7 pts
+   - Critères de perfectionnement .......................... : 1 pt
+
+RÈGLES D'IMPUTATION DANS LES 3 CRITÈRES :
+Pour chaque question, la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question.
+
+------------------------------------------------------------
+IV. PARAMÈTRES DE MISE EN FORME LaTeX
+------------------------------------------------------------
+1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`setspace\`, \`helvet\`.
+3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
+4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
+5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
+6. En-tête : Cartouche institutionnel centré avec nom d'établissement, classe, cycle, type d'évaluation, période, coef, durée.
+7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
+
+------------------------------------------------------------
+V. FORMAT DE SORTIE
+------------------------------------------------------------
+Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun texte explicatif avant ou après, prêt à être copié-collé et compilé sur Overleaf.
+% ============================================================
+% FIN DU PROMPT
+% ============================================================`;
+
+        // Utilitaire robuste pour tester la récupération dynamique dans le localStorage
+        function getLocalStorageValue(possibleKeys) {
+            for (let i = 0; i < possibleKeys.length; i++) {
+                const val = localStorage.getItem(possibleKeys[i]);
+                if (val !== null && val !== undefined && val.trim() !== '' && val.trim() !== 'null' && val.trim() !== 'undefined') {
+                    return val.trim();
+                }
+            }
+            return null;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStoredGeneralInfo();
+        });
+
+        // Garantir le rechargement des données dynamiques lors d'une navigation ou retour de page
+        window.addEventListener('pageshow', function(event) {
+            loadStoredGeneralInfo();
+        });
+
+        // Garantir aussi le rechargement lorsque la fenêtre/onglet reprend le focus
+        window.addEventListener('focus', function() {
+            loadStoredGeneralInfo();
+        });
+
+        // Synchronisation en temps réel inter-onglets/pages
+        window.addEventListener('storage', function(e) {
+            loadStoredGeneralInfo();
+        });
+
+        function loadStoredGeneralInfo() {
+            const etab = getLocalStorageValue(['pct_etablissement', 'pct_etab', 'etablissement']);
+            const annee = getLocalStorageValue(['pct_anneeScolaire', 'pct_annee', 'pct_annee_scolaire', 'annee']);
+            const classe = getLocalStorageValue(['pct_classe', 'classe']);
+            const typeEval = getLocalStorageValue(['pct_titreEpreuve', 'pct_type_eval', 'pct_evaluation', 'type_eval']);
+            const periode = getLocalStorageValue(['pct_periode', 'periode']);
+            const discipline = getLocalStorageValue(['pct_discipline', 'discipline']);
+            const cycle = getLocalStorageValue(['pct_cycle', 'cycle']);
+            const duree = getLocalStorageValue(['pct_duree', 'duree']);
+            const coef = getLocalStorageValue(['pct_coefficient', 'pct_coef', 'coef']);
+
+            document.getElementById('displayEtablissement').innerText = etab ? etab : 'Non configuré';
+            document.getElementById('displayAnnee').innerText = annee ? annee : 'Non configuré';
+            document.getElementById('displayClasse').innerText = classe ? classe : 'Non configuré';
+            document.getElementById('displayTypeEval').innerText = typeEval ? typeEval : 'Non configuré';
+            document.getElementById('displayPeriode').innerText = periode ? periode : 'Non configuré';
+            document.getElementById('displayDiscipline').innerText = discipline ? discipline : 'Non configuré';
+            document.getElementById('displayCycle').innerText = cycle ? cycle : 'Non configuré';
+            document.getElementById('displayDuree').innerText = duree ? duree : 'Non configuré';
+            
+            if (coef && !isNaN(parseFloat(coef)) && parseFloat(coef) > 0) {
+                document.getElementById('inputCoefficient').value = parseFloat(coef);
+            } else {
+                document.getElementById('inputCoefficient').value = 1;
+            }
+
+            updatePonderationCalculated();
+        }
+
+        function updatePonderationCalculated() {
+            let coefVal = parseFloat(document.getElementById('inputCoefficient').value);
+            if (isNaN(coefVal) || coefVal <= 0) {
+                coefVal = 1;
+            }
+            // Mettre à jour le localStorage pour maintenir la synchronisation avec index.html
+            localStorage.setItem('pct_coef', coefVal);
+
+            const totalPondere = 20 * coefVal;
+            document.getElementById('calculatedTotalScore').innerText = totalPondere;
+            document.getElementById('calculatedTotalScoreMax').innerText = totalPondere;
+        }
+
+        function resetGeneralInfo() {
+            const keysToRemove = [
+                'pct_etablissement', 'pct_etab', 'etablissement',
+                'pct_anneeScolaire', 'pct_annee', 'pct_annee_scolaire', 'annee',
+                'pct_classe', 'classe',
+                'pct_titreEpreuve', 'pct_type_eval', 'pct_evaluation', 'type_eval',
+                'pct_periode', 'periode',
+                'pct_discipline', 'discipline',
+                'pct_cycle', 'cycle',
+                'pct_duree', 'duree',
+                'pct_coefficient', 'pct_coef', 'coef'
+            ];
+
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+
+            document.getElementById('displayEtablissement').innerText = 'Non configuré';
+            document.getElementById('displayAnnee').innerText = 'Non configuré';
+            document.getElementById('displayClasse').innerText = 'Non configuré';
+            document.getElementById('displayTypeEval').innerText = 'Non configuré';
+            document.getElementById('displayPeriode').innerText = 'Non configuré';
+            document.getElementById('displayDiscipline').innerText = 'Non configuré';
+            document.getElementById('displayCycle').innerText = 'Non configuré';
+            document.getElementById('displayDuree').innerText = 'Non configuré';
+            document.getElementById('inputCoefficient').value = 1;
+            updatePonderationCalculated();
+        }
+
+        function openPromptModal() {
+            const etab = document.getElementById('displayEtablissement').innerText;
+            const annee = document.getElementById('displayAnnee').innerText;
+            const classe = document.getElementById('displayClasse').innerText;
+            const typeEval = document.getElementById('displayTypeEval').innerText;
+            const periode = document.getElementById('displayPeriode').innerText;
+            const discipline = document.getElementById('displayDiscipline').innerText;
+            const cycle = document.getElementById('displayCycle').innerText;
+            const duree = document.getElementById('displayDuree').innerText;
+            const coef = document.getElementById('inputCoefficient').value;
+            const scoreTotal = document.getElementById('calculatedTotalScore').innerText;
+
+            let finalPrompt = defaultPromptTemplate;
+            finalPrompt = finalPrompt.replace('[ETAB]', etab);
+            finalPrompt = finalPrompt.replace('[ANNEE]', annee);
+            finalPrompt = finalPrompt.replace('[CLASSE]', classe);
+            finalPrompt = finalPrompt.replace('[CYCLE]', cycle);
+            finalPrompt = finalPrompt.replace('[TYPE_EVAL]', typeEval);
+            finalPrompt = finalPrompt.replace('[PERIODE]', periode);
+            finalPrompt = finalPrompt.replace('[DISCIPLINE]', discipline);
+            finalPrompt = finalPrompt.replace('[DUREE]', duree);
+            finalPrompt = finalPrompt.replace('[COEF]', coef);
+            finalPrompt = finalPrompt.replaceAll('[SCORE_PONDERATION]', scoreTotal);
+
+            document.getElementById('promptTextarea').value = finalPrompt;
+
+            const modal = new bootstrap.Modal(document.getElementById('promptModal'));
+            modal.show();
+        }
+
+        function copyPromptToClipboard() {
+            const textarea = document.getElementById('promptTextarea');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                alert("Prompt copié dans le presse-papier avec succès !");
+            }).catch(err => {
+                alert("Erreur lors de la copie du prompt.");
+            });
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
