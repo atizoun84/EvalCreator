@@ -878,6 +878,14 @@
             
             <div class="row g-3">
                 <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-flag me-1"></i> Pays :</label>
+                    <span id="displayPays" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-building-columns me-1"></i> Direction Départementale :</label>
+                    <span id="displayDirectionDepartementale" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
                     <label class="info-label"><i class="fas fa-school me-1"></i> Établissement :</label>
                     <span id="displayEtablissement" class="info-value">Non configuré</span>
                 </div>
@@ -1124,13 +1132,15 @@ détaillée, en respectant SCRUPULEUSEMENT :
   - la CLÉ DE RÉPARTITION OFFICIELLE DES POINTS (Section III) ;
   - la STRUCTURE DE TABLEAU ANTI-DÉBORDEMENT décrite à la section II ;
   - les INFORMATIONS GÉNÉRALES et le CONTENU PÉDAGOGIQUE du sujet d'épreuve
-    fourni (établissement, année, classe, cycle, type d'évaluation, période, discipline, coefficient, durée, consignes, etc.) ;
+    fourni (pays, direction départementale, établissement, année, classe, cycle, type d'évaluation, période, discipline, coefficient, durée, consignes, etc.) ;
   - les PARAMÈTRES DE MISE EN FORME LaTeX de la section IV.
 
 ------------------------------------------------------------
 I. INFORMATIONS GÉNÉRALES
 ------------------------------------------------------------
 À REPRENDRE INTÉGRALEMENT depuis le sujet d'épreuve fourni :
+  - Pays : [PAYS] ;
+  - Direction Départementale : [DIRECTION_DEPARTEMENTALE] ;
   - Établissement : [ETAB] ;
   - Année scolaire : [ANNEE] ;
   - Classe : [CLASSE] ;
@@ -1163,21 +1173,50 @@ La grille reproduit EXACTEMENT l'architecture suivante :
      - Critère 3 (texte) .................. 3,8 cm  (La production est bien raisonnée)
      - Pts critère 3 ...................... 0,6 cm  (chiffres uniquement)
 
-2. ORGANISATION HIÉRARCHIQUE DES LIGNES :
+2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
+   Au-dessus du tableau principal, reproduire EXACTEMENT la même disposition que celle de l'épreuve :
+   - Le LIBELLÉ DU PAYS ([PAYS]) doit être placé EN HAUT À GAUCHE.
+   - La DIRECTION DÉPARTEMENTALE ([DIRECTION_DEPARTEMENTALE]) doit être placée EN HAUT À DROITE (côté opposé au pays).
+   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
+   - Puis centrer en dessous le nom de l'établissement, la mention « GRILLE DE CORRECTION », le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   
+   Exemple de structure à reproduire :
+   \\begin{center}
+   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
+   {\\small \\textbf{[PAYS]}} & {\\small \\textbf{[DIRECTION_DEPARTEMENTALE]}} \\\\
+   \\end{tabularx}\\\\[4pt]
+   {\\Large \\textbf{[ETAB]}}\\\\[2pt]
+   {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
+   {\\rule{0.9\\linewidth}{0.5pt}}\\\\[4pt]
+   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}
+   \\end{center}
+
+3. ORGANISATION HIÉRARCHIQUE DES LIGNES :
    - Ligne de titre de discipline (fusion multicolumn=9) : « A- PHYSIQUE ET TECHNOLOGIE »
    - Lignes de parties (fusion multicolumn=9) : 
      « PARTIE 1 : MOBILISATION DES RESSOURCES »
      « PARTIE 2 : RÉSOLUTION DE PROBLÈMES » (divisée en Sous-tâche 1 et Sous-tâche 2 si 6e/5e).
    - Questions numérotées : 1-1, 1-2... / 2-1, 2-2...
 
-3. GESTION MULTI-PAGES (IMPÉRATIF) :
+4. GESTION MULTI-PAGES (IMPÉRATIF) :
    - Tableau principal obligatoirement en environnement \`longtable\`.
    - Utiliser \`\\endfirsthead\` et \`\\endhead\` pour répéter automatiquement l'en-tête de 9 colonnes en haut de chaque page.
 
-4. TABLEAU FINAL DES CRITÈRES DE PERFECTIONNEMENT / INDICATEURS TRANSVERSAUX :
+5. TABLEAU FINAL DES CRITÈRES DE PERFECTIONNEMENT / INDICATEURS TRANSVERSAUX :
    Un tableau secondaire de 2 colonnes sous la \`longtable\` (largeur totale ajustée) :
    - Formulat 1 (Premier cycle) : 2 points attribués pour la présentation et la langue.
    - Formulat 2 (Second cycle) : 1 point attribué pour les critères de perfectionnement.
+
+6. VENTILATION DE LA PONDÉRATION DES CRITÈRES POUR LES QUESTIONS À PLUSIEURS VOLETS :
+   Lorsqu'une question comporte PLUSIEURS VOLETS (sous-questions a), b), c)..., ou plusieurs calculs/déterminations distincts), tu dois IMPÉRATIVEMENT :
+   - Traiter la question comme UNE SEULE entrée principale dans la colonne « Cons » (ex : 2-1).
+   - Attribuer à la question un total de points cohérent avec la clé de répartition APC.
+   - Répartir ce total ENTRE LES VOLETS dans la colonne « Éléments de réponse », en indiquant CLAIREMENT pour chaque volet sa part de points (ex : « a) Définition correcte .... 0,5 pt ; b) Calcul de la masse molaire ..... 0,75 pt ; c) Déduction ..... 0,75 pt »).
+   - VENTILER ENSUITE CHAQUE PART DE VOLET DANS LES 3 CRITÈRES (Pertinence / Utilisation correcte des ressources / Cohérence-Raisonnement) de manière à ce que :
+         • Pour chaque volet : Pts critère 1 + Pts critère 2 + Pts critère 3 = Pts du volet.
+         • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question (colonne « Pts »).
+   - NE JAMAIS dupliquer la ligne de la question ; regrouper les volets sur une seule ligne en utilisant des retours à la ligne (\\newline) dans la colonne « Éléments de réponse ».
+   - Vérifier que la somme verticale des points de la colonne « Pts » correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1211,17 +1250,18 @@ La somme des points du barème sur 20 doit STRICTEMENT respecter la classe de l'
    - Critères de perfectionnement .......................... : 1 pt
 
 RÈGLES D'IMPUTATION DANS LES 3 CRITÈRES :
-Pour chaque question, la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question.
+Pour chaque question (et pour chaque volet d'une question à plusieurs volets),
+la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet.
 
 ------------------------------------------------------------
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`setspace\`, \`helvet\`.
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`setspace\`, \`helvet\`.
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
-6. En-tête : Cartouche institutionnel centré avec nom d'établissement, classe, cycle, type d'évaluation, période, coef, durée.
+6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, période, coef, durée.
 7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
 
 ------------------------------------------------------------
@@ -1263,6 +1303,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
         });
 
         function loadStoredGeneralInfo() {
+            const pays = getLocalStorageValue(['pct_pays', 'pays']);
+            const directionDepartementale = getLocalStorageValue(['pct_directionDepartementale', 'directionDepartementale']);
             const etab = getLocalStorageValue(['pct_etablissement', 'pct_etab', 'etablissement']);
             const annee = getLocalStorageValue(['pct_anneeScolaire', 'pct_annee', 'pct_annee_scolaire', 'annee']);
             const classe = getLocalStorageValue(['pct_classe', 'classe']);
@@ -1273,6 +1315,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const duree = getLocalStorageValue(['pct_duree', 'duree']);
             const coef = getLocalStorageValue(['pct_coefficient', 'pct_coef', 'coef']);
 
+            document.getElementById('displayPays').innerText = pays ? pays.toUpperCase() : 'Non configuré';
+            document.getElementById('displayDirectionDepartementale').innerText = directionDepartementale ? directionDepartementale.toUpperCase() : 'Non configuré';
             document.getElementById('displayEtablissement').innerText = etab ? etab : 'Non configuré';
             document.getElementById('displayAnnee').innerText = annee ? annee : 'Non configuré';
             document.getElementById('displayClasse').innerText = classe ? classe : 'Non configuré';
@@ -1306,6 +1350,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
 
         function resetGeneralInfo() {
             const keysToRemove = [
+                'pct_pays', 'pays',
+                'pct_directionDepartementale', 'directionDepartementale',
                 'pct_etablissement', 'pct_etab', 'etablissement',
                 'pct_anneeScolaire', 'pct_annee', 'pct_annee_scolaire', 'annee',
                 'pct_classe', 'classe',
@@ -1319,6 +1365,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
 
             keysToRemove.forEach(key => localStorage.removeItem(key));
 
+            document.getElementById('displayPays').innerText = 'Non configuré';
+            document.getElementById('displayDirectionDepartementale').innerText = 'Non configuré';
             document.getElementById('displayEtablissement').innerText = 'Non configuré';
             document.getElementById('displayAnnee').innerText = 'Non configuré';
             document.getElementById('displayClasse').innerText = 'Non configuré';
@@ -1332,6 +1380,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
         }
 
         function openPromptModal() {
+            const pays = document.getElementById('displayPays').innerText;
+            const directionDepartementale = document.getElementById('displayDirectionDepartementale').innerText;
             const etab = document.getElementById('displayEtablissement').innerText;
             const annee = document.getElementById('displayAnnee').innerText;
             const classe = document.getElementById('displayClasse').innerText;
@@ -1344,6 +1394,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const scoreTotal = document.getElementById('calculatedTotalScore').innerText;
 
             let finalPrompt = defaultPromptTemplate;
+            finalPrompt = finalPrompt.replaceAll('[PAYS]', pays);
+            finalPrompt = finalPrompt.replaceAll('[DIRECTION_DEPARTEMENTALE]', directionDepartementale);
             finalPrompt = finalPrompt.replace('[ETAB]', etab);
             finalPrompt = finalPrompt.replace('[ANNEE]', annee);
             finalPrompt = finalPrompt.replace('[CLASSE]', classe);

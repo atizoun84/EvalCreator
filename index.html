@@ -644,7 +644,19 @@
                     </div>
                     <div class="card-body">
                         <form id="promptForm">
+                            <!-- NOUVEAU : Pays et Direction Départementale (en majuscules) -->
                             <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label"><i class="fas fa-flag"></i> Pays</label>
+                                    <input type="text" class="form-control" id="pays" placeholder="Ex: RÉPUBLIQUE DU BÉNIN" style="text-transform: uppercase;">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label"><i class="fas fa-building-columns"></i> Direction Départementale</label>
+                                    <input type="text" class="form-control" id="directionDepartementale" placeholder="Ex: DDESTFP DE L'ATLANTIQUE" style="text-transform: uppercase;">
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-school"></i> Établissement</label>
                                     <input type="text" class="form-control" id="etablissement" placeholder="Ex: CEG GAMIA">
@@ -1346,6 +1358,10 @@
             const duree = document.getElementById('duree').value || "1h30min";
             const discipline = document.getElementById('discipline').value;
             
+            // NOUVEAU : récupération du pays et de la direction départementale en MAJUSCULES
+            const pays = (document.getElementById('pays').value || "RÉPUBLIQUE DU BÉNIN").toUpperCase();
+            const directionDepartementale = (document.getElementById('directionDepartementale').value || "DIRECTION DÉPARTEMENTALE DES ENSEIGNEMENTS SECONDAIRES, TECHNIQUES ET DE LA FORMATION PROFESSIONNELLE").toUpperCase();
+            
             const lFont = document.getElementById('latexFont').value;
             const lSize = document.getElementById('latexFontSize').value;
             const lColor = document.getElementById('latexColor').value;
@@ -1416,6 +1432,8 @@ Ta tâche est de générer l'épreuve complète en respectant le canevas APC et 
 ${caracteristiquesContexte}
 
 --- INFORMATIONS DE L'ÉPREUVE ---
+PAYS : ${pays}
+DIRECTION DÉPARTEMENTALE : ${directionDepartementale}
 ÉTABLISSEMENT : ${etablissement}
 Année scolaire : ${anneeScolaire}
 Titre : ${titreEpreuve}
@@ -1431,8 +1449,17 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
     - Espacement : setstretch{${lSpacing}} (package setspace).
     - Numérotation : ${lPageNum === 'bottom' ? 'Page X sur \\pageref{LastPage} en bas' : lPageNum === 'top' ? 'En haut de page' : 'Désactivée'}.
     - Filigrane : ${lWatermark !== 'none' ? 'Afficher "' + lWatermark + '" en gris clair' : 'Aucun'}.
-4. EN-TÊTE : Créer un cartouche professionnel comme dans l'exemple :
+4. EN-TÊTE (CARTOUCHE OFFICIEL) : Créer un cartouche professionnel en respectant STRICTEMENT cette disposition :
+   - Le LIBELLÉ DU PAYS (${pays}) doit être placé EN HAUT À GAUCHE.
+   - La DIRECTION DÉPARTEMENTALE (${directionDepartementale}) doit être placée EN HAUT À DROITE (côté opposé au pays).
+   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
+   - Puis centrer en dessous le nom de l'établissement, le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   
+   Exemple de structure à reproduire :
    \\begin{center}
+   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
+   {\\small \\textbf{${pays}}} & {\\small \\textbf{${directionDepartementale}}} \\\\
+   \\end{tabularx}\\\\[4pt]
    {\\Large \\textbf{${etablissement}} \\\\ [2pt]}
    {\\textbf{${titreEpreuve} (${anneeScolaire})} \\\\ [2pt]}
    {\\rule{0.9\\linewidth}{${lRule}}} \\\\ [4pt]
@@ -1528,7 +1555,7 @@ Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2P
 
 ---
 Génère le code LaTeX complet avec :
-- Un en-tête unique pour l'ensemble de l'épreuve
+- Un en-tête unique pour l'ensemble de l'épreuve (avec le PAYS en haut à gauche et la DIRECTION DÉPARTEMENTALE en haut à droite)
 - Une section A "CHIMIE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Une section B "PHYSIQUE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Les compétences et les paramètres de mise en forme s'appliquent à l'ensemble du document
@@ -1563,7 +1590,7 @@ Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} quest
 Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions) - Numérotation: 2-1, 2-2...
 
 ---
-Génère le code LaTeX complet avec l'en-tête, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
+Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite), le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
 Toutes les données numériques sont dans le support, jamais dans les questions.
 Structure: Contexte -> Tâche -> Support -> Partie 1 -> Partie 2.
 AUCUN BARÈME ni points.
