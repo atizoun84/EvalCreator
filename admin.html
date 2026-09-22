@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenPCT — Panneau d'administration</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  :root {
+    --primary: #0b2545;
+    --secondary: #134074;
+    --accent: #c9a961;
+    --success: #2e7d5b;
+    --danger: #b23a48;
+  }
+  body {
+    background: radial-gradient(circle at 20% 0%, rgba(29, 91, 140, 0.35) 0%, transparent 50%),
+                linear-gradient(135deg, #061529 0%, #0b2545 45%, #134074 100%);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+    padding: 30px 15px;
+  }
+  .admin-card {
+    background: #fff;
+    color: #1a2332;
+    border-radius: 16px;
+    border: 1px solid rgba(201, 169, 97, 0.45);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.5);
+    padding: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .admin-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.7rem;
+    margin-bottom: 6px;
+  }
+  .admin-sub { color: #64748b; margin-bottom: 24px; }
+  .btn-admin {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff; border: none; padding: 10px 22px; border-radius: 10px;
+    font-weight: 600; transition: all 0.2s;
+  }
+  .btn-admin:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11,37,69,0.4); color: #fff; }
+  .btn-danger-soft {
+    background: rgba(178,58,72,0.1); color: var(--danger); border: 1px solid var(--danger);
+    padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+  }
+  .btn-danger-soft:hover { background: var(--danger); color: #fff; }
+  .btn-success-soft {
+    background: linear-gradient(135deg, var(--success), #3a9973);
+    color: #fff; border: none; padding: 10px 22px; border-radius: 10px; font-weight: 600;
+  }
+  .btn-success-soft:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46,125,91,0.4); color: #fff; }
+  .btn-release {
+    background: linear-gradient(135deg, #c9a961, #e8c96e);
+    color: #4a3410; border: 1px solid #c9a961;
+    padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-release:hover { background: linear-gradient(135deg, #b09250, #d4b25a); color: #2b1e08; }
+  .stat-box {
+    background: #f6f8fb; border-radius: 12px; padding: 16px; border-left: 4px solid var(--accent);
+    text-align: center;
+  }
+  .stat-box .stat-num {
+    font-size: 1.9rem; font-weight: 700; color: var(--primary); line-height: 1;
+  }
+  .stat-box .stat-label {
+    font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;
+  }
+  .key-row {
+    background: #f8fafc; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Courier New', monospace; font-size: 0.92rem; letter-spacing: 1px;
+    border: 1px solid #e2e8f0; transition: all 0.15s;
+  }
+  .key-row:hover { background: #eef2f7; border-color: var(--accent); }
+  .key-row.used { background: #fff5f5; border-color: rgba(178,58,72,0.35); }
+  .key-row.used .key-code { color: #b23a48; }
+  .key-code { font-weight: 700; color: var(--primary); }
+  .key-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 24px;
+    padding: 0 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-right: 10px;
+    font-family: 'Inter', sans-serif;
+    vertical-align: middle;
+  }
+  .badge-status { font-size: 0.7rem; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-avail { background: #d1fae5; color: #065f46; }
+  .badge-used  { background: #fee2e2; color: #991b1b; }
+  #loginSection { max-width: 400px; margin: 80px auto; }
+  .login-input {
+    width: 100%; padding: 12px 14px; border: 2px solid #dbe2ea; border-radius: 10px;
+    font-size: 0.95rem; margin-bottom: 12px;
+  }
+  .login-input:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(29,91,140,0.15); }
+  .msg { text-align: center; margin-top: 10px; font-size: 0.88rem; font-weight: 500; min-height: 20px; }
+  .msg.error { color: var(--danger); }
+  .msg.success { color: var(--success); }
+  .msg.info { color: var(--secondary); }
+  .hidden { display: none !important; }
+
+  /* ====== BOUTON ATTRIBUER ====== */
+  .btn-attrib {
+    background: linear-gradient(135deg, #4285F4, #1a73e8);
+    color: #fff;
+    border: 1px solid #4285F4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 4px;
+    transition: all 0.2s;
+  }
+  .btn-attrib:hover {
+    background: linear-gradient(135deg, #1a73e8, #1557b0);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.35);
+  }
+
+  /* ====== BOUTON RETOUR (vers index.html) ====== */
+  .btn-back-generator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #c9a961, #e8c96e);
+    color: #4a3410;
+    border: 1px solid #b09250;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+  }
+  .btn-back-generator:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(201, 169, 97, 0.5);
+    color: #2b1e08;
+    text-decoration: none;
+  }
+  .btn-back-generator i {
+    font-size: 0.95rem;
+  }
+  @media (max-width: 600px) {
+    .btn-back-generator {
+      padding: 8px 14px;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* ====== COMPTEUR UTILISATEURS CONNECTÉS ====== */
+  .admin-users-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #0b2545, #134074);
+    color: #fff;
+    border: 1px solid rgba(201, 169, 97, 0.55);
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.25s;
+    box-shadow: 0 6px 16px rgba(11, 37, 69, 0.25);
+    position: relative;
+    margin-left: 12px;
+  }
+  .admin-users-counter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(11, 37, 69, 0.4);
+    border-color: var(--accent);
+  }
+  .admin-users-counter i.fa-users {
+    color: var(--accent);
+    font-size: 0.95rem;
+  }
+  .admin-users-counter .counter-num {
+    background: var(--accent);
+    color: #4a3410;
+    padding: 1px 9px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    min-width: 22px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .admin-users-counter .counter-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+  }
+  .admin-users-counter .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: live-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    50%      { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  }
+  @media (max-width: 600px) {
+    .admin-users-counter .counter-label { display: none; }
+    .admin-users-counter { padding: 8px 12px; margin-left: 8px; }
+  }
+
+  /* ====== MODAL ATTRIBUER LICENCE ====== */
+  #attribModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 37, 69, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    animation: fadeInModal 0.25s ease-out;
+  }
+  @keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.98); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .attrib-modal-card {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 780px;
+    border: 1px solid rgba(201, 169, 97, 0.45);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    position: relative;
+    color: #1a2332;
+    margin: auto;
+  }
+  .attrib-modal-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+  }
+  .attrib-modal-header {
+    padding: 22px 26px 16px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .attrib-modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .attrib-modal-header h3 i {
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+  .attrib-modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0 6px;
+    transition: all 0.2s;
+    font-weight: 300;
+  }
+  .attrib-modal-close:hover {
+    color: var(--danger);
+    transform: rotate(90deg);
+  }
+  .attrib-modal-body {
+    padding: 20px 26px;
+    max-height: 65vh;
+    overflow-y: auto;
+  }
+  .attrib-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .attrib-field {
+    margin-bottom: 0;
+  }
+  .attrib-field.full { grid-column: 1 / -1; }
+  .attrib-field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 6px;
+  }
+  .attrib-field input,
+  .attrib-field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #dbe2ea;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    color: #1a2332;
+  }
+  .attrib-field input:focus,
+  .attrib-field textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(29, 91, 140, 0.12);
+  }
+  .attrib-field input[readonly] {
+    background: linear-gradient(135deg, #f6f8fb, #eef2f7);
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--primary);
+    cursor: text;
+    text-align: center;
+    font-size: 1rem;
+    border-color: var(--accent);
+  }
+  .attrib-field textarea {
+    min-height: 260px;
+    resize: vertical;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    background: #f8fafc;
+    color: #334155;
+  }
+  .attrib-modal-footer {
+    padding: 16px 26px 22px 26px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid #e2e8f0;
+    background: #fafbfc;
+    flex-wrap: wrap;
+  }
+  .attrib-footer-right {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+  }
+  .btn-attrib-close {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  .btn-attrib-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+  }
+  .btn-attrib-send {
+    background: linear-gradient(135deg, #4285F4, #1a73e8);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 18px rgba(66, 133, 244, 0.3);
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+  }
+  .btn-attrib-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(66, 133, 244, 0.45);
+    color: #fff;
+  }
+  .btn-attrib-wa {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.3);
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+  }
+  .btn-attrib-wa:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(37, 211, 102, 0.45);
+    color: #fff;
+  }
+  .btn-attrib-send:disabled,
+  .btn-attrib-wa:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-attrib-send i,
+  .btn-attrib-wa i { font-size: 0.95rem; }
+  .attrib-hint {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 6px;
+    font-style: italic;
+  }
+  @media (max-width: 700px) {
+    .attrib-modal-card { border-radius: 14px; }
+    .attrib-modal-header { padding: 18px 20px 14px 20px; }
+    .attrib-modal-header h3 { font-size: 1.1rem; }
+    .attrib-modal-body { padding: 16px 20px; }
+    .attrib-row { grid-template-columns: 1fr; gap: 12px; }
+    .attrib-modal-footer { padding: 14px 20px 18px 20px; flex-direction: column-reverse; }
+    .attrib-footer-right { flex-direction: column; width: 100%; margin-left: 0; }
+    .btn-attrib-close, .btn-attrib-send, .btn-attrib-wa { width: 100%; justify-content: center; }
+    .key-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .key-row > div:last-child { width: 100%; display: flex; flex-wrap: wrap; gap: 4px; }
+  }
+
+  /* ====== MODAL UTILISATEURS CONNECTÉS ====== */
+  #usersModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 37, 69, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    animation: fadeInModal 0.25s ease-out;
+  }
+  .users-modal-card {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 520px;
+    border: 1px solid rgba(201, 169, 97, 0.45);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    position: relative;
+    color: #1a2332;
+    margin: auto;
+  }
+  .users-modal-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #22c55e, var(--accent), var(--secondary));
+  }
+  .users-modal-header {
+    padding: 22px 26px 16px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .users-modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .users-modal-header h3 i {
+    color: #22c55e;
+    font-size: 1.05rem;
+  }
+  .users-modal-body {
+    padding: 20px 26px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .users-summary {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .users-summary .summary-label {
+    font-size: 0.82rem;
+    color: #166534;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .users-summary .summary-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #15803d;
+    line-height: 1;
+  }
+  .user-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: all 0.15s;
+    gap: 10px;
+  }
+  .user-row:hover {
+    background: #eef2f7;
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+  .user-row .user-email {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--primary);
+    word-break: break-all;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .user-row .user-time {
+    font-size: 0.72rem;
+    color: #64748b;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+  }
+  .users-empty {
+    text-align: center;
+    padding: 30px 20px;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .users-empty i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+  }
+  .users-modal-footer {
+    padding: 16px 26px 22px 26px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1px solid #e2e8f0;
+    background: #fafbfc;
+  }
+  .btn-users-close {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    padding: 11px 30px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 18px rgba(11, 37, 69, 0.3);
+  }
+  .btn-users-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(11, 37, 69, 0.45);
+    color: var(--accent-light);
+  }
+  .btn-users-close i { color: var(--accent); }
+  @media (max-width: 600px) {
+    .users-modal-card { border-radius: 14px; }
+    .users-modal-header { padding: 18px 20px 14px 20px; }
+    .users-modal-header h3 { font-size: 1.1rem; }
+    .users-modal-body { padding: 16px 20px; }
+    .users-modal-footer { padding: 14px 20px 18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== LOGIN ============== -->
+<div id="loginSection" class="admin-card">
+  <h2 class="admin-title"><i class="fas fa-lock text-warning me-2"></i>Admin GenPCT</h2>
+  <p class="admin-sub">Connectez-vous avec votre compte administrateur Firebase.</p>
+  <input type="email" id="adminEmail" class="login-input" placeholder="Email administrateur">
+  <input type="password" id="adminPass" class="login-input" placeholder="Mot de passe">
+  <button class="btn-admin w-100" id="btnLogin">
+    <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+  </button>
+  <div id="loginMsg" class="msg"></div>
+</div>
+
+<!-- ============== DASHBOARD ============== -->
+<div id="dashboard" class="admin-card hidden">
+
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+      <h2 class="admin-title"><i class="fas fa-toolbox text-warning me-2"></i>Panneau d'administration</h2>
+      <p class="admin-sub mb-0">Connecté en tant que <strong id="adminEmailLabel"></strong></p>
+    </div>
+    <div class="d-flex align-items-center flex-wrap gap-2">
+      <!-- BOUTON RETOUR VERS LE GÉNÉRATEUR D'ÉPREUVES -->
+      <a href="index.html" class="btn-back-generator" title="Retourner à la page de génération des épreuves">
+        <i class="fas fa-arrow-left"></i> Retour au générateur
+      </a>
+      <!-- COMPTEUR UTILISATEURS CONNECTÉS (temps réel) -->
+      <div class="admin-users-counter" onclick="openUsersModal()" title="Voir la liste des utilisateurs connectés">
+        <span class="live-dot"></span>
+        <i class="fas fa-users"></i>
+        <span class="counter-num" id="usersCount">0</span>
+        <span class="counter-label">connecté(s)</span>
+      </div>
+      <button class="btn-danger-soft" onclick="logout()"><i class="fas fa-power-off"></i> Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="row g-3 mb-4" id="statsRow">
+    <div class="col-md-3"><div class="stat-box"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Clés créées</div></div></div>
+    <div class="col-md-3"><div class="stat-box"><div class="stat-num" id="statAvailable">—</div><div class="stat-label">Disponibles</div></div></div>
+    <div class="col-md-3"><div class="stat-box"><div class="stat-num" id="statUsed">—</div><div class="stat-label">Activées</div></div></div>
+    <div class="col-md-3"><div class="stat-box"><div class="stat-num" id="statRevenue">—</div><div class="stat-label">Revenus potentiels</div></div></div>
+  </div>
+
+  <!-- Générateur -->
+  <div class="card mb-4" style="border: 1px solid rgba(201,169,97,0.4);">
+    <div class="card-header bg-light fw-bold"><i class="fas fa-magic text-warning me-2"></i>Générer de nouvelles clés</div>
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Nombre de clés</label>
+          <input type="number" id="nbKeys" class="form-control" value="10" min="1" max="500">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Année</label>
+          <input type="text" id="yearKeys" class="form-control" value="2026" maxlength="4">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Prix unitaire (FCFA)</label>
+          <input type="number" id="pricePerKey" class="form-control" value="5000" min="0">
+        </div>
+        <div class="col-md-3">
+          <button class="btn-success-soft w-100" id="btnGenerate" onclick="generateAndPublish()">
+            <i class="fas fa-bolt me-1"></i> Générer et publier
+          </button>
+        </div>
+      </div>
+      <div id="genMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- Liste des clés -->
+  <div class="card">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <span class="fw-bold"><i class="fas fa-key text-warning me-2"></i>Clés existantes</span>
+      <div>
+        <a href="https://docs.google.com/spreadsheets/d/1JekEQT3crTm7_BLQ06ieHpiGZyzo4cdaGhM5nmKDfBE/copy" target="_blank" class="btn-danger-soft" style="background: linear-gradient(135deg, #4285F4, #1a73e8); color: #fff; border-color: #4285F4; text-decoration: none;"><i class="fas fa-file-excel"></i> Nouveau fichier suivi</a>
+        <button class="btn-danger-soft" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+        <button class="btn-danger-soft" onclick="copyAllAvailable()"><i class="fas fa-copy"></i> Copier dispo</button>
+        <button class="btn-danger-soft" onclick="loadKeys()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+      </div>
+    </div>
+    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+      <div id="keysList"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     MODAL ATTRIBUER LICENCE
+     ============================================================ -->
+<div id="attribModal" style="display:none;">
+  <div class="attrib-modal-card">
+    <div class="attrib-modal-header">
+      <h3><i class="fas fa-paper-plane"></i> Attribuer la licence</h3>
+      <button class="attrib-modal-close" onclick="fermerModalAttrib()" title="Fermer">&times;</button>
+    </div>
+    <div class="attrib-modal-body">
+
+      <div class="attrib-row">
+        <div class="attrib-field">
+          <label><i class="fas fa-user me-1"></i> Nom du client</label>
+          <input type="text" id="attribNom" placeholder="Ex : M. Dupont" autocomplete="off">
+        </div>
+        <div class="attrib-field">
+          <label><i class="fas fa-envelope me-1"></i> Email du client</label>
+          <input type="email" id="attribEmail" placeholder="client@exemple.com" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="attrib-row">
+        <div class="attrib-field">
+          <label><i class="fas fa-phone me-1"></i> WhatsApp du client (indicatif inclus)</label>
+          <input type="tel" id="attribWhatsApp" placeholder="Ex : +22997000000" autocomplete="off">
+        </div>
+        <div class="attrib-field">
+          <label><i class="fas fa-key me-1"></i> Clé de licence</label>
+          <input type="text" id="attribKey" readonly>
+        </div>
+      </div>
+
+      <div class="attrib-field full" style="margin-top: 4px;">
+        <label><i class="fas fa-file-lines me-1"></i> Aperçu du message</label>
+        <textarea id="attribMessage" readonly></textarea>
+        <div class="attrib-hint">Le message se met à jour automatiquement quand vous changez le nom. Modifiable dans Gmail ou WhatsApp après envoi.</div>
+      </div>
+
+    </div>
+    <div class="attrib-modal-footer">
+      <button class="btn-attrib-close" onclick="fermerModalAttrib()">
+        <i class="fas fa-times me-1"></i> Fermer
+      </button>
+      <div class="attrib-footer-right">
+        <button class="btn-attrib-wa" id="btnAttribWa" onclick="envoyerWhatsAppClient()">
+          <i class="fab fa-whatsapp"></i> Envoyer par WhatsApp
+        </button>
+        <button class="btn-attrib-send" id="btnAttribSend" onclick="envoyerEmailClient()">
+          <i class="fab fa-google"></i> Envoyer par Email (Gmail)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL UTILISATEURS CONNECTÉS
+     ============================================================ -->
+<div id="usersModal" style="display:none;">
+  <div class="users-modal-card">
+    <div class="users-modal-header">
+      <h3><i class="fas fa-users"></i> Utilisateurs connectés</h3>
+      <button class="attrib-modal-close" onclick="closeUsersModal()" title="Fermer">&times;</button>
+    </div>
+    <div class="users-modal-body">
+      <div class="users-summary">
+        <span class="summary-label"><i class="fas fa-signal me-1"></i> En temps réel</span>
+        <span class="summary-num" id="usersModalCount">0</span>
+      </div>
+      <div id="usersList"></div>
+    </div>
+    <div class="users-modal-footer">
+      <button class="btn-users-close" onclick="closeUsersModal()">
+        <i class="fas fa-times"></i> Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FIREBASE SDK — avec defer pour garantir l'ordre de chargement
+     ============================================================ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// INITIALISATION DIFFÉRÉE — On attend que le DOM soit prêt
+// et que les SDK Firebase soient bien chargés.
+// ============================================================
+(function() {
+    'use strict';
+
+    // ============================================================
+    // CONFIGURATION FIREBASE
+    // ============================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyDguZC4dAMIbKS00zkIJjqT8KpuARiTsyM",
+        authDomain: "genpct-licence.firebaseapp.com",
+        databaseURL: "https://genpct-licence-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "genpct-licence",
+        storageBucket: "genpct-licence.firebasestorage.app",
+        messagingSenderId: "796594204374",
+        appId: "1:796594204374:web:cbbe360b00a0d187242377"
+    };
+
+    // ⚠️ TON EMAIL ADMINISTRATEUR
+    const ADMIN_EMAIL = "leonardaholou@gmail.com";
+
+    // ⚠️ CODE DE SÉCURITÉ POUR LA SUPPRESSION
+    const DELETE_SECURITY_CODE = "1984";
+
+    // ============================================================
+    // PARAMÈTRES DU MESSAGE CLIENT (modifiable ici facilement)
+    // ============================================================
+    const APP_URL = '[votre-domaine-ou-lien]/index.html';
+    const WHATSAPP_NUM = '[votre numéro WhatsApp]';
+    const CONTACT_EMAIL = 'atizoun@gmail.com';
+
+    // Vérifier que Firebase est bien chargé
+    if (typeof firebase === 'undefined' || !firebase.initializeApp) {
+        console.error('Firebase SDK non chargé. Vérifiez les balises <script>.');
+        return;
+    }
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Variable globale pour stocker la liste des utilisateurs connectés (pour la modal)
+    window._presenceList = {};
+
+    // ============================================================
+    // LOGIN
+    // ============================================================
+    document.getElementById('btnLogin').onclick = async () => {
+        const email = document.getElementById('adminEmail').value.trim();
+        const pass = document.getElementById('adminPass').value;
+        const msg = document.getElementById('loginMsg');
+        msg.className = 'msg info'; msg.textContent = 'Connexion...';
+
+        try {
+            const cred = await auth.signInWithEmailAndPassword(email, pass);
+            if (cred.user.email !== ADMIN_EMAIL) {
+                await auth.signOut();
+                msg.className = 'msg error';
+                msg.textContent = '❌ Accès refusé. Ce compte n\'est pas administrateur.';
+                return;
+            }
+        } catch (err) {
+            msg.className = 'msg error';
+            msg.textContent = '❌ ' + (err.message || 'Erreur de connexion');
+        }
+    };
+
+    auth.onAuthStateChanged((user) => {
+        const loginSec = document.getElementById('loginSection');
+        const dash = document.getElementById('dashboard');
+        if (user && user.email === ADMIN_EMAIL) {
+            loginSec.classList.add('hidden');
+            dash.classList.remove('hidden');
+            document.getElementById('adminEmailLabel').textContent = user.email;
+            // Activer la présence temps réel pour l'admin connecté
+            setupAdminPresence(user);
+            // Écouter la liste des utilisateurs connectés
+            listenPresence();
+            loadKeys();
+        } else {
+            loginSec.classList.remove('hidden');
+            dash.classList.add('hidden');
+        }
+    });
+
+    async function logout() {
+        try {
+            const u = auth.currentUser;
+            if (u) await db.ref('presence/' + u.uid).remove();
+        } catch(e) {}
+        if (confirm('Se déconnecter ?')) { await auth.signOut(); location.reload(); }
+    }
+
+    // ============================================================
+    // PRÉSENCE — Enregistrement de l'admin connecté
+    // ============================================================
+    function setupAdminPresence(user) {
+        if (!user) return;
+        const uid = user.uid;
+        const email = user.email;
+        const presenceRef = db.ref('presence/' + uid);
+        const connectedRef = db.ref('.info/connected');
+
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                presenceRef.onDisconnect().remove();
+                presenceRef.set({
+                    email: email,
+                    connectedAt: firebase.database.ServerValue.TIMESTAMP
+                }).catch(() => {});
+            }
+        });
+    }
+
+    // ============================================================
+    // PRÉSENCE — Écoute de tous les utilisateurs connectés
+    // ============================================================
+    function listenPresence() {
+        const presenceRef = db.ref('presence');
+        presenceRef.on('value', (snap) => {
+            const data = snap.val() || {};
+            const count = Object.keys(data).length;
+            const badge = document.getElementById('usersCount');
+            if (badge) badge.textContent = count;
+            window._presenceList = data;
+            const modalCount = document.getElementById('usersModalCount');
+            if (modalCount) modalCount.textContent = count;
+        });
+    }
+
+    // ============================================================
+    // MODAL UTILISATEURS CONNECTÉS
+    // ============================================================
+    function openUsersModal() {
+        const data = window._presenceList || {};
+        const entries = Object.entries(data);
+        const container = document.getElementById('usersList');
+        const countEl = document.getElementById('usersModalCount');
+
+        countEl.textContent = entries.length;
+
+        if (entries.length === 0) {
+            container.innerHTML = `
+                <div class="users-empty">
+                    <i class="fas fa-user-slash"></i>
+                    Aucun utilisateur connecté actuellement.
+                </div>`;
+        } else {
+            entries.sort((a, b) => {
+                const ta = a[1] && a[1].connectedAt ? a[1].connectedAt : 0;
+                const tb = b[1] && b[1].connectedAt ? b[1].connectedAt : 0;
+                return tb - ta;
+            });
+
+            container.innerHTML = entries.map(([uid, info]) => {
+                const email = (info && info.email) ? info.email : uid;
+                const dateStr = (info && info.connectedAt)
+                    ? new Date(info.connectedAt).toLocaleString('fr-FR', {
+                        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+                    })
+                    : '—';
+                return `
+                    <div class="user-row">
+                        <div class="user-email">
+                            <i class="fas fa-circle" style="color:#22c55e; font-size:0.5rem; margin-right:9px;"></i>
+                            ${email}
+                        </div>
+                        <div class="user-time"><i class="far fa-clock me-1"></i>${dateStr}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        document.getElementById('usersModal').style.display = 'flex';
+    }
+
+    function closeUsersModal() {
+        document.getElementById('usersModal').style.display = 'none';
+    }
+
+    document.getElementById('usersModal').addEventListener('click', function(e) {
+        if (e.target === this) closeUsersModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const m = document.getElementById('usersModal');
+            if (m && m.style.display === 'flex') closeUsersModal();
+        }
+    });
+
+    // ============================================================
+    // GÉNÉRATION DE CLÉS
+    // ============================================================
+    function randomSegment() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let s = '';
+        for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+        return s;
+    }
+
+    async function generateAndPublish() {
+        const nb = parseInt(document.getElementById('nbKeys').value) || 10;
+        const year = document.getElementById('yearKeys').value || '2026';
+        const msg = document.getElementById('genMsg');
+
+        if (nb < 1 || nb > 500) {
+            msg.className = 'msg error'; msg.textContent = 'Nombre entre 1 et 500.';
+            return;
+        }
+
+        msg.className = 'msg info';
+        msg.textContent = 'Génération de ' + nb + ' clés...';
+
+        try {
+            const existingSnap = await db.ref('valid_keys').once('value');
+            const existing = existingSnap.val() || {};
+
+            const updates = {};
+            let generated = 0;
+            let attempts = 0;
+
+            while (generated < nb && attempts < nb * 10) {
+                attempts++;
+                const key = `PCT-${year}-${randomSegment()}-${randomSegment()}`;
+                if (!existing[key] && !updates['valid_keys/' + key]) {
+                    updates['valid_keys/' + key] = true;
+                    generated++;
+                }
+            }
+
+            if (generated === 0) {
+                msg.className = 'msg error';
+                msg.textContent = '❌ Impossible de générer de nouvelles clés.';
+                return;
+            }
+
+            msg.textContent = 'Publication dans Firebase...';
+            await db.ref().update(updates);
+
+            msg.className = 'msg success';
+            msg.textContent = `✅ ${generated} clé(s) générée(s) et publiée(s).`;
+            loadKeys();
+        } catch (err) {
+            msg.className = 'msg error';
+            msg.textContent = '❌ ' + (err.message || 'Erreur');
+        }
+    }
+
+    // ============================================================
+    // CHARGEMENT ET AFFICHAGE DES CLÉS
+    // ============================================================
+    let cachedKeys = [];
+    let cachedUsed = {};
+
+    async function loadKeys() {
+        const container = document.getElementById('keysList');
+        container.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin me-2"></i>Chargement...</div>';
+
+        try {
+            const [keysSnap, licensesSnap] = await Promise.all([
+                db.ref('valid_keys').once('value'),
+                db.ref('licenses').once('value')
+            ]);
+
+            const keys = keysSnap.val() || {};
+            const licenses = licensesSnap.val() || {};
+
+            const usedKeys = {};
+            Object.entries(licenses).forEach(([uid, lic]) => {
+                if (lic && lic.licenseKey) {
+                    usedKeys[lic.licenseKey] = {
+                        email: lic.email || '—',
+                        activatedAt: lic.activatedAt || null,
+                        uid: uid
+                    };
+                }
+            });
+
+            cachedKeys = Object.keys(keys).sort();
+            cachedUsed = usedKeys;
+
+            const total = cachedKeys.length;
+            const used = cachedKeys.filter(k => usedKeys[k]).length;
+            const available = total - used;
+            const price = parseInt(document.getElementById('pricePerKey').value) || 0;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statAvailable').textContent = available;
+            document.getElementById('statUsed').textContent = used;
+            document.getElementById('statRevenue').textContent = (used * price).toLocaleString('fr-FR');
+
+            if (total === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-info-circle me-2"></i>Aucune clé.</div>';
+                return;
+            }
+
+            container.innerHTML = cachedKeys.map((k, index) => {
+                const isUsed = !!usedKeys[k];
+                const info = isUsed ? usedKeys[k] : null;
+                const dateStr = info && info.activatedAt ? new Date(info.activatedAt).toLocaleDateString('fr-FR') : '';
+                const uid = info && info.uid ? info.uid : '';
+                const numero = String(index + 1).padStart(3, '0');
+
+                const releaseBtn = isUsed && uid
+                    ? `<button class="btn-release me-1" onclick="releaseDevice('${uid}', '${k}')" title="Libérer l'appareil"><i class="fas fa-exchange-alt"></i> Libérer</button>`
+                    : '';
+
+                const attribuerBtn = `<button class="btn-attrib" onclick="attribuerLicence('${k}')" title="Attribuer cette licence à un client"><i class="fas fa-paper-plane"></i> Attribuer</button>`;
+
+                return `
+                    <div class="key-row ${isUsed ? 'used' : ''}">
+                        <div>
+                            <span class="key-index">N° ${numero}</span>
+                            <span class="key-code">${k}</span>
+                            ${isUsed ? `<span class="badge-status badge-used ms-2">Activée ${dateStr}</span>` : '<span class="badge-status badge-avail ms-2">Disponible</span>'}
+                            ${isUsed && info.email ? `<span class="text-muted small ms-2">— ${info.email}</span>` : ''}
+                        </div>
+                        <div>
+                            ${attribuerBtn}
+                            ${releaseBtn}
+                            <button class="btn-danger-soft" onclick="deleteKey('${k}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            }).join('');
+
+        } catch (err) {
+            container.innerHTML = `<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle me-2"></i>Erreur : ${err.message}</div>`;
+        }
+    }
+
+    // ============================================================
+    // LIBÉRER UN APPAREIL (TRANSFERT)
+    // ============================================================
+    async function releaseDevice(uid, key) {
+        const confirmation = prompt(
+            `⚠️ Libérer l'appareil lié à la clé :\n\n${key}\n\n` +
+            `Cela permettra au client de se reconnecter sur un NOUVEL appareil.\n\n` +
+            `Pour confirmer, tapez exactement : LIBERER`
+        );
+
+        if (confirmation !== 'LIBERER') {
+            alert('Annulé. Aucune modification.');
+            return;
+        }
+
+        try {
+            await db.ref('licenses/' + uid + '/hardwareId').remove();
+            await db.ref('licenses/' + uid + '/releasedAt').set(firebase.database.ServerValue.TIMESTAMP);
+            alert('✅ Appareil libéré. Le client peut maintenant activer sur son nouvel appareil.');
+            loadKeys();
+        } catch (err) {
+            alert('❌ Erreur : ' + err.message);
+        }
+    }
+
+    // ============================================================
+    // SUPPRIMER UNE CLÉ (sécurisé par code 1984)
+    // ============================================================
+    async function deleteKey(key) {
+        const code = prompt(
+            `🔒 CONFIRMATION DE SÉCURITÉ\n\n` +
+            `Vous êtes sur le point de supprimer définitivement la clé :\n\n` +
+            `${key}\n\n` +
+            `Veuillez saisir le code de sécurité administrateur pour continuer :`
+        );
+
+        if (code === null) return;
+
+        if (code !== DELETE_SECURITY_CODE) {
+            alert('❌ Code de sécurité incorrect.\n\nSuppression annulée.');
+            return;
+        }
+
+        if (!confirm(
+            `⚠️ DERNIÈRE CONFIRMATION\n\n` +
+            `Supprimer DÉFINITIVEMENT la clé :\n\n` +
+            `${key}\n\n` +
+            `Cette action est IRRÉVERSIBLE.\n\n` +
+            `Si cette clé a été activée, l'utilisateur ne pourra plus se reconnecter.\n\n` +
+            `Confirmer la suppression ?`
+        )) return;
+
+        try {
+            await db.ref('valid_keys/' + key).remove();
+            alert('✅ Clé supprimée avec succès.');
+            loadKeys();
+        } catch (err) {
+            alert('❌ Erreur lors de la suppression : ' + err.message);
+        }
+    }
+
+    // ============================================================
+    // MODAL ATTRIBUER LICENCE
+    // ============================================================
+    let currentAttribKey = '';
+
+    function construireMessageEmail(cle, nomClient) {
+        const nom = nomClient && nomClient.trim() ? nomClient.trim() : '[Nom du client]';
+        return `Bonjour ${nom},
+
+Merci pour votre achat de GenPCT — le générateur d'épreuves PCT conforme à l'APC béninoise.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 VOTRE CLÉ DE LICENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ${cle}
+
+⚠️ Conservez cette clé précieusement. Elle est unique et liée à votre appareil.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 COMMENT OUVRIR L'APPLICATION ET CRÉER VOTRE COMPTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pour ouvrir l'application et créer votre compte avec cette licence,
+veuillez consulter les ressources et instructions détaillées
+fournies dans le pack GenPCT que vous avez acheté.
+
+Vous y trouverez le lien d'accès à l'application ainsi que toutes
+les étapes d'installation et d'activation pas à pas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ INFORMATIONS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Votre licence est liée à VOTRE appareil. Elle ne peut pas être utilisée sur plusieurs appareils simultanément.
+
+• Si vous changez de téléphone, contactez-moi : je peux transférer votre licence gratuitement (limité à 2 transferts par an).
+
+• Conservez bien votre email + mot de passe : ils vous seront demandés à chaque connexion.
+
+• Notez quelque part votre clé de licence en cas de perte.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 BESOIN D'AIDE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Répondez simplement à cet email ou contactez-moi :
+📧 ${CONTACT_EMAIL}
+📱 WhatsApp : ${WHATSAPP_NUM}
+
+Je vous réponds généralement dans les 24 heures.
+
+Bon usage et bonne préparation d'épreuves !
+
+Cordialement,
+AMOUSSOU Atizoun Plateny
+Concepteur de GenPCT`;
+    }
+
+    function construireMessageWhatsApp(cle, nomClient) {
+        const nom = nomClient && nomClient.trim() ? nomClient.trim() : '[Nom]';
+        return `Bonjour ${nom} 👋
+
+Merci pour votre achat de GenPCT ! Voici votre licence :
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔑 *VOTRE CLÉ :*
+${cle}
+━━━━━━━━━━━━━━━━━━━━━━
+
+📱 *Comment ouvrir et créer votre compte :*
+Pour ouvrir l'application et créer votre compte avec cette licence,
+veuillez consulter les ressources et instructions détaillées
+fournies dans le pack GenPCT que vous avez acheté 📦
+
+Vous y trouverez le lien d'accès à l'application ainsi que toutes
+les étapes d'installation et d'activation pas à pas.
+
+⚠️ Votre licence est liée à votre appareil. En cas de changement de téléphone, contactez-moi pour un transfert gratuit.
+
+Besoin d'aide ? Répondez à ce message 📞
+
+Bonne préparation d'épreuves ! 🎓
+— AMOUSSOU Atizoun Plateny`;
+    }
+
+    function actualiserApercu() {
+        const nomClient = document.getElementById('attribNom').value;
+        const cle = document.getElementById('attribKey').value;
+        document.getElementById('attribMessage').value = construireMessageEmail(cle, nomClient);
+    }
+
+    function attribuerLicence(key) {
+        currentAttribKey = key;
+        document.getElementById('attribKey').value = key;
+        document.getElementById('attribNom').value = '';
+        document.getElementById('attribEmail').value = '';
+        document.getElementById('attribWhatsApp').value = '';
+        document.getElementById('attribMessage').value = construireMessageEmail(key, '');
+        document.getElementById('attribModal').style.display = 'flex';
+        setTimeout(() => document.getElementById('attribNom').focus(), 100);
+    }
+
+    function fermerModalAttrib() {
+        document.getElementById('attribModal').style.display = 'none';
+        currentAttribKey = '';
+    }
+
+    async function envoyerEmailClient() {
+        const email = document.getElementById('attribEmail').value.trim();
+        const nomClient = document.getElementById('attribNom').value.trim();
+
+        if (!email) {
+            alert('⚠️ Veuillez saisir l\'email du client destinataire.');
+            document.getElementById('attribEmail').focus();
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert('⚠️ L\'adresse email semble invalide. Vérifiez la saisie.');
+            document.getElementById('attribEmail').focus();
+            return;
+        }
+
+        const subject = '🎉 Votre licence GenPCT est prête';
+        const body = construireMessageEmail(currentAttribKey, nomClient);
+
+        try {
+            await navigator.clipboard.writeText(body);
+        } catch(e) {
+            const ta = document.createElement('textarea');
+            ta.value = body;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch(_) {}
+            document.body.removeChild(ta);
+        }
+
+        const gmailUrl =
+            'https://mail.google.com/mail/?view=cm&fs=1' +
+            '&to=' + encodeURIComponent(email) +
+            '&su=' + encodeURIComponent(subject) +
+            '&body=' + encodeURIComponent(body);
+
+        window.open(gmailUrl, '_blank');
+
+        const btn = document.getElementById('btnAttribSend');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copié & Gmail ouvert';
+        btn.disabled = true;
+        setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 2500);
+    }
+
+    async function envoyerWhatsAppClient() {
+        const num = document.getElementById('attribWhatsApp').value.trim().replace(/[^0-9+]/g, '');
+        const nomClient = document.getElementById('attribNom').value.trim();
+
+        if (!num || num.length < 8) {
+            alert('⚠️ Veuillez saisir le numéro WhatsApp du client (avec indicatif, ex : +22997000000).');
+            document.getElementById('attribWhatsApp').focus();
+            return;
+        }
+
+        const body = construireMessageWhatsApp(currentAttribKey, nomClient);
+        const numClean = num.replace(/^\+/, '');
+
+        try { await navigator.clipboard.writeText(body); } catch(e) {}
+
+        const waUrl = 'https://wa.me/' + numClean + '?text=' + encodeURIComponent(body);
+        window.open(waUrl, '_blank');
+
+        const btn = document.getElementById('btnAttribWa');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> WhatsApp ouvert';
+        btn.disabled = true;
+        setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 2500);
+    }
+
+    // Écouteurs divers pour la modale attribuer
+    document.getElementById('attribNom').addEventListener('input', actualiserApercu);
+    document.getElementById('attribModal').addEventListener('click', function(e) {
+        if (e.target === this) fermerModalAttrib();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const m = document.getElementById('attribModal');
+            if (m && m.style.display === 'flex') fermerModalAttrib();
+        }
+    });
+    document.getElementById('attribEmail').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); envoyerEmailClient(); }
+    });
+    document.getElementById('attribWhatsApp').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); envoyerWhatsAppClient(); }
+    });
+
+    // ============================================================
+    // EXPORT ET UTILITAIRES
+    // ============================================================
+    function copyAllAvailable() {
+        const available = cachedKeys.filter(k => !cachedUsed[k]);
+        if (available.length === 0) { alert('Aucune clé disponible.'); return; }
+        navigator.clipboard.writeText(available.join('\n')).then(() => {
+            alert(`✅ ${available.length} clé(s) disponible(s) copiée(s).`);
+        });
+    }
+
+    function exportCSV() {
+        if (cachedKeys.length === 0) { alert('Aucune clé à exporter.'); return; }
+        const rows = [['N°', 'Clé', 'Statut', 'Email', 'Date activation']];
+        cachedKeys.forEach((k, index) => {
+            const used = cachedUsed[k];
+            rows.push([
+                String(index + 1).padStart(3, '0'),
+                k,
+                used ? 'Activée' : 'Disponible',
+                used ? (used.email || '') : '',
+                used && used.activatedAt ? new Date(used.activatedAt).toLocaleString('fr-FR') : ''
+            ]);
+        });
+        const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `genpct-cles-${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ============================================================
+    // EXPOSER LES FONCTIONS UTILISÉES PAR LES ONCLICK HTML
+    // (car le code est maintenant dans un IIFE)
+    // ============================================================
+    window.logout = logout;
+    window.openUsersModal = openUsersModal;
+    window.closeUsersModal = closeUsersModal;
+    window.generateAndPublish = generateAndPublish;
+    window.loadKeys = loadKeys;
+    window.releaseDevice = releaseDevice;
+    window.deleteKey = deleteKey;
+    window.attribuerLicence = attribuerLicence;
+    window.fermerModalAttrib = fermerModalAttrib;
+    window.envoyerEmailClient = envoyerEmailClient;
+    window.envoyerWhatsAppClient = envoyerWhatsAppClient;
+    window.copyAllAvailable = copyAllAvailable;
+    window.exportCSV = exportCSV;
+
+})();
+</script>
+</body>
+</html>

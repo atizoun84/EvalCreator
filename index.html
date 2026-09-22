@@ -69,11 +69,47 @@
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding: 0;
+            margin-right: 20px;
         }
-        .app-navbar .navbar-brand i {
+        .app-navbar .navbar-brand > i.fa-flask-vial {
             color: var(--accent);
-            font-size: 1.15rem;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        /* Wrapper pour le texte à deux lignes */
+        .brand-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+            gap: 2px;
+        }
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.08rem;
+            color: #fff;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+        .brand-user-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.68);
+            letter-spacing: 0.2px;
+        }
+        #userEmailLabel {
+            color: rgba(201, 169, 97, 0.95);
+            font-weight: 600;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .app-navbar .nav-link {
             color: rgba(255, 255, 255, 0.85) !important;
@@ -579,6 +615,8 @@
             border-top: 1px solid rgba(201, 169, 97, 0.3);
             padding: 14px 20px;
             justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .about-modal .btn-close-modal {
             background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
@@ -599,22 +637,405 @@
         .about-modal .btn-close-modal i {
             margin-right: 6px;
         }
+        /* Bouton Admin vers admin.html */
+        .about-modal .btn-admin-modal {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+            border: 1px solid rgba(201, 169, 97, 0.5);
+            border-radius: 10px;
+            padding: 10px 30px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .about-modal .btn-admin-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(11, 37, 69, 0.4);
+            color: var(--accent-light);
+        }
+        .about-modal .btn-admin-modal i {
+            margin-right: 6px;
+            color: var(--accent);
+        }
+
+        /* ====== OVERLAY D'AUTHENTIFICATION (SÉCURITÉ) ====== */
+        #authOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(29, 91, 140, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 100%, rgba(201, 169, 97, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, #061529 0%, #0b2545 45%, #134074 100%);
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            overflow-y: auto;
+        }
+        #authOverlay.hidden { display: none; }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(201, 169, 97, 0.45);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            padding: 36px 30px 28px 30px;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+        }
+        .auth-emblem {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(201, 169, 97, 0.18), rgba(29, 91, 140, 0.25));
+            border: 1px solid rgba(201, 169, 97, 0.55);
+            margin: 0 auto 18px auto;
+            box-shadow: 0 0 30px rgba(201, 169, 97, 0.2);
+            display: flex;
+        }
+        .auth-emblem i { font-size: 1.7rem; color: var(--accent); }
+        .auth-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.45rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .auth-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #dbe2ea;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.25s;
+            margin-bottom: 12px;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--secondary-light);
+            box-shadow: 0 0 0 3px rgba(29, 91, 140, 0.15);
+        }
+        .auth-input.mono {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-align: center;
+            font-weight: 600;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.98rem;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .auth-btn-primary {
+            background: linear-gradient(135deg, var(--success), #3a9973);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(46, 125, 91, 0.3);
+        }
+        .auth-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(46, 125, 91, 0.42);
+        }
+        .auth-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .auth-switch {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.86rem;
+            color: #64748b;
+        }
+        .auth-switch a {
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .auth-switch a:hover { color: var(--accent); text-decoration: underline; }
+        .auth-msg {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.86rem;
+            min-height: 20px;
+            font-weight: 500;
+        }
+        .auth-msg.error { color: #b23a48; }
+        .auth-msg.success { color: #2e7d5b; }
+        .auth-msg.info { color: #1d5b8c; }
+        .auth-footer-note {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        /* Note dynamique : licence liée à un autre appareil */
+        .auth-footer-note.linked-warning {
+            color: #b45309;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border-top: 1px dashed #f59e0b;
+            border-radius: 0 0 8px 8px;
+            padding: 12px 14px;
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+        .auth-footer-note.linked-warning i {
+            color: #d97706;
+            margin-right: 4px;
+        }
+        /* Note dynamique : reconnexion automatique */
+        .auth-footer-note.reconnecting {
+            color: #1d5b8c;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-top: 1px dashed #3b82f6;
+            border-radius: 0 0 8px 8px;
+            padding: 12px 14px;
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+        .auth-footer-note.reconnecting i {
+            color: #2563eb;
+            margin-right: 4px;
+        }
+
+        /* ====== BOUTON DÉCONNEXION DANS NAVBAR (intégré sous l'email) ====== */
+        .btn-logout {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            font-size: 0.68rem;
+            padding: 3px 8px !important;
+            border-radius: 6px;
+            background: rgba(178, 58, 72, 0.15);
+            border: 1px solid rgba(178, 58, 72, 0.4);
+            transition: all 0.25s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .btn-logout:hover {
+            background: rgba(178, 58, 72, 0.35);
+            color: #fff !important;
+        }
+        .btn-logout i { color: #f5a3ac; font-size: 0.7rem; }
+
+        /* ====== INDICATEUR DE CONNEXION (devant le nom de l'app) ====== */
+        .nav-connection {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 11px 5px 9px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.92);
+            transition: all 0.35s ease;
+            user-select: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .nav-connection .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 0 rgba(126, 231, 135, 0.7);
+        }
+        .nav-connection.online {
+            background: linear-gradient(135deg, rgba(46, 125, 91, 0.35), rgba(46, 125, 91, 0.15));
+            border-color: rgba(126, 231, 135, 0.45);
+            color: #d1fae5;
+        }
+        .nav-connection.online .status-dot {
+            background: #7ee787;
+            animation: nav-pulse-green 1.8s ease-in-out infinite;
+        }
+        .nav-connection.offline {
+            background: linear-gradient(135deg, rgba(178, 58, 72, 0.35), rgba(178, 58, 72, 0.15));
+            border-color: rgba(255, 179, 184, 0.5);
+            color: #ffe4e6;
+        }
+        .nav-connection.offline .status-dot {
+            background: #ffb3b8;
+            animation: nav-pulse-red 1.2s ease-in-out infinite;
+        }
+        .nav-connection.checking {
+            background: linear-gradient(135deg, rgba(29, 91, 140, 0.35), rgba(29, 91, 140, 0.15));
+            border-color: rgba(201, 169, 97, 0.45);
+            color: #fef3c7;
+        }
+        .nav-connection.checking .status-dot {
+            background: #c9a961;
+            animation: nav-pulse-gold 1.4s ease-in-out infinite;
+        }
+        .nav-connection .status-label {
+            display: inline-block;
+        }
+        @keyframes nav-pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(126, 231, 135, 0.7); }
+            50%      { box-shadow: 0 0 0 5px rgba(126, 231, 135, 0); }
+        }
+        @keyframes nav-pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 179, 184, 0.75); }
+            50%      { box-shadow: 0 0 0 5px rgba(255, 179, 184, 0); }
+        }
+        @keyframes nav-pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.75); }
+            50%      { box-shadow: 0 0 0 5px rgba(201, 169, 97, 0); }
+        }
+        /* Sur mobile, on masque le libellé pour garder juste le point */
+        @media (max-width: 991px) {
+            .nav-connection {
+                margin: 0;
+                width: fit-content;
+            }
+        }
+        @media (max-width: 480px) {
+            .nav-connection .status-label {
+                display: none;
+            }
+            .nav-connection {
+                padding: 6px 8px;
+            }
+            .brand-title {
+                font-size: 0.95rem;
+            }
+            #userEmailLabel {
+                max-width: 110px;
+                font-size: 0.68rem;
+            }
+        }
     </style>
 </head>
 <body onload="chargerDonnees()">
 
+    <!-- ============================================================
+         OVERLAY D'AUTHENTIFICATION (affiché tant que non licencié)
+         ============================================================ -->
+    <div id="authOverlay">
+        <div class="auth-card">
+            <div class="auth-emblem">
+                <i class="fas fa-shield-halved" id="authIcon"></i>
+            </div>
+            <h2 class="auth-title" id="authTitle">Activation de GenPCT</h2>
+            <p class="auth-subtitle" id="authSubtitle">
+                Créez votre compte et activez votre licence sur cet appareil
+            </p>
+
+            <!-- Formulaire : Création de compte -->
+            <div id="signupForm">
+                <input type="email" id="signupEmail" class="auth-input" placeholder="Adresse e-mail" autocomplete="email">
+                <input type="password" id="signupPass" class="auth-input" placeholder="Mot de passe (min. 6 caractères)" autocomplete="new-password">
+                <input type="text" id="signupLicense" class="auth-input mono" placeholder="PCT-XXXX-XXXX-XXXX" autocomplete="off">
+                <button class="auth-btn auth-btn-primary" id="btnSignup">
+                    <i class="fas fa-key"></i> Créer le compte et activer
+                </button>
+                <div class="auth-switch">
+                    Déjà un compte ? <a id="toLogin">Se connecter</a>
+                </div>
+            </div>
+
+            <!-- Formulaire : Connexion -->
+            <div id="loginForm" style="display:none;">
+                <input type="email" id="loginEmail" class="auth-input" placeholder="Adresse e-mail" autocomplete="email">
+                <input type="password" id="loginPass" class="auth-input" placeholder="Mot de passe" autocomplete="current-password">
+                <button class="auth-btn auth-btn-primary" id="btnLogin">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+                <div class="auth-switch">
+                    Pas encore de compte ? <a id="toSignup">Créer un compte</a>
+                </div>
+            </div>
+
+            <div id="authMsg" class="auth-msg"></div>
+
+            <!-- Note dynamique : affiche soit le message par défaut, soit l'avertissement de licence déjà liée -->
+            <div id="authFooterNote" class="auth-footer-note">
+                <i class="fas fa-lock"></i> Votre licence sera liée définitivement à cet appareil.<br>
+                Toute tentative d'utilisation sur un autre appareil sera bloquée.
+            </div>
+        </div>
+    </div>
+
     <!-- ====== NAVBAR ====== -->
-    <nav class="navbar navbar-expand-lg app-navbar">
+    <nav class="navbar navbar-expand-lg app-navbar" id="mainNavbar" style="display:none;">
         <div class="container">
             <a class="navbar-brand" href="index.html">
+                <!-- INDICATEUR DE CONNEXION (EN LIGNE / HORS LIGNE) — placé DEVANT le nom de l'app -->
+                <div id="connectionToast" class="nav-connection checking" aria-live="polite">
+                    <span class="status-dot"></span>
+                    <span id="connectionText" class="status-label">Vérification...</span>
+                </div>
+
                 <i class="fas fa-flask-vial"></i>
-                <span>Générateur PCT</span>
+
+                <div class="brand-text-wrapper">
+                    <span class="brand-title">Générateur éval PCT/APC</span>
+                    <span class="brand-user-line">
+                        <i class="fas fa-user-circle" style="color: rgba(201, 169, 97, 0.75); font-size: 0.7rem;"></i>
+                        <span id="userEmailLabel">utilisateur@exemple.com</span>
+                        <span class="btn-logout" id="btnLogout" title="Se déconnecter">
+                            <i class="fas fa-power-off"></i> Déconnexion
+                        </span>
+                    </span>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Basculer la navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
                     <li class="nav-item">
                         <a class="nav-link active" href="index.html">
                             <i class="fas fa-magic"></i> Générateur de prompt AI
@@ -635,6 +1056,10 @@
         </div>
     </nav>
 
+    <!-- ============================================================
+         CONTENU PRINCIPAL DE L'APPLICATION (masqué jusqu'à validation)
+         ============================================================ -->
+    <div id="appContent" style="display:none;">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
@@ -1173,6 +1598,7 @@
             </div>
         </div>
     </footer>
+    </div> <!-- /#appContent -->
 
     <!-- ====== MODAL À PROPOS ====== -->
     <div class="modal fade about-modal" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
@@ -1204,6 +1630,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <a href="admin.html" class="btn-admin-modal">
+                        <i class="fas fa-toolbox"></i> Espace Administrateur
+                    </a>
                     <button type="button" class="btn-close-modal" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Fermer
                     </button>
@@ -1217,8 +1646,416 @@
         <i class="fas fa-download"></i>
         <span>Installer l'application</span>
     </div>
-    
+
+    <!-- ============================================================
+         FIREBASE SDK (compat) — chargé avant le script principal
+         ============================================================ -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
     <script>
+        // ============================================================
+        // CONFIGURATION FIREBASE — PROJET GENPCT-LICENCE
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDguZC4dAMIbKS00zkIJjqT8KpuARiTsyM",
+            authDomain: "genpct-licence.firebaseapp.com",
+            databaseURL: "https://genpct-licence-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "genpct-licence",
+            storageBucket: "genpct-licence.firebasestorage.app",
+            messagingSenderId: "796594204374",
+            appId: "1:796594204374:web:cbbe360b00a0d187242377"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        window._pctAuth = auth;
+        window._pctDb = db;
+
+        // ⚠️ IMPORTANT — Déconnexion automatique à la fermeture de la page.
+        // Par défaut, Firebase Auth conserve la session dans le localStorage.
+        // Pour éviter de saturer le quota de 100 connexions simultanées,
+        // on force la persistance en mémoire (SESSION). La session est ainsi
+        // perdue dès que l'onglet est fermé ou rechargé → l'utilisateur devra
+        // se reconnecter à chaque nouvelle visite, libérant la place pour d'autres.
+        auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+            .catch(err => console.warn('Persistance SESSION non appliquée :', err));
+
+        // ============================================================
+        // PRÉSENCE — Enregistrer cet utilisateur comme connecté
+        // (pour le compteur temps réel visible par l'admin)
+        // ============================================================
+        function setupUserPresence(user) {
+            if (!user) return;
+            const uid = user.uid;
+            const email = user.email;
+            const presenceRef = db.ref('presence/' + uid);
+            const connectedRef = db.ref('.info/connected');
+
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true) {
+                    // Suppression automatique en cas de déconnexion réseau
+                    presenceRef.onDisconnect().remove();
+                    // Enregistrer la présence
+                    presenceRef.set({
+                        email: email,
+                        connectedAt: firebase.database.ServerValue.TIMESTAMP
+                    }).catch(() => {});
+                }
+            });
+        }
+
+        // Nettoyer la présence à la déconnexion (bouton Déconnexion)
+        async function cleanupPresence() {
+            try {
+                const u = auth.currentUser;
+                if (u) await db.ref('presence/' + u.uid).remove();
+            } catch(e) {}
+        }
+
+        // Nettoyage automatique à la fermeture de la page
+        // (en plus de onDisconnect() qui est le filet de sécurité principal)
+        window.addEventListener('beforeunload', () => {
+            const u = auth.currentUser;
+            if (u) {
+                try { db.ref('presence/' + u.uid).remove(); } catch(e) {}
+            }
+        });
+
+        // ============================================================
+        // GESTION DE L'EMAIL MÉMORISÉ (pour faciliter la connexion)
+        // ============================================================
+        const LAST_EMAIL_KEY = 'pct_last_email';
+
+        function memoriserEmail(email) {
+            try { localStorage.setItem(LAST_EMAIL_KEY, email); } catch(e) {}
+        }
+        function recupererEmailMemorise() {
+            try { return localStorage.getItem(LAST_EMAIL_KEY) || ''; } catch(e) { return ''; }
+        }
+        function preRemplirEmail() {
+            const email = recupererEmailMemorise();
+            if (!email) return;
+            const loginEmail = document.getElementById('loginEmail');
+            const signupEmail = document.getElementById('signupEmail');
+            if (loginEmail && !loginEmail.value) loginEmail.value = email;
+            if (signupEmail && !signupEmail.value) signupEmail.value = email;
+        }
+
+        // ============================================================
+        // GESTION DE LA NOTE DYNAMIQUE SOUS LE FORMULAIRE
+        // ============================================================
+        function setFooterNoteDefault() {
+            const note = document.getElementById('authFooterNote');
+            note.className = 'auth-footer-note';
+            note.innerHTML = '<i class="fas fa-lock"></i> Votre licence sera liée définitivement à cet appareil.<br>Toute tentative d\'utilisation sur un autre appareil sera bloquée.';
+        }
+
+        function setFooterNoteLinkedWarning(emailConcerne) {
+            const note = document.getElementById('authFooterNote');
+            note.className = 'auth-footer-note linked-warning';
+            const emailStr = emailConcerne ? ` (${emailConcerne})` : '';
+            note.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Cette licence est déjà liée à un appareil' + emailStr + '.<br>Contactez le concepteur pour un transfert gratuit.';
+        }
+
+        // Note spécifique : vérification de licence en cours (reconnexion automatique)
+        function setFooterNoteReconnecting() {
+            const note = document.getElementById('authFooterNote');
+            note.className = 'auth-footer-note reconnecting';
+            note.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Vérification automatique de votre licence en cours...';
+        }
+
+        // ============================================================
+        // TOAST PERMANENT — ÉTAT DE CONNEXION AU CLOUD
+        // ============================================================
+        (function initConnectionToast() {
+            const toast = document.getElementById('connectionToast');
+            const text = document.getElementById('connectionText');
+            const connectedRef = db.ref('.info/connected');
+
+            function update(state) {
+                toast.classList.remove('online', 'offline', 'checking');
+                if (state === 'online') {
+                    toast.classList.add('online');
+                    text.textContent = 'En ligne';
+                } else if (state === 'offline') {
+                    toast.classList.add('offline');
+                    text.textContent = 'Hors ligne';
+                } else {
+                    toast.classList.add('checking');
+                    text.textContent = 'Vérification...';
+                }
+            }
+
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true) {
+                    update('online');
+                } else {
+                    update(navigator.onLine ? 'checking' : 'offline');
+                }
+            });
+
+            window.addEventListener('online', () => update('online'));
+            window.addEventListener('offline', () => update('offline'));
+
+            update(navigator.onLine ? 'checking' : 'offline');
+        })();
+
+        // ============================================================
+        // SÉCURITÉ — Empreinte matérielle (fingerprint)
+        // ============================================================
+        async function getHardwareFingerprint() {
+            const parts = [];
+            parts.push('cores:' + (navigator.hardwareConcurrency || 'x'));
+            parts.push('ram:' + (navigator.deviceMemory || 'x'));
+            parts.push('screen:' + screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
+            parts.push('tz:' + Intl.DateTimeFormat().resolvedOptions().timeZone);
+            parts.push('lang:' + navigator.language);
+            parts.push('plat:' + (navigator.platform || 'x'));
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (gl) {
+                    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (dbg) parts.push('gpu:' + gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL));
+                }
+            } catch(e) {}
+            try {
+                const ac = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
+                parts.push('audio:' + ac.sampleRate);
+            } catch(e) {}
+            const raw = parts.join('|');
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
+
+        // ============================================================
+        // INTERFACE D'AUTHENTIFICATION
+        // ============================================================
+        const authOverlay = document.getElementById('authOverlay');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const authMsg = document.getElementById('authMsg');
+        const appContent = document.getElementById('appContent');
+        const mainNavbar = document.getElementById('mainNavbar');
+
+        function showMsg(text, type) {
+            authMsg.textContent = text;
+            authMsg.className = 'auth-msg ' + (type || '');
+        }
+
+        document.getElementById('toLogin').onclick = () => {
+            signupForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            document.getElementById('authTitle').textContent = 'Connexion à GenPCT';
+            document.getElementById('authSubtitle').textContent = 'Connectez-vous pour accéder à votre licence';
+            showMsg('');
+            setFooterNoteDefault();
+            preRemplirEmail();
+        };
+        document.getElementById('toSignup').onclick = () => {
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'block';
+            document.getElementById('authTitle').textContent = 'Activation de GenPCT';
+            document.getElementById('authSubtitle').textContent = 'Créez votre compte et activez votre licence sur cet appareil';
+            showMsg('');
+            setFooterNoteDefault();
+            preRemplirEmail();
+        };
+
+        // ---------- Création de compte + activation licence ----------
+        document.getElementById('btnSignup').onclick = async () => {
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPass').value;
+            const licenseKey = document.getElementById('signupLicense').value.trim().toUpperCase();
+
+            if (!email || !pass || !licenseKey) {
+                return showMsg('Tous les champs sont obligatoires.', 'error');
+            }
+            if (pass.length < 6) {
+                return showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error');
+            }
+            if (!/^PCT-\d{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(licenseKey)) {
+                return showMsg('Format de clé invalide. Attendu : PCT-XXXX-XXXX-XXXX', 'error');
+            }
+
+            const btn = document.getElementById('btnSignup');
+            btn.disabled = true;
+            showMsg('Vérification de la clé de licence...', 'info');
+            setFooterNoteDefault();
+
+            try {
+                // ÉTAPE 1 : VÉRIFIER QUE LA CLÉ EXISTE DANS valid_keys
+                const keySnap = await db.ref('valid_keys/' + licenseKey).once('value');
+                if (keySnap.val() !== true) {
+                    btn.disabled = false;
+                    return showMsg('❌ Clé de licence inconnue ou invalide. Vérifiez votre clé.', 'error');
+                }
+
+                // ÉTAPE 2 : VÉRIFIER QUE LA CLÉ N'A PAS DÉJÀ ÉTÉ UTILISÉE
+                const usedSnap = await db.ref('used_keys/' + licenseKey).once('value');
+                if (usedSnap.exists()) {
+                    btn.disabled = false;
+                    let emailDetenteur = '';
+                    try {
+                        const uidDetenteur = usedSnap.val();
+                        const licSnap = await db.ref('licenses/' + uidDetenteur).once('value');
+                        const lic = licSnap.val();
+                        if (lic && lic.email) emailDetenteur = lic.email;
+                    } catch(e) {}
+                    setFooterNoteLinkedWarning(emailDetenteur);
+                    return showMsg('🚫 Cette clé a déjà été activée sur un autre appareil.', 'error');
+                }
+
+                // ÉTAPE 3 : CRÉER LE COMPTE FIREBASE AUTH
+                showMsg('Création du compte en cours...', 'info');
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                const uid = cred.user.uid;
+
+                // ÉTAPE 4 : GÉNÉRER LE FINGERPRINT MATÉRIEL
+                const hw = await getHardwareFingerprint();
+
+                // ÉTAPE 5 : ENREGISTRER LA LICENCE + MARQUER LA CLÉ COMME UTILISÉE
+                const updates = {};
+                updates['licenses/' + uid] = {
+                    licenseKey: licenseKey,
+                    hardwareId: hw,
+                    email: email,
+                    activatedAt: firebase.database.ServerValue.TIMESTAMP
+                };
+                updates['used_keys/' + licenseKey] = uid;
+                await db.ref().update(updates);
+
+                memoriserEmail(email);
+
+                showMsg('✅ Activation réussie !', 'success');
+            } catch (err) {
+                btn.disabled = false;
+                let msg = 'Erreur inconnue.';
+                if (err.code === 'auth/email-already-in-use') msg = 'Cet email est déjà utilisé. Connectez-vous.';
+                else if (err.code === 'auth/invalid-email') msg = 'Adresse email invalide.';
+                else if (err.code === 'auth/weak-password') msg = 'Mot de passe trop faible.';
+                else if (err.code === 'PERMISSION_DENIED') msg = 'Accès refusé. Vérifiez les règles Firebase.';
+                else if (err.message) msg = err.message;
+                showMsg('❌ ' + msg, 'error');
+            }
+        };
+
+        // ---------- Connexion ----------
+        document.getElementById('btnLogin').onclick = async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            if (!email || !pass) return showMsg('Email et mot de passe requis.', 'error');
+
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true;
+            showMsg('Connexion en cours...', 'info');
+
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                memoriserEmail(email);
+                showMsg('✅ Connexion réussie', 'success');
+            } catch (err) {
+                btn.disabled = false;
+                let msg = 'Identifiants incorrects.';
+                if (err.code === 'auth/user-not-found') msg = 'Aucun compte avec cet email.';
+                else if (err.code === 'auth/wrong-password') msg = 'Mot de passe incorrect.';
+                else if (err.code === 'auth/invalid-credential') msg = 'Email ou mot de passe incorrect.';
+                else if (err.code === 'auth/too-many-requests') msg = 'Trop de tentatives. Réessayez plus tard.';
+                showMsg('❌ ' + msg, 'error');
+            }
+        };
+
+        // ---------- Déconnexion ----------
+        document.getElementById('btnLogout').onclick = async () => {
+            if (confirm('Voulez-vous vous déconnecter ?')) {
+                await cleanupPresence();
+                await auth.signOut();
+                location.reload();
+            }
+        };
+
+        // ============================================================
+        // VÉRIFICATION DE LA LICENCE À CHAQUE CHANGEMENT D'ÉTAT AUTH
+        // ============================================================
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                authOverlay.classList.remove('hidden');
+                appContent.style.display = 'none';
+                mainNavbar.style.display = 'none';
+                const b1 = document.getElementById('btnSignup');
+                const b2 = document.getElementById('btnLogin');
+                if (b1) b1.disabled = false;
+                if (b2) b2.disabled = false;
+                setFooterNoteDefault();
+                preRemplirEmail();
+                return;
+            }
+
+            const label = document.getElementById('userEmailLabel');
+            if (label) label.textContent = user.email;
+
+            showMsg('Vérification de la licence...', 'info');
+            // Note dynamique : reprise automatique en cours
+            setFooterNoteReconnecting();
+
+            try {
+                const snap = await db.ref('licenses/' + user.uid).once('value');
+                const license = snap.val();
+
+                if (!license || !license.licenseKey) {
+                    await auth.signOut();
+                    setFooterNoteDefault();
+                    return showMsg('❌ Aucune licence trouvée pour ce compte.', 'error');
+                }
+
+                const currentHw = await getHardwareFingerprint();
+
+                if (!license.hardwareId) {
+                    await db.ref('licenses/' + user.uid + '/hardwareId').set(currentHw);
+                    await db.ref('licenses/' + user.uid + '/reactivatedAt').set(firebase.database.ServerValue.TIMESTAMP);
+                    showMsg('✅ Licence transférée sur ce nouvel appareil', 'success');
+                } else if (currentHw !== license.hardwareId) {
+                    await auth.signOut();
+                    setFooterNoteLinkedWarning(license.email || user.email);
+                    return showMsg(
+                        '🚫 Cette licence est liée à un autre appareil. Contactez le concepteur pour un transfert.',
+                        'error'
+                    );
+                }
+
+                // ✅ Licence valide → afficher l'application
+                authOverlay.classList.add('hidden');
+                appContent.style.display = 'block';
+                mainNavbar.style.display = 'flex';
+                setFooterNoteDefault();
+
+                // 🔹 ENREGISTRER LA PRÉSENCE (pour le compteur admin temps réel)
+                setupUserPresence(user);
+
+                if (typeof chargerDonnees === 'function') chargerDonnees();
+
+            } catch (err) {
+                console.error('Erreur vérification licence:', err);
+                showMsg('❌ Erreur de vérification : ' + (err.message || 'inconnue'), 'error');
+                await auth.signOut();
+                setFooterNoteDefault();
+            }
+        });
+
+        // ============================================================
+        // PRÉREMPLISSAGE DE L'EMAIL AU CHARGEMENT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            preRemplirEmail();
+        });
+        preRemplirEmail();
+
+        // ============================================================
+        // CODE EXISTANT DE L'APPLICATION (inchangé)
+        // ============================================================
+
         // Gestion de l'affichage du container double discipline
         const disciplineSelect = document.getElementById('discipline');
         const simpleContainer = document.getElementById('simpleDisciplineContainer');
@@ -1263,10 +2100,6 @@
         
         // ============================================================
         // SAUVEGARDE AUTOMATIQUE DANS LE LOCALSTORAGE
-        // Deux niveaux de sauvegarde :
-        //   1. Objet complet sous la clé 'promptData_PCT_v2' (compatibilité)
-        //   2. Chaque champ individuellement sous la clé 'pct_<id>'
-        //      pour récupération facile par grille_correction.html
         // ============================================================
         const PCT_KEY_PREFIX = 'pct_';
         
@@ -1277,13 +2110,11 @@
             inputs.forEach(input => {
                 const valeur = (input.type === 'checkbox') ? input.checked : input.value;
                 formData[input.id] = valeur;
-                // Sauvegarde individuelle avec préfixe pour lecture directe par grille_correction.html
                 try {
                     localStorage.setItem(PCT_KEY_PREFIX + input.id, JSON.stringify(valeur));
                 } catch(e) { /* ignore quota errors */ }
             });
             
-            // Sauvegarde globale (compatibilité avec le code existant)
             try {
                 localStorage.setItem('promptData_PCT_v2', JSON.stringify(formData));
             } catch(e) { /* ignore quota errors */ }
@@ -1314,22 +2145,14 @@
         
         // ============================================================
         // API PUBLIQUE pour grille_correction.html
-        // Permet de récupérer toutes les données ou un champ précis.
-        // Exemple d'utilisation dans grille_correction.html :
-        //     const data = getPCTData();
-        //     console.log(data.etablissement);
-        //     // ou
-        //     const etab = getPCTField('etablissement');
         // ============================================================
         window.PCT_KEY_PREFIX = PCT_KEY_PREFIX;
         window.getPCTData = function() {
             const data = {};
-            // Récupère d'abord l'objet global s'il existe
             const savedData = localStorage.getItem('promptData_PCT_v2');
             if (savedData) {
                 try { Object.assign(data, JSON.parse(savedData)); } catch(e) {}
             }
-            // Complète/écrase avec les clés individuelles (source la plus fiable)
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 if (key && key.startsWith(PCT_KEY_PREFIX)) {
@@ -1358,7 +2181,6 @@
             const duree = document.getElementById('duree').value || "1h30min";
             const discipline = document.getElementById('discipline').value;
             
-            // NOUVEAU : récupération du pays et de la direction départementale en MAJUSCULES
             const pays = (document.getElementById('pays').value || "RÉPUBLIQUE DU BÉNIN").toUpperCase();
             const directionDepartementale = (document.getElementById('directionDepartementale').value || "DIRECTION DÉPARTEMENTALE DES ENSEIGNEMENTS SECONDAIRES, TECHNIQUES ET DE LA FORMATION PROFESSIONNELLE").toUpperCase();
             
@@ -1467,7 +2289,6 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
    \\end{center}
 5. GESTION DES IMAGES/SCHÉMAS : `;
             
-            // Gestion des images selon la discipline
             if (discipline === 'PHYSIQUE CHIMIE ET TECHNOLOGIE') {
                 let imagesChimie = "";
                 if(document.getElementById('hasImagesChimie').checked) {
@@ -1620,9 +2441,7 @@ AUCUN BARÈME ni points.
         function resetForm() {
             if(confirm("Voulez-vous vraiment réinitialiser tout le formulaire ?")) {
                 document.getElementById('promptForm').reset();
-                // Supprimer l'objet global
                 localStorage.removeItem('promptData_PCT_v2');
-                // Supprimer toutes les clés individuelles pct_
                 const keysToRemove = [];
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
