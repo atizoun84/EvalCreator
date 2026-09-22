@@ -1218,6 +1218,16 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - NE JAMAIS dupliquer la ligne de la question ; regrouper les volets sur une seule ligne en utilisant des retours à la ligne (\\newline) dans la colonne « Éléments de réponse ».
    - Vérifier que la somme verticale des points de la colonne « Pts » correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
 
+7. CONTRAINTE ABSOLUE SUR LES VALEURS DE POINTS (MULTIPLES DE 0,25 UNIQUEMENT) :
+   Toutes les attributions de points — au niveau des volets, des critères, des questions, des parties et des totaux — doivent OBLIGATOIREMENT être des ENTIERS ou des MULTIPLES DE 0,25 (c'est-à-dire 0,25 ; 0,5 ; 0,75 ; 1 ; 1,25 ; 1,5 ; 1,75 ; 2 ; etc.).
+   - IL EST FORMELLEMENT INTERDIT d'utiliser des valeurs telles que 0,33 ; 0,67 ; 0,34 ; 0,66 ; 0,1 ; 0,2 ; 0,3 ; 0,4 ; 0,6 ; 0,7 ; 0,8 ; 0,9 ; 1,1 ; 1,2 ; etc.
+   - Pour respecter cette contrainte, tu dois ajuster la répartition des points entre les volets et entre les critères en utilisant exclusivement des incréments de 0,25.
+   - Exemple de ventilation correcte pour une question de 2 points à 3 volets :
+        a) 0,5 pt  +  b) 0,75 pt  +  c) 0,75 pt  =  2 pts
+        Et pour chaque volet, la somme des 3 critères doit également être un multiple de 0,25 (ex : 0,25 + 0,25 + 0 = 0,5 ; 0,25 + 0,25 + 0,25 = 0,75 ; etc.).
+   - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
+   - Vérifie systématiquement que la somme de tous les points (colonnes « Pts » + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
+
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
 ------------------------------------------------------------
@@ -1251,7 +1261,7 @@ La somme des points du barème sur 20 doit STRICTEMENT respecter la classe de l'
 
 RÈGLES D'IMPUTATION DANS LES 3 CRITÈRES :
 Pour chaque question (et pour chaque volet d'une question à plusieurs volets),
-la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet.
+la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet, et chaque point attribué doit être un multiple de 0,25.
 
 ------------------------------------------------------------
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
