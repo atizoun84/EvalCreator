@@ -902,8 +902,12 @@
                     <span id="displayTypeEval" class="info-value">Non configuré</span>
                 </div>
                 <div class="col-md-4">
-                    <label class="info-label"><i class="fas fa-business-time me-1"></i> Période / Semestre :</label>
-                    <span id="displayPeriode" class="info-value">Non configuré</span>
+                    <label class="info-label"><i class="fas fa-puzzle-piece me-1"></i> Compétences disciplinaires :</label>
+                    <span id="displayCompetencesDisciplinaires" class="info-value">Non configuré</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="info-label"><i class="fas fa-diagram-project me-1"></i> Compétences transversales :</label>
+                    <span id="displayCompetencesTransversales" class="info-value">Non configuré</span>
                 </div>
                 <div class="col-md-4">
                     <label class="info-label"><i class="fas fa-layer-group me-1"></i> Niveau & Discipline :</label>
@@ -1132,8 +1136,9 @@ détaillée, en respectant SCRUPULEUSEMENT :
   - la CLÉ DE RÉPARTITION OFFICIELLE DES POINTS (Section III) ;
   - la STRUCTURE DE TABLEAU ANTI-DÉBORDEMENT décrite à la section II ;
   - les INFORMATIONS GÉNÉRALES et le CONTENU PÉDAGOGIQUE du sujet d'épreuve
-    fourni (pays, direction départementale, établissement, année, classe, cycle, type d'évaluation, période, discipline, coefficient, durée, consignes, etc.) ;
-  - les PARAMÈTRES DE MISE EN FORME LaTeX de la section IV.
+    fourni (pays, direction départementale, établissement, année, classe, cycle, type d'évaluation, compétences disciplinaires, compétences transversales, discipline, coefficient, durée, consignes, etc.) ;
+  - les PARAMÈTRES DE MISE EN FORME LaTeX de la section IV ;
+  - les DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 et C3 (Section V).
 
 ------------------------------------------------------------
 I. INFORMATIONS GÉNÉRALES
@@ -1146,7 +1151,8 @@ I. INFORMATIONS GÉNÉRALES
   - Classe : [CLASSE] ;
   - Cycle : [CYCLE] ;
   - Type d'évaluation : [TYPE_EVAL] ;
-  - Période / Semestre : [PERIODE] ;
+  - Compétences disciplinaires : [COMPETENCES_DISCIPLINAIRES] ;
+  - Compétences transversales : [COMPETENCES_TRANSVERSALES] ;
   - Discipline / Structure : [DISCIPLINE] ;
   - Coefficient : [COEF] ;
   - Durée : [DUREE] ;
@@ -1166,11 +1172,11 @@ La grille reproduit EXACTEMENT l'architecture suivante :
      - Cons ............................... 1,0 cm  (code/numéro de question)
      - Éléments de réponse ................ 11,2 cm (contenu pédagogique attendu)
      - Pts (total question) ............... 0,7 cm  (chiffres uniquement)
-     - Critère 1 (texte) .................. 3,3 cm  (La production se rapporte à la consigne)
+     - Critère 1 (texte) .................. 3,3 cm  (la production se rapporte à la consigne)
      - Pts critère 1 ...................... 0,6 cm  (chiffres uniquement)
-     - Critère 2 (texte) .................. 3,3 cm  (La production utilise les ressources...)
+     - Critère 2 (texte) .................. 3,3 cm  (la production utilise les ressources...)
      - Pts critère 2 ...................... 0,6 cm  (chiffres uniquement)
-     - Critère 3 (texte) .................. 3,8 cm  (La production est bien raisonnée)
+     - Critère 3 (texte) .................. 3,8 cm  (la production est bien raisonnée)
      - Pts critère 3 ...................... 0,6 cm  (chiffres uniquement)
 
 2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
@@ -1179,6 +1185,8 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - La DIRECTION DÉPARTEMENTALE ([DIRECTION_DEPARTEMENTALE]) doit être placée EN HAUT À DROITE (côté opposé au pays).
    - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
    - Puis centrer en dessous le nom de l'établissement, la mention « GRILLE DE CORRECTION », le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   - AJOUTER OBLIGATOIREMENT une ligne présentant les compétences disciplinaires et transversales évaluées, sous la forme :
+     \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
    
    Exemple de structure à reproduire :
    \\begin{center}
@@ -1188,7 +1196,8 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    {\\Large \\textbf{[ETAB]}}\\\\[2pt]
    {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
    {\\rule{0.9\\linewidth}{0.5pt}}\\\\[4pt]
-   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}
+   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
+   {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
    \\end{center}
 
 3. ORGANISATION HIÉRARCHIQUE DES LIGNES :
@@ -1227,6 +1236,14 @@ La grille reproduit EXACTEMENT l'architecture suivante :
         Et pour chaque volet, la somme des 3 critères doit également être un multiple de 0,25 (ex : 0,25 + 0,25 + 0 = 0,5 ; 0,25 + 0,25 + 0,25 = 0,75 ; etc.).
    - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
    - Vérifie systématiquement que la somme de tous les points (colonnes « Pts » + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
+
+8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER :
+   Si une réponse attendue est un schéma à dessiner, tu dois impérativement :
+   - Insérer une image incrustée dans la colonne « Éléments de réponse » à l'aide de la commande LaTeX \\includegraphics.
+   - Utiliser un environnement \\begin{minipage} ou un ajustement de largeur (ex : \\includegraphics[width=0.8\\linewidth]{nom_image}) pour que l'image s'adapte automatiquement à la largeur du texte.
+   - Prévoir un espace vertical suffisant (\\vspace) avant et après l'image pour une bonne lisibilité.
+   - Indiquer clairement la légende ou le titre du schéma sous l'image (ex : \\captionof{figure}{Schéma du montage}).
+   - Si aucune image réelle n'est disponible, insérer un cadre vide de taille appropriée avec la mention « Emplacement réservé pour le schéma » à l'aide de \\fbox{\\parbox{0.8\\linewidth}{\\centering \\vspace{2cm} Emplacement réservé pour le schéma \\vspace{2cm}}}.
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1267,15 +1284,49 @@ la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`setspace\`, \`helvet\`.
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`.
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
-6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, période, coef, durée.
+6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, compétences disciplinaires et transversales, période, coef, durée.
 7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
 
 ------------------------------------------------------------
-V. FORMAT DE SORTIE
+V. DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 ET C3
+------------------------------------------------------------
+Les trois critères d'évaluation utilisés dans la colonne de droite de la grille
+doivent être libellés et explicités EXACTEMENT comme suit :
+
+▸ C1 : « La production se rapporte à la consigne »
+   Permet de vérifier si l'élève a répondu globalement à la question.
+   Exemple : la question demande de calculer ; en C1, on écrira par exemple :
+   « un calcul de ... est fait ».
+
+▸ C2 : « La production utilise les ressources visées par la situation d'évaluation »
+   Permet de vérifier si l'élève a utilisé les données et informations ciblées
+   par les ressources de l'épreuve.
+   Exemple : on peut écrire : « le calcul fait comporte ... (en citant les données ciblées) ».
+
+▸ C3 : « La production est bien raisonnée »
+   Permet de vérifier si la réponse est totalement correcte et logique par rapport
+   au corrigé type (donc exactement la même réponse ou une réponse similaire).
+   Exemple : « le calcul fait est juste et est ... ».
+
+IMPORTANT :
+  - Dans la colonne « Critère 1 (texte) » de la longtable, le libellé à utiliser
+    en en-tête est exactement : « C1 : La production se rapporte à la consigne ».
+  - Dans la colonne « Critère 2 (texte) », le libellé est exactement :
+    « C2 : La production utilise les ressources visées par la situation d'évaluation ».
+  - Dans la colonne « Critère 3 (texte) », le libellé est exactement :
+    « C3 : La production est bien raisonnée ».
+  - Pour CHAQUE question et CHAQUE volet, tu dois formuler, dans la colonne du
+    critère correspondant, une phrase courte et spécifique à la question,
+    en suivant les exemples ci-dessus (ex : « un calcul de la masse molaire est fait »,
+    « le calcul comporte la masse m = 5 g et la masse molaire M = 40 g/mol »,
+    « le calcul est juste et donne n = 0,125 mol »).
+
+------------------------------------------------------------
+VI. FORMAT DE SORTIE
 ------------------------------------------------------------
 Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun texte explicatif avant ou après, prêt à être copié-collé et compilé sur Overleaf.
 % ============================================================
@@ -1319,11 +1370,14 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const annee = getLocalStorageValue(['pct_anneeScolaire', 'pct_annee', 'pct_annee_scolaire', 'annee']);
             const classe = getLocalStorageValue(['pct_classe', 'classe']);
             const typeEval = getLocalStorageValue(['pct_titreEpreuve', 'pct_type_eval', 'pct_evaluation', 'type_eval']);
-            const periode = getLocalStorageValue(['pct_periode', 'periode']);
+            const periode = getLocalStorageValue(['pct_periode', 'periode']); // conservé pour compatibilité
             const discipline = getLocalStorageValue(['pct_discipline', 'discipline']);
             const cycle = getLocalStorageValue(['pct_cycle', 'cycle']);
             const duree = getLocalStorageValue(['pct_duree', 'duree']);
             const coef = getLocalStorageValue(['pct_coefficient', 'pct_coef', 'coef']);
+            // Nouvelles compétences
+            const compDisc = getLocalStorageValue(['pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc']);
+            const compTrans = getLocalStorageValue(['pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans']);
 
             document.getElementById('displayPays').innerText = pays ? pays.toUpperCase() : 'Non configuré';
             document.getElementById('displayDirectionDepartementale').innerText = directionDepartementale ? directionDepartementale.toUpperCase() : 'Non configuré';
@@ -1331,7 +1385,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             document.getElementById('displayAnnee').innerText = annee ? annee : 'Non configuré';
             document.getElementById('displayClasse').innerText = classe ? classe : 'Non configuré';
             document.getElementById('displayTypeEval').innerText = typeEval ? typeEval : 'Non configuré';
-            document.getElementById('displayPeriode').innerText = periode ? periode : 'Non configuré';
+            document.getElementById('displayCompetencesDisciplinaires').innerText = compDisc ? compDisc : 'Non configuré';
+            document.getElementById('displayCompetencesTransversales').innerText = compTrans ? compTrans : 'Non configuré';
             document.getElementById('displayDiscipline').innerText = discipline ? discipline : 'Non configuré';
             document.getElementById('displayCycle').innerText = cycle ? cycle : 'Non configuré';
             document.getElementById('displayDuree').innerText = duree ? duree : 'Non configuré';
@@ -1370,7 +1425,9 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
                 'pct_discipline', 'discipline',
                 'pct_cycle', 'cycle',
                 'pct_duree', 'duree',
-                'pct_coefficient', 'pct_coef', 'coef'
+                'pct_coefficient', 'pct_coef', 'coef',
+                'pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc',
+                'pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans'
             ];
 
             keysToRemove.forEach(key => localStorage.removeItem(key));
@@ -1381,7 +1438,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             document.getElementById('displayAnnee').innerText = 'Non configuré';
             document.getElementById('displayClasse').innerText = 'Non configuré';
             document.getElementById('displayTypeEval').innerText = 'Non configuré';
-            document.getElementById('displayPeriode').innerText = 'Non configuré';
+            document.getElementById('displayCompetencesDisciplinaires').innerText = 'Non configuré';
+            document.getElementById('displayCompetencesTransversales').innerText = 'Non configuré';
             document.getElementById('displayDiscipline').innerText = 'Non configuré';
             document.getElementById('displayCycle').innerText = 'Non configuré';
             document.getElementById('displayDuree').innerText = 'Non configuré';
@@ -1396,7 +1454,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const annee = document.getElementById('displayAnnee').innerText;
             const classe = document.getElementById('displayClasse').innerText;
             const typeEval = document.getElementById('displayTypeEval').innerText;
-            const periode = document.getElementById('displayPeriode').innerText;
+            const compDisc = document.getElementById('displayCompetencesDisciplinaires').innerText;
+            const compTrans = document.getElementById('displayCompetencesTransversales').innerText;
             const discipline = document.getElementById('displayDiscipline').innerText;
             const cycle = document.getElementById('displayCycle').innerText;
             const duree = document.getElementById('displayDuree').innerText;
@@ -1411,7 +1470,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             finalPrompt = finalPrompt.replace('[CLASSE]', classe);
             finalPrompt = finalPrompt.replace('[CYCLE]', cycle);
             finalPrompt = finalPrompt.replace('[TYPE_EVAL]', typeEval);
-            finalPrompt = finalPrompt.replace('[PERIODE]', periode);
+            finalPrompt = finalPrompt.replaceAll('[COMPETENCES_DISCIPLINAIRES]', compDisc);
+            finalPrompt = finalPrompt.replaceAll('[COMPETENCES_TRANSVERSALES]', compTrans);
             finalPrompt = finalPrompt.replace('[DISCIPLINE]', discipline);
             finalPrompt = finalPrompt.replace('[DUREE]', duree);
             finalPrompt = finalPrompt.replace('[COEF]', coef);
