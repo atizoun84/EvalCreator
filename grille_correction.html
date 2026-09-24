@@ -1344,6 +1344,31 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             return null;
         }
 
+        // NOUVEL UTILITAIRE : Récupère un tableau de valeurs depuis localStorage à partir
+        // d'une liste de clés possibles (pour les checkbox multiples comme les compétences).
+        function getLocalStorageArray(possibleKeys) {
+            for (let i = 0; i < possibleKeys.length; i++) {
+                const raw = localStorage.getItem(possibleKeys[i]);
+                if (raw === null || raw === undefined) continue;
+                const trimmed = String(raw).trim();
+                if (trimmed === '' || trimmed === 'null' || trimmed === 'undefined') continue;
+                try {
+                    const parsed = JSON.parse(trimmed);
+                    if (Array.isArray(parsed)) {
+                        const filtered = parsed.filter(v => v !== null && v !== undefined && String(v).trim() !== '' && String(v).trim() !== 'false');
+                        if (filtered.length > 0) return filtered;
+                    } else if (parsed !== null && parsed !== undefined && String(parsed).trim() !== '' && parsed !== false) {
+                        return [String(parsed)];
+                    }
+                } catch(e) {
+                    // Si ce n'est pas du JSON, on tente une séparation par ' • ' ou ';' ou ','
+                    const parts = trimmed.split(/\s*[•;,]\s*/).map(s => s.trim()).filter(s => s && s !== 'false' && s !== 'null');
+                    if (parts.length > 0) return parts;
+                }
+            }
+            return [];
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             loadStoredGeneralInfo();
         });
@@ -1375,9 +1400,61 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const cycle = getLocalStorageValue(['pct_cycle', 'cycle']);
             const duree = getLocalStorageValue(['pct_duree', 'duree']);
             const coef = getLocalStorageValue(['pct_coefficient', 'pct_coef', 'coef']);
-            // Nouvelles compétences
-            const compDisc = getLocalStorageValue(['pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc']);
-            const compTrans = getLocalStorageValue(['pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans']);
+
+            // ============================================================
+            // RÉCUPÉRATION DES COMPÉTENCES COCHÉES (adaptée au format réel
+            // de sauvegarde de index.html qui enregistre chaque checkbox
+            // séparément sous la clé pct_<id-checkbox>).
+            // Les IDs des checkboxes dans index.html sont :
+            //   - Compétences disciplinaires : cd1, cd2, cd3
+            //   - Compétences transversales : ctv1, ctv2, ctv3, ctv4
+            // Chaque valeur sauvegardée est soit `true` (cochée),
+            // soit `false` (décochée).
+            // ============================================================
+            const compDiscDefs = [
+                { key: 'pct_cd1', val: "CD n°1 : Élaborer une explication d'un fait ou d'un phénomène naturel ou construit en mettant en œuvre les modes de raisonnement propres aux PCT." },
+                { key: 'pct_cd2', val: "CD n°2 : Exploiter les PCT dans la production l'utilisation et la réparation d'objets technologiques." },
+                { key: 'pct_cd3', val: "CD n°3 : Apprécier l'apport des PCT à la vie de l'homme." }
+            ];
+            const compTransDefs = [
+                { key: 'pct_ctv1', val: "Communiquer de façon précise et appropriée." },
+                { key: 'pct_ctv2', val: "Capacité d'analyse" },
+                { key: 'pct_ctv3', val: "Résoudre une situation-problème" },
+                { key: 'pct_ctv4', val: "Exploiter l'information disponible" }
+            ];
+
+            const compDiscList = [];
+            compDiscDefs.forEach(def => {
+                const raw = localStorage.getItem(def.key);
+                if (raw === null) return;
+                let isChecked = false;
+                try { isChecked = JSON.parse(raw) === true; }
+                catch(e) { isChecked = (String(raw).trim().toLowerCase() === 'true'); }
+                if (isChecked) compDiscList.push(def.val);
+            });
+
+            const compTransList = [];
+            compTransDefs.forEach(def => {
+                const raw = localStorage.getItem(def.key);
+                if (raw === null) return;
+                let isChecked = false;
+                try { isChecked = JSON.parse(raw) === true; }
+                catch(e) { isChecked = (String(raw).trim().toLowerCase() === 'true'); }
+                if (isChecked) compTransList.push(def.val);
+            });
+
+            // Fallback : ancien format (clé unique "pct_competencesDisciplinaires")
+            if (compDiscList.length === 0) {
+                const legacy = getLocalStorageArray(['pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc']);
+                compDiscList.push(...legacy);
+            }
+            if (compTransList.length === 0) {
+                const legacy = getLocalStorageArray(['pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans']);
+                compTransList.push(...legacy);
+            }
+
+            const compDisc = compDiscList.length > 0 ? compDiscList.join(' • ') : null;
+            const compTrans = compTransList.length > 0 ? compTransList.join(' • ') : null;
 
             document.getElementById('displayPays').innerText = pays ? pays.toUpperCase() : 'Non configuré';
             document.getElementById('displayDirectionDepartementale').innerText = directionDepartementale ? directionDepartementale.toUpperCase() : 'Non configuré';
@@ -1426,6 +1503,10 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
                 'pct_cycle', 'cycle',
                 'pct_duree', 'duree',
                 'pct_coefficient', 'pct_coef', 'coef',
+                // Nouvelles clés individuelles pour les compétences cochées
+                'pct_cd1', 'pct_cd2', 'pct_cd3',
+                'pct_ctv1', 'pct_ctv2', 'pct_ctv3', 'pct_ctv4',
+                // Anciennes clés (fallback)
                 'pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc',
                 'pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans'
             ];
