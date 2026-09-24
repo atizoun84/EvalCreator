@@ -112,6 +112,12 @@
     font-size: 0.95rem; margin-bottom: 12px;
   }
   .login-input:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(29,91,140,0.15); }
+  .login-input:read-only {
+    background: #f6f8fb;
+    color: #475569;
+    cursor: not-allowed;
+    font-weight: 600;
+  }
   .msg { text-align: center; margin-top: 10px; font-size: 0.88rem; font-weight: 500; min-height: 20px; }
   .msg.error { color: var(--danger); }
   .msg.success { color: var(--success); }
@@ -152,6 +158,34 @@
     background: linear-gradient(135deg, #1a73e8, #1557b0);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(66, 133, 244, 0.35);
+  }
+
+  /* ====== BOUTON COPIER LA CLÉ (nouveau) ====== */
+  .btn-copy-key {
+    background: linear-gradient(135deg, #c9a961, #e8c96e);
+    color: #4a3410;
+    border: 1px solid #b09250;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 4px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-copy-key:hover {
+    background: linear-gradient(135deg, #b09250, #d4b25a);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);
+    color: #2b1e08;
+  }
+  .btn-copy-key.copied {
+    background: linear-gradient(135deg, var(--success), #3a9973);
+    color: #fff;
+    border-color: var(--success);
   }
 
   /* ====== BOUTON RETOUR (vers index.html) ====== */
@@ -687,7 +721,7 @@
 <div id="loginSection" class="admin-card">
   <h2 class="admin-title"><i class="fas fa-lock text-warning me-2"></i>Admin GenPCT</h2>
   <p class="admin-sub">Connectez-vous avec votre compte administrateur Firebase.</p>
-  <input type="email" id="adminEmail" class="login-input" placeholder="Email administrateur">
+  <input type="email" id="adminEmail" class="login-input" placeholder="Email administrateur" value="leonardaholou@gmail.com" readonly>
   <input type="password" id="adminPass" class="login-input" placeholder="Mot de passe">
   <button class="btn-admin w-100" id="btnLogin">
     <i class="fas fa-sign-in-alt me-2"></i> Se connecter
@@ -1188,6 +1222,9 @@
 
                 const attribuerBtn = `<button class="btn-attrib" onclick="attribuerLicence('${k}')" title="Attribuer cette licence à un client"><i class="fas fa-paper-plane"></i> Attribuer</button>`;
 
+                // NOUVEAU : bouton Copier + marquer comme distribuée
+                const copyBtn = `<button class="btn-copy-key" onclick="copyAndMarkDistributed('${k}', this)" title="Copier la clé et la marquer comme distribuée"><i class="fas fa-copy"></i> Copier</button>`;
+
                 // Case à cocher pour marquer la distribution
                 // - Si déjà distribuée, on l'affiche cochée
                 // - Le décochage demande le code 1984
@@ -1211,6 +1248,7 @@
                             ${isUsed && info.email ? `<span class="text-muted small ms-2">— ${info.email}</span>` : ''}
                         </div>
                         <div>
+                            ${copyBtn}
                             ${attribuerBtn}
                             ${releaseBtn}
                             <button class="btn-danger-soft" onclick="deleteKey('${k}')" title="Supprimer"><i class="fas fa-trash"></i></button>
@@ -1220,6 +1258,49 @@
 
         } catch (err) {
             container.innerHTML = `<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle me-2"></i>Erreur : ${err.message}</div>`;
+        }
+    }
+
+    // ============================================================
+    // NOUVEAU : COPIER LA CLÉ + COCHER AUTOMATIQUEMENT LA CASE
+    // ============================================================
+    async function copyAndMarkDistributed(key, btnElement) {
+        // 1) Copier la clé dans le presse-papier
+        try {
+            await navigator.clipboard.writeText(key);
+        } catch (e) {
+            // Fallback : ancien procédé pour les navigateurs sans clipboard API
+            const ta = document.createElement('textarea');
+            ta.value = key;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch(_) {}
+            document.body.removeChild(ta);
+        }
+
+        // 2) Feedback visuel sur le bouton
+        if (btnElement) {
+            const originalHTML = btnElement.innerHTML;
+            btnElement.classList.add('copied');
+            btnElement.innerHTML = '<i class="fas fa-check"></i> Copié';
+            setTimeout(() => {
+                btnElement.classList.remove('copied');
+                btnElement.innerHTML = originalHTML;
+            }, 1800);
+        }
+
+        // 3) Cocher automatiquement la case "distribuée" de la même ligne
+        //    On déclenche un click() simulé pour passer par la logique existante
+        //    de toggleDistributed(), ce qui enregistre dans Firebase.
+        const row = btnElement ? btnElement.closest('.key-row') : null;
+        if (row) {
+            const checkbox = row.querySelector('.distributed-check');
+            if (checkbox && !checkbox.checked) {
+                // .click() simulé déclenche l'événement 'change' → toggleDistributed
+                checkbox.click();
+            }
         }
     }
 
@@ -1714,6 +1795,7 @@ Bonne préparation d'épreuves ! 🎓
     window.releaseDevice = releaseDevice;
     window.deleteKey = deleteKey;
     window.toggleDistributed = toggleDistributed;
+    window.copyAndMarkDistributed = copyAndMarkDistributed;
     window.attribuerLicence = attribuerLicence;
     window.fermerModalAttrib = fermerModalAttrib;
     window.envoyerEmailClient = envoyerEmailClient;
