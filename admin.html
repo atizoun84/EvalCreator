@@ -154,34 +154,6 @@
     box-shadow: 0 4px 12px rgba(66, 133, 244, 0.35);
   }
 
-  /* ====== BOUTON COPIER LA CLÉ (nouveau) ====== */
-  .btn-copy-key {
-    background: linear-gradient(135deg, #c9a961, #e8c96e);
-    color: #4a3410;
-    border: 1px solid #b09250;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-weight: 600;
-    margin-right: 4px;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .btn-copy-key:hover {
-    background: linear-gradient(135deg, #b09250, #d4b25a);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);
-    color: #2b1e08;
-  }
-  .btn-copy-key.copied {
-    background: linear-gradient(135deg, var(--success), #3a9973);
-    color: #fff;
-    border-color: var(--success);
-  }
-
   /* ====== BOUTON RETOUR (vers index.html) ====== */
   .btn-back-generator {
     display: inline-flex;
@@ -758,3 +730,1000 @@
   <!-- Générateur -->
   <div class="card mb-4" style="border: 1px solid rgba(201,169,97,0.4);">
     <div class="card-header bg-light fw-bold"><i class="fas fa-magic text-warning me-2"></i>Générer de nouvelles clés</div>
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Nombre de clés</label>
+          <input type="number" id="nbKeys" class="form-control" value="10" min="1" max="500">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Année</label>
+          <input type="text" id="yearKeys" class="form-control" value="2026" maxlength="4">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold">Prix unitaire (FCFA)</label>
+          <input type="number" id="pricePerKey" class="form-control" value="5000" min="0">
+        </div>
+        <div class="col-md-3">
+          <button class="btn-success-soft w-100" id="btnGenerate" onclick="generateAndPublish()">
+            <i class="fas fa-bolt me-1"></i> Générer et publier
+          </button>
+        </div>
+      </div>
+      <div id="genMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- Liste des clés -->
+  <div class="card">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <span class="fw-bold"><i class="fas fa-key text-warning me-2"></i>Clés existantes</span>
+      <div>
+        <a href="https://docs.google.com/spreadsheets/d/1JekEQT3crTm7_BLQ06ieHpiGZyzo4cdaGhM5nmKDfBE/copy" target="_blank" class="btn-danger-soft" style="background: linear-gradient(135deg, #4285F4, #1a73e8); color: #fff; border-color: #4285F4; text-decoration: none;"><i class="fas fa-file-excel"></i> Nouveau fichier suivi</a>
+        <button class="btn-danger-soft" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+        <button class="btn-danger-soft" onclick="copyAllAvailable()"><i class="fas fa-copy"></i> Copier dispo</button>
+        <button class="btn-danger-soft" onclick="loadKeys()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+      </div>
+    </div>
+    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+      <div id="keysList"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     MODAL ATTRIBUER LICENCE
+     ============================================================ -->
+<div id="attribModal" style="display:none;">
+  <div class="attrib-modal-card">
+    <div class="attrib-modal-header">
+      <h3><i class="fas fa-paper-plane"></i> Attribuer la licence</h3>
+      <button class="attrib-modal-close" onclick="fermerModalAttrib()" title="Fermer">&times;</button>
+    </div>
+    <div class="attrib-modal-body">
+
+      <div class="attrib-row">
+        <div class="attrib-field">
+          <label><i class="fas fa-user me-1"></i> Nom du client</label>
+          <input type="text" id="attribNom" placeholder="Ex : M. Dupont" autocomplete="off">
+        </div>
+        <div class="attrib-field">
+          <label><i class="fas fa-envelope me-1"></i> Email du client</label>
+          <input type="email" id="attribEmail" placeholder="client@exemple.com" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="attrib-row">
+        <div class="attrib-field">
+          <label><i class="fas fa-phone me-1"></i> WhatsApp du client (indicatif inclus)</label>
+          <!-- CHAMP TÉLÉPHONE AVEC BOUTON CONTACTS -->
+          <div class="phone-input-group">
+            <input type="tel" id="attribWhatsApp" placeholder="Ex : +22997000000" autocomplete="off" inputmode="tel">
+            <button type="button" class="btn-pick-contact" id="btnPickContact" title="Choisir un contact de mon répertoire" onclick="ouvrirRepertoireContacts()">
+              <i class="fas fa-address-book"></i>
+            </button>
+          </div>
+          <!-- Input caché pour le sélecteur natif de contacts -->
+          <input type="file" id="contactPickerInput" accept="text/vcard,text/x-vcard,text/directory,.vcf,text/csv,.csv" style="display:none;" onchange="traiterContactSelectionne(event)">
+          <div class="attrib-hint">Cliquez sur l'icône 📖 pour choisir un contact depuis votre répertoire (ou saisissez manuellement).</div>
+        </div>
+        <div class="attrib-field">
+          <label><i class="fas fa-key me-1"></i> Clé de licence</label>
+          <input type="text" id="attribKey" readonly>
+        </div>
+      </div>
+
+      <div class="attrib-field full" style="margin-top: 4px;">
+        <label><i class="fas fa-file-lines me-1"></i> Aperçu du message</label>
+        <textarea id="attribMessage" readonly></textarea>
+        <div class="attrib-hint">Le message se met à jour automatiquement quand vous changez le nom. Modifiable dans Gmail ou WhatsApp après envoi.</div>
+      </div>
+
+    </div>
+    <div class="attrib-modal-footer">
+      <button class="btn-attrib-close" onclick="fermerModalAttrib()">
+        <i class="fas fa-times me-1"></i> Fermer
+      </button>
+      <div class="attrib-footer-right">
+        <button class="btn-attrib-wa" id="btnAttribWa" onclick="envoyerWhatsAppClient()">
+          <i class="fab fa-whatsapp"></i> Envoyer par WhatsApp
+        </button>
+        <button class="btn-attrib-send" id="btnAttribSend" onclick="envoyerEmailClient()">
+          <i class="fab fa-google"></i> Envoyer par Email (Gmail)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL UTILISATEURS CONNECTÉS
+     ============================================================ -->
+<div id="usersModal" style="display:none;">
+  <div class="users-modal-card">
+    <div class="users-modal-header">
+      <h3><i class="fas fa-users"></i> Utilisateurs connectés</h3>
+      <button class="attrib-modal-close" onclick="closeUsersModal()" title="Fermer">&times;</button>
+    </div>
+    <div class="users-modal-body">
+      <div class="users-summary">
+        <span class="summary-label"><i class="fas fa-signal me-1"></i> En temps réel</span>
+        <span class="summary-num" id="usersModalCount">0</span>
+      </div>
+      <div id="usersList"></div>
+    </div>
+    <div class="users-modal-footer">
+      <button class="btn-users-close" onclick="closeUsersModal()">
+        <i class="fas fa-times"></i> Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FIREBASE SDK — avec defer pour garantir l'ordre de chargement
+     ============================================================ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// INITIALISATION DIFFÉRÉE — On attend que le DOM soit prêt
+// et que les SDK Firebase soient bien chargés.
+// ============================================================
+(function() {
+    'use strict';
+
+    // ============================================================
+    // CONFIGURATION FIREBASE
+    // ============================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyDguZC4dAMIbKS00zkIJjqT8KpuARiTsyM",
+        authDomain: "genpct-licence.firebaseapp.com",
+        databaseURL: "https://genpct-licence-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "genpct-licence",
+        storageBucket: "genpct-licence.firebasestorage.app",
+        messagingSenderId: "796594204374",
+        appId: "1:796594204374:web:cbbe360b00a0d187242377"
+    };
+
+    // ⚠️ TON EMAIL ADMINISTRATEUR
+    const ADMIN_EMAIL = "leonardaholou@gmail.com";
+
+    // ⚠️ CODE DE SÉCURITÉ POUR LA SUPPRESSION ET LE DÉCOCHAGE
+    const DELETE_SECURITY_CODE = "1984";
+
+    // ============================================================
+    // PARAMÈTRES DU MESSAGE CLIENT (modifiable ici facilement)
+    // ============================================================
+    const APP_URL = '[votre-domaine-ou-lien]/index.html';
+    const WHATSAPP_NUM = '[votre numéro WhatsApp]';
+    const CONTACT_EMAIL = 'atizoun@gmail.com';
+
+    // Vérifier que Firebase est bien chargé
+    if (typeof firebase === 'undefined' || !firebase.initializeApp) {
+        console.error('Firebase SDK non chargé. Vérifiez les balises <script>.');
+        return;
+    }
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Variable globale pour stocker la liste des utilisateurs connectés (pour la modal)
+    window._presenceList = {};
+
+    // Cache local des clés distribuées (pour éviter un aller-retour Firebase à chaque rendu)
+    let cachedDistributed = {};
+
+    // ============================================================
+    // LOGIN
+    // ============================================================
+    document.getElementById('btnLogin').onclick = async () => {
+        const email = document.getElementById('adminEmail').value.trim();
+        const pass = document.getElementById('adminPass').value;
+        const msg = document.getElementById('loginMsg');
+        msg.className = 'msg info'; msg.textContent = 'Connexion...';
+
+        try {
+            const cred = await auth.signInWithEmailAndPassword(email, pass);
+            if (cred.user.email !== ADMIN_EMAIL) {
+                await auth.signOut();
+                msg.className = 'msg error';
+                msg.textContent = '❌ Accès refusé. Ce compte n\'est pas administrateur.';
+                return;
+            }
+        } catch (err) {
+            msg.className = 'msg error';
+            msg.textContent = '❌ ' + (err.message || 'Erreur de connexion');
+        }
+    };
+
+    auth.onAuthStateChanged((user) => {
+        const loginSec = document.getElementById('loginSection');
+        const dash = document.getElementById('dashboard');
+        if (user && user.email === ADMIN_EMAIL) {
+            loginSec.classList.add('hidden');
+            dash.classList.remove('hidden');
+            document.getElementById('adminEmailLabel').textContent = user.email;
+            // Activer la présence temps réel pour l'admin connecté
+            setupAdminPresence(user);
+            // Écouter la liste des utilisateurs connectés
+            listenPresence();
+            loadKeys();
+        } else {
+            loginSec.classList.remove('hidden');
+            dash.classList.add('hidden');
+        }
+    });
+
+    async function logout() {
+        try {
+            const u = auth.currentUser;
+            if (u) await db.ref('presence/' + u.uid).remove();
+        } catch(e) {}
+        if (confirm('Se déconnecter ?')) { await auth.signOut(); location.reload(); }
+    }
+
+    // ============================================================
+    // PRÉSENCE — Enregistrement de l'admin connecté
+    // ============================================================
+    function setupAdminPresence(user) {
+        if (!user) return;
+        const uid = user.uid;
+        const email = user.email;
+        const presenceRef = db.ref('presence/' + uid);
+        const connectedRef = db.ref('.info/connected');
+
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                presenceRef.onDisconnect().remove();
+                presenceRef.set({
+                    email: email,
+                    connectedAt: firebase.database.ServerValue.TIMESTAMP
+                }).catch(() => {});
+            }
+        });
+    }
+
+    // ============================================================
+    // PRÉSENCE — Écoute de tous les utilisateurs connectés
+    // ============================================================
+    function listenPresence() {
+        const presenceRef = db.ref('presence');
+        presenceRef.on('value', (snap) => {
+            const data = snap.val() || {};
+            const count = Object.keys(data).length;
+            const badge = document.getElementById('usersCount');
+            if (badge) badge.textContent = count;
+            window._presenceList = data;
+            const modalCount = document.getElementById('usersModalCount');
+            if (modalCount) modalCount.textContent = count;
+        });
+    }
+
+    // ============================================================
+    // MODAL UTILISATEURS CONNECTÉS
+    // ============================================================
+    function openUsersModal() {
+        const data = window._presenceList || {};
+        const entries = Object.entries(data);
+        const container = document.getElementById('usersList');
+        const countEl = document.getElementById('usersModalCount');
+
+        countEl.textContent = entries.length;
+
+        if (entries.length === 0) {
+            container.innerHTML = `
+                <div class="users-empty">
+                    <i class="fas fa-user-slash"></i>
+                    Aucun utilisateur connecté actuellement.
+                </div>`;
+        } else {
+            entries.sort((a, b) => {
+                const ta = a[1] && a[1].connectedAt ? a[1].connectedAt : 0;
+                const tb = b[1] && b[1].connectedAt ? b[1].connectedAt : 0;
+                return tb - ta;
+            });
+
+            container.innerHTML = entries.map(([uid, info]) => {
+                const email = (info && info.email) ? info.email : uid;
+                const dateStr = (info && info.connectedAt)
+                    ? new Date(info.connectedAt).toLocaleString('fr-FR', {
+                        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+                    })
+                    : '—';
+                return `
+                    <div class="user-row">
+                        <div class="user-email">
+                            <i class="fas fa-circle" style="color:#22c55e; font-size:0.5rem; margin-right:9px;"></i>
+                            ${email}
+                        </div>
+                        <div class="user-time"><i class="far fa-clock me-1"></i>${dateStr}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        document.getElementById('usersModal').style.display = 'flex';
+    }
+
+    function closeUsersModal() {
+        document.getElementById('usersModal').style.display = 'none';
+    }
+
+    document.getElementById('usersModal').addEventListener('click', function(e) {
+        if (e.target === this) closeUsersModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const m = document.getElementById('usersModal');
+            if (m && m.style.display === 'flex') closeUsersModal();
+        }
+    });
+
+    // ============================================================
+    // GÉNÉRATION DE CLÉS
+    // ============================================================
+    function randomSegment() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let s = '';
+        for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+        return s;
+    }
+
+    async function generateAndPublish() {
+        const nb = parseInt(document.getElementById('nbKeys').value) || 10;
+        const year = document.getElementById('yearKeys').value || '2026';
+        const msg = document.getElementById('genMsg');
+
+        if (nb < 1 || nb > 500) {
+            msg.className = 'msg error'; msg.textContent = 'Nombre entre 1 et 500.';
+            return;
+        }
+
+        msg.className = 'msg info';
+        msg.textContent = 'Génération de ' + nb + ' clés...';
+
+        try {
+            const existingSnap = await db.ref('valid_keys').once('value');
+            const existing = existingSnap.val() || {};
+
+            const updates = {};
+            let generated = 0;
+            let attempts = 0;
+
+            while (generated < nb && attempts < nb * 10) {
+                attempts++;
+                const key = `PCT-${year}-${randomSegment()}-${randomSegment()}`;
+                if (!existing[key] && !updates['valid_keys/' + key]) {
+                    updates['valid_keys/' + key] = true;
+                    generated++;
+                }
+            }
+
+            if (generated === 0) {
+                msg.className = 'msg error';
+                msg.textContent = '❌ Impossible de générer de nouvelles clés.';
+                return;
+            }
+
+            msg.textContent = 'Publication dans Firebase...';
+            await db.ref().update(updates);
+
+            msg.className = 'msg success';
+            msg.textContent = `✅ ${generated} clé(s) générée(s) et publiée(s).`;
+            loadKeys();
+        } catch (err) {
+            msg.className = 'msg error';
+            msg.textContent = '❌ ' + (err.message || 'Erreur');
+        }
+    }
+
+    // ============================================================
+    // CHARGEMENT ET AFFICHAGE DES CLÉS
+    // ============================================================
+    let cachedKeys = [];
+    let cachedUsed = {};
+
+    async function loadKeys() {
+        const container = document.getElementById('keysList');
+        container.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin me-2"></i>Chargement...</div>';
+
+        try {
+            const [keysSnap, licensesSnap, distributedSnap] = await Promise.all([
+                db.ref('valid_keys').once('value'),
+                db.ref('licenses').once('value'),
+                db.ref('distributed_keys').once('value')
+            ]);
+
+            const keys = keysSnap.val() || {};
+            const licenses = licensesSnap.val() || {};
+            const distributed = distributedSnap.val() || {};
+
+            cachedDistributed = distributed;
+
+            const usedKeys = {};
+            Object.entries(licenses).forEach(([uid, lic]) => {
+                if (lic && lic.licenseKey) {
+                    usedKeys[lic.licenseKey] = {
+                        email: lic.email || '—',
+                        activatedAt: lic.activatedAt || null,
+                        uid: uid
+                    };
+                }
+            });
+
+            cachedKeys = Object.keys(keys).sort();
+            cachedUsed = usedKeys;
+
+            const total = cachedKeys.length;
+            const used = cachedKeys.filter(k => usedKeys[k]).length;
+            const available = total - used;
+            const price = parseInt(document.getElementById('pricePerKey').value) || 0;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statAvailable').textContent = available;
+            document.getElementById('statUsed').textContent = used;
+            document.getElementById('statRevenue').textContent = (used * price).toLocaleString('fr-FR');
+
+            if (total === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-info-circle me-2"></i>Aucune clé.</div>';
+                return;
+            }
+
+            container.innerHTML = cachedKeys.map((k, index) => {
+                const isUsed = !!usedKeys[k];
+                const isDistributed = !!distributed[k];
+                const info = isUsed ? usedKeys[k] : null;
+                const dateStr = info && info.activatedAt ? new Date(info.activatedAt).toLocaleDateString('fr-FR') : '';
+                const uid = info && info.uid ? info.uid : '';
+                const numero = String(index + 1).padStart(3, '0');
+
+                const releaseBtn = isUsed && uid
+                    ? `<button class="btn-release me-1" onclick="releaseDevice('${uid}', '${k}')" title="Libérer l'appareil"><i class="fas fa-exchange-alt"></i> Libérer</button>`
+                    : '';
+
+                const attribuerBtn = `<button class="btn-attrib" onclick="attribuerLicence('${k}')" title="Attribuer cette licence à un client"><i class="fas fa-paper-plane"></i> Attribuer</button>`;
+
+                // Case à cocher pour marquer la distribution
+                // - Si déjà distribuée, on l'affiche cochée
+                // - Le décochage demande le code 1984
+                const rowClasses = [];
+                if (isUsed) rowClasses.push('used');
+                if (isDistributed && !isUsed) rowClasses.push('distributed');
+
+                // Badge distribué (visible uniquement si distribué ET non activé)
+                const distributedBadge = (isDistributed && !isUsed)
+                    ? `<span class="badge-status badge-distributed ms-2">Distribuée</span>`
+                    : '';
+
+                return `
+                    <div class="key-row ${rowClasses.join(' ')}" data-key="${k}">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <input type="checkbox" class="distributed-check" ${isDistributed ? 'checked' : ''} title="Marquer cette licence comme distribuée" onchange="toggleDistributed('${k}', this)">
+                            <span class="key-index">N° ${numero}</span>
+                            <span class="key-code">${k}</span>
+                            ${isUsed ? `<span class="badge-status badge-used ms-2">Activée ${dateStr}</span>` : (isDistributed ? '' : '<span class="badge-status badge-avail ms-2">Disponible</span>')}
+                            ${distributedBadge}
+                            ${isUsed && info.email ? `<span class="text-muted small ms-2">— ${info.email}</span>` : ''}
+                        </div>
+                        <div>
+                            ${attribuerBtn}
+                            ${releaseBtn}
+                            <button class="btn-danger-soft" onclick="deleteKey('${k}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            }).join('');
+
+        } catch (err) {
+            container.innerHTML = `<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle me-2"></i>Erreur : ${err.message}</div>`;
+        }
+    }
+
+    // ============================================================
+    // MARQUER / DÉMARQUER UNE CLÉ COMME DISTRIBUÉE
+    // - Le cochage est libre (marque simplement la distribution)
+    // - Le décochage exige le code de sécurité 1984
+    // ============================================================
+    async function toggleDistributed(key, checkboxElement) {
+        const wasChecked = !!cachedDistributed[key];
+
+        if (!wasChecked) {
+            // === COCHAGE : on enregistre directement ===
+            try {
+                checkboxElement.disabled = true;
+                await db.ref('distributed_keys/' + key).set({
+                    markedAt: firebase.database.ServerValue.TIMESTAMP
+                });
+                cachedDistributed[key] = true;
+                // Mise à jour locale (sans recharger tout le tableau)
+                const row = checkboxElement.closest('.key-row');
+                if (row) {
+                    row.classList.add('distributed');
+                    // Retirer le badge "Disponible" et ajouter "Distribuée"
+                    const availBadge = row.querySelector('.badge-avail');
+                    if (availBadge) {
+                        availBadge.className = 'badge-status badge-distributed ms-2';
+                        availBadge.textContent = 'Distribuée';
+                    } else {
+                        // Si pas de badge, en ajouter un après le key-code
+                        const keyCode = row.querySelector('.key-code');
+                        if (keyCode && !row.querySelector('.badge-distributed')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge-status badge-distributed ms-2';
+                            badge.textContent = 'Distribuée';
+                            keyCode.insertAdjacentElement('afterend', badge);
+                        }
+                    }
+                }
+            } catch (err) {
+                checkboxElement.checked = false;
+                alert('❌ Erreur lors du marquage : ' + err.message);
+            } finally {
+                checkboxElement.disabled = false;
+            }
+            return;
+        }
+
+        // === DÉCOCHAGE : on demande le code de sécurité ===
+        const code = prompt(
+            `🔒 CONFIRMATION DE SÉCURITÉ\n\n` +
+            `Vous êtes sur le point de démarquer la clé suivante comme NON distribuée :\n\n` +
+            `${key}\n\n` +
+            `Veuillez saisir le code de sécurité administrateur pour continuer :`
+        );
+
+        if (code === null) {
+            // Annulé → on remet la case cochée visuellement
+            checkboxElement.checked = true;
+            return;
+        }
+
+        if (code !== DELETE_SECURITY_CODE) {
+            alert('❌ Code de sécurité incorrect.\n\nAction annulée.');
+            checkboxElement.checked = true;
+            return;
+        }
+
+        try {
+            checkboxElement.disabled = true;
+            await db.ref('distributed_keys/' + key).remove();
+            delete cachedDistributed[key];
+            // Mise à jour locale
+            const row = checkboxElement.closest('.key-row');
+            if (row) {
+                row.classList.remove('distributed');
+                // Retirer le badge "Distribuée" et remettre "Disponible" si non utilisée
+                const distBadge = row.querySelector('.badge-distributed');
+                if (distBadge) {
+                    // Vérifier si la licence est utilisée (présence d'un badge-used)
+                    const usedBadge = row.querySelector('.badge-used');
+                    if (usedBadge) {
+                        distBadge.remove();
+                    } else {
+                        distBadge.className = 'badge-status badge-avail ms-2';
+                        distBadge.textContent = 'Disponible';
+                    }
+                }
+            }
+        } catch (err) {
+            checkboxElement.checked = true;
+            alert('❌ Erreur lors du décochage : ' + err.message);
+        } finally {
+            checkboxElement.disabled = false;
+        }
+    }
+
+    // ============================================================
+    // LIBÉRER UN APPAREIL (TRANSFERT)
+    // ============================================================
+    async function releaseDevice(uid, key) {
+        const confirmation = prompt(
+            `⚠️ Libérer l'appareil lié à la clé :\n\n${key}\n\n` +
+            `Cela permettra au client de se reconnecter sur un NOUVEL appareil.\n\n` +
+            `Pour confirmer, tapez exactement : LIBERER`
+        );
+
+        if (confirmation !== 'LIBERER') {
+            alert('Annulé. Aucune modification.');
+            return;
+        }
+
+        try {
+            await db.ref('licenses/' + uid + '/hardwareId').remove();
+            await db.ref('licenses/' + uid + '/releasedAt').set(firebase.database.ServerValue.TIMESTAMP);
+            alert('✅ Appareil libéré. Le client peut maintenant activer sur son nouvel appareil.');
+            loadKeys();
+        } catch (err) {
+            alert('❌ Erreur : ' + err.message);
+        }
+    }
+
+    // ============================================================
+    // SUPPRIMER UNE CLÉ (sécurisé par code 1984)
+    // ============================================================
+    async function deleteKey(key) {
+        const code = prompt(
+            `🔒 CONFIRMATION DE SÉCURITÉ\n\n` +
+            `Vous êtes sur le point de supprimer définitivement la clé :\n\n` +
+            `${key}\n\n` +
+            `Veuillez saisir le code de sécurité administrateur pour continuer :`
+        );
+
+        if (code === null) return;
+
+        if (code !== DELETE_SECURITY_CODE) {
+            alert('❌ Code de sécurité incorrect.\n\nSuppression annulée.');
+            return;
+        }
+
+        if (!confirm(
+            `⚠️ DERNIÈRE CONFIRMATION\n\n` +
+            `Supprimer DÉFINITIVEMENT la clé :\n\n` +
+            `${key}\n\n` +
+            `Cette action est IRRÉVERSIBLE.\n\n` +
+            `Si cette clé a été activée, l'utilisateur ne pourra plus se reconnecter.\n\n` +
+            `Confirmer la suppression ?`
+        )) return;
+
+        try {
+            // Supprimer la clé et son marquage "distribuée"
+            const updates = {};
+            updates['valid_keys/' + key] = null;
+            updates['distributed_keys/' + key] = null;
+            await db.ref().update(updates);
+            delete cachedDistributed[key];
+            alert('✅ Clé supprimée avec succès.');
+            loadKeys();
+        } catch (err) {
+            alert('❌ Erreur lors de la suppression : ' + err.message);
+        }
+    }
+
+    // ============================================================
+    // MODAL ATTRIBUER LICENCE
+    // ============================================================
+    let currentAttribKey = '';
+
+    function construireMessageEmail(cle, nomClient) {
+        const nom = nomClient && nomClient.trim() ? nomClient.trim() : '[Nom du client]';
+        return `Bonjour ${nom},
+
+Merci pour votre achat de GenPCT — le générateur d'épreuves PCT conforme à l'APC béninoise.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 VOTRE CLÉ DE LICENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ${cle}
+
+⚠️ Conservez cette clé précieusement. Elle est unique et liée à votre appareil.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 COMMENT OUVRIR L'APPLICATION ET CRÉER VOTRE COMPTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pour ouvrir l'application et créer votre compte avec cette licence,
+veuillez consulter les ressources et instructions détaillées
+fournies dans le pack GenPCT que vous avez acheté.
+
+Vous y trouverez le lien d'accès à l'application ainsi que toutes
+les étapes d'installation et d'activation pas à pas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ INFORMATIONS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Votre licence est liée à VOTRE appareil. Elle ne peut pas être utilisée sur plusieurs appareils simultanément.
+
+• Si vous changez de téléphone, contactez-moi : je peux transférer votre licence gratuitement (limité à 2 transferts par an).
+
+• Conservez bien votre email + mot de passe : ils vous seront demandés à chaque connexion.
+
+• Notez quelque part votre clé de licence en cas de perte.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 BESOIN D'AIDE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Répondez simplement à cet email ou contactez-moi :
+📧 ${CONTACT_EMAIL}
+📱 WhatsApp : ${WHATSAPP_NUM}
+
+Je vous réponds généralement dans les 24 heures.
+
+Bon usage et bonne préparation d'épreuves !
+
+Cordialement,
+AMOUSSOU Atizoun Plateny
+Concepteur de GenPCT`;
+    }
+
+    function construireMessageWhatsApp(cle, nomClient) {
+        const nom = nomClient && nomClient.trim() ? nomClient.trim() : '[Nom]';
+        return `Bonjour ${nom} 👋
+
+Merci pour votre achat de GenPCT ! Voici votre licence :
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔑 *VOTRE CLÉ :*
+${cle}
+━━━━━━━━━━━━━━━━━━━━━━
+
+📱 *Comment ouvrir et créer votre compte :*
+Pour ouvrir l'application et créer votre compte avec cette licence,
+veuillez consulter les ressources et instructions détaillées
+fournies dans le pack GenPCT que vous avez acheté 📦
+
+Vous y trouverez le lien d'accès à l'application ainsi que toutes
+les étapes d'installation et d'activation pas à pas.
+
+⚠️ Votre licence est liée à votre appareil. En cas de changement de téléphone, contactez-moi pour un transfert gratuit.
+
+Besoin d'aide ? Répondez à ce message 📞
+
+Bonne préparation d'épreuves ! 🎓
+— AMOUSSOU Atizoun Plateny`;
+    }
+
+    function actualiserApercu() {
+        const nomClient = document.getElementById('attribNom').value;
+        const cle = document.getElementById('attribKey').value;
+        document.getElementById('attribMessage').value = construireMessageEmail(cle, nomClient);
+    }
+
+    function attribuerLicence(key) {
+        currentAttribKey = key;
+        document.getElementById('attribKey').value = key;
+        document.getElementById('attribNom').value = '';
+        document.getElementById('attribEmail').value = '';
+        document.getElementById('attribWhatsApp').value = '';
+        document.getElementById('attribMessage').value = construireMessageEmail(key, '');
+        document.getElementById('attribModal').style.display = 'flex';
+        setTimeout(() => document.getElementById('attribNom').focus(), 100);
+    }
+
+    function fermerModalAttrib() {
+        document.getElementById('attribModal').style.display = 'none';
+        currentAttribKey = '';
+    }
+
+    // ============================================================
+    // SÉLECTION D'UN CONTACT DEPUIS LE RÉPERTOIRE
+    // ============================================================
+    async function ouvrirRepertoireContacts() {
+        // 1) API Contact Picker (Chrome Android 80+, Edge)
+        if ('contacts' in navigator && 'select' in navigator.contacts) {
+            try {
+                const props = ['name', 'tel'];
+                const contacts = await navigator.contacts.select(props, { multiple: false });
+                if (!contacts || contacts.length === 0) return;
+
+                const contact = contacts[0];
+                const nom = (contact.name && contact.name[0]) ? contact.name[0] : '';
+                let tel = '';
+                if (contact.tel && contact.tel.length > 0) {
+                    tel = contact.tel[0];
+                }
+
+                if (nom) {
+                    const nomInput = document.getElementById('attribNom');
+                    if (!nomInput.value) nomInput.value = nom;
+                }
+                if (tel) {
+                    let telClean = tel.replace(/[\s\-\(\)\.]/g, '');
+                    if (!telClean.startsWith('+') && telClean.length > 8) {
+                        telClean = '+' + telClean;
+                    }
+                    document.getElementById('attribWhatsApp').value = telClean;
+                }
+
+                actualiserApercu();
+                return;
+            } catch (err) {
+                if (err && err.name === 'AbortError') return;
+                console.warn('Contact Picker indisponible :', err);
+            }
+        }
+
+        // 2) Fallback : sélecteur de fichier .vcf ou .csv
+        const fileInput = document.getElementById('contactPickerInput');
+        if (fileInput) {
+            fileInput.value = '';
+            fileInput.click();
+        } else {
+            alert('Pour choisir un contact, ouvrez-le depuis votre application Contacts, copiez le numéro, puis collez-le dans le champ. Sur Android Chrome, ce bouton ouvrira directement votre répertoire.');
+        }
+    }
+
+    // Traitement d'un fichier .vcf / .csv importé manuellement
+    function traiterContactSelectionne(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const contenu = e.target.result || '';
+
+            const telMatch = contenu.match(/(?:TEL[^:]*:|tel:|\+)?([0-9\+\-\(\)\.\s]{8,20})/i);
+            let telTrouve = '';
+            if (telMatch) {
+                telTrouve = telMatch[0].replace(/[\s\-\(\)\.]/g, '').replace(/^TEL/i, '').replace(/:/g, '');
+            }
+
+            const nomMatch = contenu.match(/^FN[^:]*:(.+)$/mi);
+            let nomTrouve = '';
+            if (nomMatch) {
+                nomTrouve = nomMatch[1].trim();
+            }
+
+            if (nomTrouve) {
+                const nomInput = document.getElementById('attribNom');
+                if (!nomInput.value) nomInput.value = nomTrouve;
+            }
+            if (telTrouve) {
+                if (!telTrouve.startsWith('+') && telTrouve.length > 8) {
+                    telTrouve = '+' + telTrouve;
+                }
+                document.getElementById('attribWhatsApp').value = telTrouve;
+            } else {
+                alert('Aucun numéro de téléphone détecté dans le fichier sélectionné. Veuillez saisir le numéro manuellement.');
+            }
+
+            actualiserApercu();
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    async function envoyerEmailClient() {
+        const email = document.getElementById('attribEmail').value.trim();
+        const nomClient = document.getElementById('attribNom').value.trim();
+
+        if (!email) {
+            alert('⚠️ Veuillez saisir l\'email du client destinataire.');
+            document.getElementById('attribEmail').focus();
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert('⚠️ L\'adresse email semble invalide. Vérifiez la saisie.');
+            document.getElementById('attribEmail').focus();
+            return;
+        }
+
+        const subject = '🎉 Votre licence GenPCT est prête';
+        const body = construireMessageEmail(currentAttribKey, nomClient);
+
+        try {
+            await navigator.clipboard.writeText(body);
+        } catch(e) {
+            const ta = document.createElement('textarea');
+            ta.value = body;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch(_) {}
+            document.body.removeChild(ta);
+        }
+
+        const gmailUrl =
+            'https://mail.google.com/mail/?view=cm&fs=1' +
+            '&to=' + encodeURIComponent(email) +
+            '&su=' + encodeURIComponent(subject) +
+            '&body=' + encodeURIComponent(body);
+
+        window.open(gmailUrl, '_blank');
+
+        const btn = document.getElementById('btnAttribSend');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copié & Gmail ouvert';
+        btn.disabled = true;
+        setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 2500);
+    }
+
+    async function envoyerWhatsAppClient() {
+        const num = document.getElementById('attribWhatsApp').value.trim().replace(/[^0-9+]/g, '');
+        const nomClient = document.getElementById('attribNom').value.trim();
+
+        if (!num || num.length < 8) {
+            alert('⚠️ Veuillez saisir le numéro WhatsApp du client (avec indicatif, ex : +22997000000).');
+            document.getElementById('attribWhatsApp').focus();
+            return;
+        }
+
+        const body = construireMessageWhatsApp(currentAttribKey, nomClient);
+        const numClean = num.replace(/^\+/, '');
+
+        try { await navigator.clipboard.writeText(body); } catch(e) {}
+
+        const waUrl = 'https://wa.me/' + numClean + '?text=' + encodeURIComponent(body);
+        window.open(waUrl, '_blank');
+
+        const btn = document.getElementById('btnAttribWa');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> WhatsApp ouvert';
+        btn.disabled = true;
+        setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 2500);
+    }
+
+    // Écouteurs divers pour la modale attribuer
+    document.getElementById('attribNom').addEventListener('input', actualiserApercu);
+    document.getElementById('attribModal').addEventListener('click', function(e) {
+        if (e.target === this) fermerModalAttrib();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const m = document.getElementById('attribModal');
+            if (m && m.style.display === 'flex') fermerModalAttrib();
+        }
+    });
+    document.getElementById('attribEmail').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); envoyerEmailClient(); }
+    });
+    document.getElementById('attribWhatsApp').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); envoyerWhatsAppClient(); }
+    });
+
+    // ============================================================
+    // EXPORT ET UTILITAIRES
+    // ============================================================
+    function copyAllAvailable() {
+        const available = cachedKeys.filter(k => !cachedUsed[k]);
+        if (available.length === 0) { alert('Aucune clé disponible.'); return; }
+        navigator.clipboard.writeText(available.join('\n')).then(() => {
+            alert(`✅ ${available.length} clé(s) disponible(s) copiée(s).`);
+        });
+    }
+
+    function exportCSV() {
+        if (cachedKeys.length === 0) { alert('Aucune clé à exporter.'); return; }
+        const rows = [['N°', 'Clé', 'Distribuée', 'Statut', 'Email', 'Date activation']];
+        cachedKeys.forEach((k, index) => {
+            const used = cachedUsed[k];
+            const isDistributed = !!cachedDistributed[k];
+            rows.push([
+                String(index + 1).padStart(3, '0'),
+                k,
+                isDistributed ? 'Oui' : 'Non',
+                used ? 'Activée' : 'Disponible',
+                used ? (used.email || '') : '',
+                used && used.activatedAt ? new Date(used.activatedAt).toLocaleString('fr-FR') : ''
+            ]);
+        });
+        const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `genpct-cles-${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ============================================================
+    // EXPOSER LES FONCTIONS UTILISÉES PAR LES ONCLICK HTML
+    // ============================================================
+    window.logout = logout;
+    window.openUsersModal = openUsersModal;
+    window.closeUsersModal = closeUsersModal;
+    window.generateAndPublish = generateAndPublish;
+    window.loadKeys = loadKeys;
+    window.releaseDevice = releaseDevice;
+    window.deleteKey = deleteKey;
+    window.toggleDistributed = toggleDistributed;
+    window.attribuerLicence = attribuerLicence;
+    window.fermerModalAttrib = fermerModalAttrib;
+    window.envoyerEmailClient = envoyerEmailClient;
+    window.envoyerWhatsAppClient = envoyerWhatsAppClient;
+    window.copyAllAvailable = copyAllAvailable;
+    window.exportCSV = exportCSV;
+    window.ouvrirRepertoireContacts = ouvrirRepertoireContacts;
+    window.traiterContactSelectionne = traiterContactSelectionne;
+
+})();
+</script>
+</body>
+</html>
