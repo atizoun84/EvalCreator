@@ -1106,6 +1106,36 @@
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-school"></i> Établissement</label>
                                     <input type="text" class="form-control" id="etablissement" placeholder="Ex: CEG GAMIA">
+                                    <div class="form-check mt-1">
+                                        <input class="form-check-input" type="checkbox" id="hasLogoEtablissement">
+                                        <label class="form-check-label" for="hasLogoEtablissement">
+                                            <i class="fas fa-stamp"></i> L'établissement dispose d'un logo / timbre
+                                        </label>
+                                    </div>
+                                    <div id="logoConfig" style="display:none;" class="mt-1">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label" style="font-size:0.78rem;">Nom du fichier image</label>
+                                                <input type="text" class="form-control form-control-sm" id="logoFileName" value="logo.png" placeholder="logo.png">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label" style="font-size:0.78rem;">Taille du logo</label>
+                                                <select class="form-select form-select-sm" id="logoSize">
+                                                    <option value="small">Petit (1.5cm)</option>
+                                                    <option value="medium" selected>Moyen (2.5cm)</option>
+                                                    <option value="large">Grand (3.5cm)</option>
+                                                    <option value="custom">Personnalisée</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-1" id="logoCustomSizeRow" style="display:none;">
+                                            <div class="col-md-12">
+                                                <label class="form-label" style="font-size:0.78rem;">Dimensions personnalisées</label>
+                                                <input type="text" class="form-control form-control-sm" id="logoCustomSize" placeholder="Ex: 2cm, 0.2\textwidth">
+                                                <div class="cm-hint">Utilisez les unités LaTeX (cm, mm, \textwidth...)</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-calendar"></i> Année scolaire</label>
@@ -1225,6 +1255,12 @@
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
                                             <input type="number" class="form-control" id="nbQuestions1Chimie" value="3" min="1" max="8">
+                                            <div class="form-check form-switch mt-1">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1Chimie">
+                                                <label class="form-check-label" for="sousQuestions1Chimie" style="font-size:0.75rem;">
+                                                    <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                                </label>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label"><i class="fas fa-puzzle-piece"></i> Partie 2 – Résolution (Chimie)</label>
@@ -1233,6 +1269,12 @@
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
                                             <input type="number" class="form-control" id="nbQuestions2Chimie" value="3" min="1" max="8">
+                                            <div class="form-check form-switch mt-1">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2Chimie">
+                                                <label class="form-check-label" for="sousQuestions2Chimie" style="font-size:0.75rem;">
+                                                    <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="alert alert-info mt-2 small">
@@ -1288,6 +1330,12 @@
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
                                             <input type="number" class="form-control" id="nbQuestions1Physique" value="3" min="1" max="8">
+                                            <div class="form-check form-switch mt-1">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1Physique">
+                                                <label class="form-check-label" for="sousQuestions1Physique" style="font-size:0.75rem;">
+                                                    <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                                </label>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label"><i class="fas fa-puzzle-piece"></i> Partie 2 – Résolution (Physique)</label>
@@ -1296,6 +1344,12 @@
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
                                             <input type="number" class="form-control" id="nbQuestions2Physique" value="3" min="1" max="8">
+                                            <div class="form-check form-switch mt-1">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2Physique">
+                                                <label class="form-check-label" for="sousQuestions2Physique" style="font-size:0.75rem;">
+                                                    <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="alert alert-info mt-2 small">
@@ -1355,6 +1409,12 @@
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 1)</label>
                                         <input type="number" class="form-control" id="nbQuestions1" value="3" min="1" max="8">
+                                        <div class="form-check form-switch mt-1">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1">
+                                            <label class="form-check-label" for="sousQuestions1" style="font-size:0.78rem;">
+                                                <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="alert alert-info mt-2 small">
@@ -1369,6 +1429,12 @@
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 2)</label>
                                         <input type="number" class="form-control" id="nbQuestions2" value="3" min="1" max="8">
+                                        <div class="form-check form-switch mt-1">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2">
+                                            <label class="form-check-label" for="sousQuestions2" style="font-size:0.78rem;">
+                                                <i class="fas fa-list-ul"></i> Autoriser sous-questions (a, b, c)
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1594,6 +1660,7 @@
                             <li><i class="fas fa-check-circle text-success"></i> Document optimisé pour moins de pages, pas d'espace de réponse</li>
                             <li><i class="fas fa-check-circle text-success"></i> Option "PHYSIQUE CHIMIE ET TECHNOLOGIE" génère deux parties A et B</li>
                             <li><i class="fas fa-check-circle text-success"></i> Numérotation hiérarchique : 1-1, 1-2, 2-1, 2-2...</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Bouton poussoir "Sous-questions" pour autoriser 1-1-a, 1-1-b si nécessaire</li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Les questions de la Partie 1 (Mobilisation) doivent être utiles à la Partie 2 (Résolution)</strong></li>
                         </ul>
                     </div>
@@ -2383,6 +2450,26 @@
         document.getElementById('promptForm').addEventListener('input', sauvegarderDonnees);
 
         // ============================================================
+        // GESTION DU LOGO ÉTABLISSEMENT
+        // ============================================================
+        const hasLogoEtablissement = document.getElementById('hasLogoEtablissement');
+        const logoConfig = document.getElementById('logoConfig');
+        const logoSizeSelect = document.getElementById('logoSize');
+        const logoCustomSizeRow = document.getElementById('logoCustomSizeRow');
+
+        if (hasLogoEtablissement) {
+            hasLogoEtablissement.addEventListener('change', function() {
+                logoConfig.style.display = this.checked ? 'block' : 'none';
+            });
+        }
+
+        if (logoSizeSelect) {
+            logoSizeSelect.addEventListener('change', function() {
+                logoCustomSizeRow.style.display = (this.value === 'custom') ? 'block' : 'none';
+            });
+        }
+
+        // ============================================================
         // GÉNÉRATION DU PROMPT
         // ============================================================
         function genererPrompt() {
@@ -2432,6 +2519,45 @@
             const competencesDisciplinairesTexte = competencesDisciplinaires.length > 0 ? competencesDisciplinaires.join(' \\\\ ') : 'CD n°1 : Élaborer une explication d\'un fait ou d\'un phénomène de son environnement naturel ou construit en mettant en œuvre les modes de raisonnement propres à la physique, à la chimie et à la technologie.';
             const competencesTransversalesTexte = competencesTransversales.length > 0 ? competencesTransversales.join(' \\\\ ') : 'CTV8 : Communiquer de façon précise et appropriée';
             
+            // Gestion du logo établissement
+            const hasLogo = document.getElementById('hasLogoEtablissement').checked;
+            const logoFileName = document.getElementById('logoFileName').value || 'logo.png';
+            const logoSize = document.getElementById('logoSize').value;
+            let logoSizeTexte = '';
+            if (logoSize === 'small') logoSizeTexte = 'width=1.5cm';
+            else if (logoSize === 'medium') logoSizeTexte = 'width=2.5cm';
+            else if (logoSize === 'large') logoSizeTexte = 'width=3.5cm';
+            else if (logoSize === 'custom') {
+                const customSize = document.getElementById('logoCustomSize').value || '2cm';
+                logoSizeTexte = customSize.includes('=') ? customSize : 'width=' + customSize;
+            }
+
+            let logoPromptInstruction = '';
+            if (hasLogo) {
+                logoPromptInstruction = `
+
+--- LOGO DE L'ÉTABLISSEMENT ---
+L'établissement dispose d'un logo/timbre. Tu dois :
+1. Inclure le fichier image "${logoFileName}" dans l'en-tête de l'épreuve.
+2. Utiliser \\includegraphics[${logoSizeTexte}]{${logoFileName}} pour insérer le logo.
+3. Positionner le logo de manière ÉLÉGANTE et PROFESSIONNELLE dans le cartouche :
+   - Placer le logo à GAUCHE du cartouche (colonne de gauche).
+   - Utiliser un \\begin{minipage} ou un \\begin{tabularx} avec 3 colonnes : logo | informations centrales | (optionnel) logo ou vide.
+   - Si le logo est le seul élément graphique, le centrer verticalement par rapport au texte du cartouche.
+   - Le logo ne doit pas chevaucher le texte ni les bordures.
+4. Exemple de structure recommandée pour le cartouche avec logo :
+   \\begin{minipage}[c]{0.15\\textwidth}
+     \\centering
+     \\includegraphics[${logoSizeTexte}]{${logoFileName}}
+   \\end{minipage}%
+   \\begin{minipage}[c]{0.85\\textwidth}
+     \\centering
+     ... (le reste du cartouche : pays, direction, établissement, titre, etc.)
+   \\end{minipage}
+5. Adapter les proportions pour que l'ensemble reste harmonieux et tienne sur la largeur de la page.
+6. Le logo doit être traité comme un élément d'identité visuelle de l'établissement, placé avec goût.`;
+            }
+
             const caracteristiquesContexte = `
 --- CARACTÉRISTIQUES DU CONTEXTE (APPROCHE PAR COMPÉTENCES) ---
 Lors de la rédaction du contexte de la situation-problème, tu dois impérativement respecter les 6 caractéristiques suivantes :
@@ -2449,7 +2575,24 @@ Lors de la rédaction du contexte de la situation-problème, tu dois impérative
 6. L'OUVERTURE : Le texte doit être conçu de manière à nécessiter le recours aux supports (données, tableaux, schémas, documents) pour être compris et résolu. Il ne donne pas directement la solution.
 
 Applique ces caractéristiques lors de la rédaction du contexte dans ton épreuve LaTeX.`;
-            
+
+            // Récupération des états des boutons poussoir pour sous-questions
+            const sousQ1Simple = document.getElementById('sousQuestions1')?.checked || false;
+            const sousQ2Simple = document.getElementById('sousQuestions2')?.checked || false;
+            const sousQ1Chimie = document.getElementById('sousQuestions1Chimie')?.checked || false;
+            const sousQ2Chimie = document.getElementById('sousQuestions2Chimie')?.checked || false;
+            const sousQ1Physique = document.getElementById('sousQuestions1Physique')?.checked || false;
+            const sousQ2Physique = document.getElementById('sousQuestions2Physique')?.checked || false;
+
+            function regleSousQuestions(autorise) {
+                if (autorise) {
+                    return `- SOUS-QUESTIONS AUTORISÉES UNIQUEMENT SI NÉCESSAIRE : lorsqu'une question exige plusieurs réponses distinctes, utiliser 1-1-a, 1-1-b, 1-1-c... (puis 1-2-a, 1-2-b... etc.).
+    - CONTRAINTE STRICTE : le nombre total de questions numérotées au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2...) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c...) NE COMPTENT PAS comme des questions supplémentaires et ne doivent être utilisées que lorsqu'elles sont réellement indispensables, sans en mettre trop pour dépasser le nombre de questions indiquées.`;
+                } else {
+                    return `- SOUS-QUESTIONS INTERDITES : ne pas utiliser de sous-questions (a, b, c...). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2...`;
+                }
+            }
+
             let prompt = `Tu es une intelligence artificielle experte en Physique-Chimie-Technologie (PCT), spécialisée dans la génération d'épreuves d'évaluation rigoureuses selon l'approche par compétences (APC).
 
 Tu possèdes les qualités suivantes :
@@ -2474,6 +2617,7 @@ DIRECTION DÉPARTEMENTALE : ${directionDepartementale}
 Année scolaire : ${anneeScolaire}
 Titre : ${titreEpreuve}
 Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
+${hasLogo ? `Logo établissement : ${logoFileName} (taille : ${logoSizeTexte})` : 'Logo établissement : Aucun'}
 
 --- PARAMÈTRES DE MISE EN FORME LATEX (IMPÉRATIFS) ---
 1. STRUCTURE : Document class article, taille ${lSize}${lTwoCols ? ', twocolumn' : ''}, sans espace inutile pour les réponses (pas de lignes pointillées, pas d'espace réservé pour écrire). AUCUN BARÈME ni points dans le document.
@@ -2490,6 +2634,7 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
    - La DIRECTION DÉPARTEMENTALE (${directionDepartementale}) doit être placée EN HAUT À DROITE (côté opposé au pays).
    - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
    - Puis centrer en dessous le nom de l'établissement, le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   ${hasLogo ? `   - INSÉRER LE LOGO "${logoFileName}" DANS LE CARTOUCHE de manière élégante et professionnelle : placer le logo à gauche du cartouche, centré verticalement, à l'aide d'une minipage. Le logo doit avoir une taille cohérente avec l'en-tête (${logoSizeTexte}). Utiliser une structure du type : \\begin{minipage}[c]{0.15\\textwidth}\\centering\\includegraphics[${logoSizeTexte}]{${logoFileName}}\\end{minipage}% \\begin{minipage}[c]{0.85\\textwidth} ... \\end{minipage}. Adapter les proportions pour un rendu harmonieux.` : '   - Aucun logo à insérer.'}
    
    Exemple de structure à reproduire :
    \\begin{center}
@@ -2540,7 +2685,8 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
     - Le CONTEXTE doit respecter IMPÉRATIVEMENT les 6 caractéristiques énumérées ci-dessus : narrativité, caractère problématique, authenticité, sobriété, neutralité injonctive, ouverture.
     - NUMÉROTATION HIÉRARCHIQUE OBLIGATOIRE : Partie 1 = questions 1-1, 1-2, 1-3... ; Partie 2 = questions 2-1, 2-2, 2-3...
     - AUCUN BARÈME ni indication de points.
-    - IMPORTANT : Les questions de la Partie 1 (Mobilisation de ressources) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.`;
+    - IMPORTANT : Les questions de la Partie 1 (Mobilisation de ressources) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
+${logoPromptInstruction}`;
 
             if (discipline === 'PHYSIQUE CHIMIE ET TECHNOLOGIE') {
                 const connaissancesChimie = document.getElementById('connaissancesChimie').value || "Mélanges, solutions, concentrations, séparation";
@@ -2560,6 +2706,12 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
                 const nbQuestions1Physique = parseInt(document.getElementById('nbQuestions1Physique').value) || 3;
                 const indicesPartie2Physique = document.getElementById('indicesPartie2Physique').value || "Résolution de problème physique";
                 const nbQuestions2Physique = parseInt(document.getElementById('nbQuestions2Physique').value) || 3;
+
+                // Libellés dynamiques selon l'état des boutons poussoir
+                const labelSousQ1Chimie = sousQ1Chimie ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+                const labelSousQ2Chimie = sousQ2Chimie ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+                const labelSousQ1Physique = sousQ1Physique ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+                const labelSousQ2Physique = sousQ2Physique ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 
                 prompt += `
 
@@ -2570,16 +2722,19 @@ Compétences transversales évaluées :
 ${competencesTransversalesTexte}
 ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + documentJoint : ""}
 
-================================================================================
-PARTIE A - CHIMIE ET TECHNOLOGIE
+================================================================================PARTIE A - CHIMIE ET TECHNOLOGIE
 ================================================================================
 
 Connaissances à mobiliser (Chimie) : ${connaissancesChimie}
 Contexte (Chimie) : ${contexteChimie}
 Support (Chimie) : ${supportChimie}
 Tâche (Chimie) : ${tacheChimie}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${nbQuestions1Chimie} questions) - Numérotation: 1-1, 1-2...
-Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${nbQuestions2Chimie} questions) - Numérotation: 2-1, 2-2...
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${nbQuestions1Chimie} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1Chimie})
+Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${nbQuestions2Chimie} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2Chimie})
+
+RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE A (CHIMIE) :
+${regleSousQuestions(sousQ1Chimie)} (pour la Partie 1)
+${regleSousQuestions(sousQ2Chimie)} (pour la Partie 2)
 
 ================================================================================
 PARTIE B - PHYSIQUE ET TECHNOLOGIE
@@ -2589,12 +2744,17 @@ Connaissances à mobiliser (Physique) : ${connaissancesPhysique}
 Contexte (Physique) : ${contextePhysique}
 Support (Physique) : ${supportPhysique}
 Tâche (Physique) : ${tachePhysique}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${nbQuestions1Physique} questions) - Numérotation: 1-1, 1-2...
-Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2Physique} questions) - Numérotation: 2-1, 2-2...
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${nbQuestions1Physique} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1Physique})
+Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2Physique} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2Physique})
+
+RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE B (PHYSIQUE) :
+${regleSousQuestions(sousQ1Physique)} (pour la Partie 1)
+${regleSousQuestions(sousQ2Physique)} (pour la Partie 2)
 
 ---
 Génère le code LaTeX complet avec :
 - Un en-tête unique pour l'ensemble de l'épreuve (avec le PAYS en haut à gauche et la DIRECTION DÉPARTEMENTALE en haut à droite)
+${hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le cartouche à gauche, avec une taille de ' + logoSizeTexte + ', de manière élégante et professionnelle' : ''}
 - Une section A "CHIMIE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Une section B "PHYSIQUE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Les compétences et les paramètres de mise en forme s'appliquent à l'ensemble du document
@@ -2602,7 +2762,8 @@ Génère le code LaTeX complet avec :
 - Structure: Contexte A -> Tâche A -> Support A -> Partie 1 A (questions 1-1, 1-2...) -> Partie 2 A (questions 2-1, 2-2...), puis Contexte B -> Tâche B -> Support B -> Partie 1 B -> Partie 2 B
 - Toutes les données numériques sont dans les supports respectifs, jamais dans les questions.
 - AUCUN BARÈME ni points.
-- IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être conçues pour être utiles à la résolution des questions de la Partie 2.`;
+- IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être conçues pour être utiles à la résolution des questions de la Partie 2.
+- Respecter strictement les règles de sous-questions définies ci-dessus pour chaque partie (autorisées ou interdites).`;
             } else {
                 const connaissances = document.getElementById('connaissances').value || "Mélanges homogènes/hétérogènes, méthodes de séparation, concentration massique et molaire";
                 const contexte = document.getElementById('contexte').value || "Pour le dîner, la maman de Hawa prépare le repas. Elle réalise différents mélanges et prépare une eau salée en dissolvant du sel dans l'eau. Hawa se demande comment reconnaître la nature de ces mélanges, choisir une méthode de séparation et déterminer la concentration de l'eau salée.";
@@ -2612,6 +2773,10 @@ Génère le code LaTeX complet avec :
                 const nbQuestions1 = parseInt(document.getElementById('nbQuestions1').value) || 3;
                 const indicesPartie2 = document.getElementById('indicesPartie2').value || "Classification des mélanges, identification soluté/solvant, propositions de méthodes, atomicité, calculs de masses molaires, concentration massique et molaire";
                 const nbQuestions2 = parseInt(document.getElementById('nbQuestions2').value) || 6;
+
+                // Libellés dynamiques selon l'état des boutons poussoir
+                const labelSousQ1 = sousQ1Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+                const labelSousQ2 = sousQ2Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 
                 prompt += `
 
@@ -2625,15 +2790,20 @@ Contexte (rédigé selon les 6 caractéristiques APC ci-dessus) : ${contexte}
 Support : ${support}
 ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + documentJoint : ""}
 Tâche : ${tache}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} questions) - Numérotation: 1-1, 1-2...
-Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions) - Numérotation: 2-1, 2-2...
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1})
+Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2})
+
+RÈGLES DE SOUS-QUESTIONS :
+${regleSousQuestions(sousQ1Simple)} (pour la Partie 1)
+${regleSousQuestions(sousQ2Simple)} (pour la Partie 2)
 
 ---
-Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite), le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
+Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite)${hasLogo ? ', incluant le logo "' + logoFileName + '" à gauche du cartouche avec une taille de ' + logoSizeTexte : ''}, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
 Toutes les données numériques sont dans le support, jamais dans les questions.
 Structure: Contexte -> Tâche -> Support -> Partie 1 -> Partie 2.
 AUCUN BARÈME ni points.
-- IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.`;
+- IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
+- Respecter strictement les règles de sous-questions définies ci-dessus (autorisées ou interdites).`;
             }
             
             prompt += "\n\nGénère uniquement le code LaTeX complet sans texte superflu.";
@@ -2673,6 +2843,8 @@ AUCUN BARÈME ni points.
                 if(hasImagesSimple) { imagesSimpleConfig.style.display = 'none'; document.getElementById('imageDetailsSimple').innerHTML = ''; }
                 if(hasImagesChimie) { imagesChimieConfig.style.display = 'none'; document.getElementById('imageDetailsChimie').innerHTML = ''; }
                 if(hasImagesPhysique) { imagesPhysiqueConfig.style.display = 'none'; document.getElementById('imageDetailsPhysique').innerHTML = ''; }
+                if(logoConfig) { logoConfig.style.display = 'none'; }
+                if(logoCustomSizeRow) { logoCustomSizeRow.style.display = 'none'; }
             }
         }
 
