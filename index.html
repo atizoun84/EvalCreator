@@ -78,7 +78,6 @@
             font-size: 1.5rem;
             flex-shrink: 0;
         }
-        /* Wrapper pour le texte à deux lignes */
         .brand-text-wrapper {
             display: flex;
             flex-direction: column;
@@ -396,7 +395,6 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* Styles pour la section double discipline */
         .double-discipline-section {
             border: 1.5px solid rgba(29, 91, 140, 0.35);
             border-radius: 12px;
@@ -416,7 +414,6 @@
             border-bottom: 2px solid var(--accent);
         }
         
-        /* Style pour la gestion des images */
         .image-config {
             background: #f4f8fc;
             padding: 10px;
@@ -424,6 +421,41 @@
             margin-top: 5px;
             margin-bottom: 5px;
             border-left: 3px solid var(--accent);
+        }
+
+        /* Styles pour les champs d'images dynamiques */
+        .image-detail-block {
+            background: #ffffff;
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        .image-detail-block .row {
+            margin-bottom: 4px;
+        }
+        .image-detail-block .form-label {
+            font-size: 0.78rem;
+            margin-top: 0;
+            margin-bottom: 2px;
+        }
+        .image-detail-block .form-control,
+        .image-detail-block .form-select {
+            font-size: 0.82rem;
+            padding: 4px 8px;
+        }
+        .image-grid-options {
+            background: #fff8e1;
+            border: 1px solid #f0d99b;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 8px;
+        }
+        .cm-hint {
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 2px;
         }
 
         /* PWA Install Button */
@@ -637,7 +669,6 @@
         .about-modal .btn-close-modal i {
             margin-right: 6px;
         }
-        /* Bouton Admin vers admin.html */
         .about-modal .btn-admin-modal {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: #fff;
@@ -812,7 +843,6 @@
             color: #94a3b8;
             line-height: 1.5;
         }
-        /* Note dynamique : licence liée à un autre appareil */
         .auth-footer-note.linked-warning {
             color: #b45309;
             background: linear-gradient(135deg, #fffbeb, #fef3c7);
@@ -826,7 +856,6 @@
             color: #d97706;
             margin-right: 4px;
         }
-        /* Note dynamique : reconnexion automatique */
         .auth-footer-note.reconnecting {
             color: #1d5b8c;
             background: linear-gradient(135deg, #eff6ff, #dbeafe);
@@ -841,7 +870,7 @@
             margin-right: 4px;
         }
 
-        /* ====== BOUTON DÉCONNEXION DANS NAVBAR (intégré sous l'email) ====== */
+        /* ====== BOUTON DÉCONNEXION ====== */
         .btn-logout {
             color: rgba(255,255,255,0.85) !important;
             font-weight: 500;
@@ -863,7 +892,7 @@
         }
         .btn-logout i { color: #f5a3ac; font-size: 0.7rem; }
 
-        /* ====== INDICATEUR DE CONNEXION (devant le nom de l'app) ====== */
+        /* ====== INDICATEUR DE CONNEXION ====== */
         .nav-connection {
             display: inline-flex;
             align-items: center;
@@ -934,7 +963,6 @@
             0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.75); }
             50%      { box-shadow: 0 0 0 5px rgba(201, 169, 97, 0); }
         }
-        /* Sur mobile, on masque le libellé pour garder juste le point */
         @media (max-width: 991px) {
             .nav-connection {
                 margin: 0;
@@ -961,7 +989,7 @@
 <body onload="chargerDonnees()">
 
     <!-- ============================================================
-         OVERLAY D'AUTHENTIFICATION (affiché tant que non licencié)
+         OVERLAY D'AUTHENTIFICATION
          ============================================================ -->
     <div id="authOverlay">
         <div class="auth-card">
@@ -973,7 +1001,6 @@
                 Créez votre compte et activez votre licence sur cet appareil
             </p>
 
-            <!-- Formulaire : Création de compte -->
             <div id="signupForm">
                 <input type="email" id="signupEmail" class="auth-input" placeholder="Adresse e-mail" autocomplete="email">
                 <input type="password" id="signupPass" class="auth-input" placeholder="Mot de passe (min. 6 caractères)" autocomplete="new-password">
@@ -986,7 +1013,6 @@
                 </div>
             </div>
 
-            <!-- Formulaire : Connexion -->
             <div id="loginForm" style="display:none;">
                 <input type="email" id="loginEmail" class="auth-input" placeholder="Adresse e-mail" autocomplete="email">
                 <input type="password" id="loginPass" class="auth-input" placeholder="Mot de passe" autocomplete="current-password">
@@ -1000,7 +1026,6 @@
 
             <div id="authMsg" class="auth-msg"></div>
 
-            <!-- Note dynamique : affiche soit le message par défaut, soit l'avertissement de licence déjà liée -->
             <div id="authFooterNote" class="auth-footer-note">
                 <i class="fas fa-lock"></i> Votre licence sera liée définitivement à cet appareil.<br>
                 Toute tentative d'utilisation sur un autre appareil sera bloquée.
@@ -1012,14 +1037,11 @@
     <nav class="navbar navbar-expand-lg app-navbar" id="mainNavbar" style="display:none;">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <!-- INDICATEUR DE CONNEXION (EN LIGNE / HORS LIGNE) — placé DEVANT le nom de l'app -->
                 <div id="connectionToast" class="nav-connection checking" aria-live="polite">
                     <span class="status-dot"></span>
                     <span id="connectionText" class="status-label">Vérification...</span>
                 </div>
-
                 <i class="fas fa-flask-vial"></i>
-
                 <div class="brand-text-wrapper">
                     <span class="brand-title">Générateur éval PCT/APC</span>
                     <span class="brand-user-line">
@@ -1057,7 +1079,7 @@
     </nav>
 
     <!-- ============================================================
-         CONTENU PRINCIPAL DE L'APPLICATION (masqué jusqu'à validation)
+         CONTENU PRINCIPAL
          ============================================================ -->
     <div id="appContent" style="display:none;">
     <div class="container">
@@ -1069,7 +1091,6 @@
                     </div>
                     <div class="card-body">
                         <form id="promptForm">
-                            <!-- NOUVEAU : Pays et Direction Départementale (en majuscules) -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-flag"></i> Pays</label>
@@ -1097,33 +1118,17 @@
                                     <label class="form-label"><i class="fas fa-tag"></i> Titre épreuve</label>
                                     <select class="form-select" id="titreEpreuve">
                                         <option value="ÉPREUVE DE BACHOTAGE">ÉPREUVE DE BACHOTAGE</option>
-
                                         <option value="ÉVALUATION FORMATIVE" selected>ÉVALUATION FORMATIVE</option>
-
                                         <option value="TRAVAUX DIRIGÉS">TRAVAUX DIRIGÉS</option>
-
-                                        <!-- ===== PREMIER SEMESTRE ===== -->
-
                                         <option value="PREMIÈRE PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE">PREMIÈRE PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE</option>
-
                                         <option value="DEUXIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE">DEUXIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE</option>
-
                                         <option value="TROISIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE">TROISIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU PREMIER SEMESTRE</option>
-
                                         <option value="PREMIÈRE SÉRIE DES PRODUCTIONS SCOLAIRES DU PREMIER SEMESTRE">PREMIÈRE SÉRIE DES PRODUCTIONS SCOLAIRES DU PREMIER SEMESTRE</option>
-
                                         <option value="DEUXIÈME SÉRIE DES PRODUCTIONS SCOLAIRES DU PREMIER SEMESTRE">DEUXIÈME SÉRIE DES PRODUCTIONS SCOLAIRES DU PREMIER SEMESTRE</option>
-
-                                        <!-- ===== SECOND SEMESTRE ===== -->
-
                                         <option value="PREMIÈRE PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE">PREMIÈRE PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE</option>
-
                                         <option value="DEUXIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE">DEUXIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE</option>
-
                                         <option value="TROISIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE">TROISIÈME PRODUCTION PONCTUELLE D'ÉTAPE DU SECOND SEMESTRE</option>
-
                                         <option value="PREMIÈRE SÉRIE DES PRODUCTIONS SCOLAIRES DU SECOND SEMESTRE">PREMIÈRE SÉRIE DES PRODUCTIONS SCOLAIRES DU SECOND SEMESTRE</option>
-
                                         <option value="DEUXIÈME SÉRIE DES PRODUCTIONS SCOLAIRES DU SECOND SEMESTRE">DEUXIÈME SÉRIE DES PRODUCTIONS SCOLAIRES DU SECOND SEMESTRE</option>
                                     </select>
                                 </div>
@@ -1170,7 +1175,7 @@
                                 </div>
                             </div>
                             
-                            <!-- Section pour la double discipline (visible uniquement quand PHYSIQUE CHIMIE ET TECHNOLOGIE est sélectionné) -->
+                            <!-- Section double discipline -->
                             <div id="doubleDisciplineContainer" style="display: none;">
                                 <div class="double-discipline-section">
                                     <div class="discipline-header">
@@ -1208,8 +1213,7 @@
                                             <div class="col-md-6" id="imagesChimieConfig" style="display:none;">
                                                 <label class="form-label">Nombre d'images</label>
                                                 <input type="number" class="form-control" id="nbImagesChimie" value="1" min="1" max="10">
-                                                <label class="form-label mt-2">Titre(s) des images (séparés par des points-virgules)</label>
-                                                <input type="text" class="form-control" id="titresImagesChimie" placeholder="Ex: Schéma du montage de filtration; Graphique de solubilité">
+                                                <div id="imageDetailsChimie" class="mt-2"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1272,8 +1276,7 @@
                                             <div class="col-md-6" id="imagesPhysiqueConfig" style="display:none;">
                                                 <label class="form-label">Nombre d'images</label>
                                                 <input type="number" class="form-control" id="nbImagesPhysique" value="1" min="1" max="10">
-                                                <label class="form-label mt-2">Titre(s) des images (séparés par des points-virgules)</label>
-                                                <input type="text" class="form-control" id="titresImagesPhysique" placeholder="Ex: Circuit électrique en série; Schéma d'un montage expérimental">
+                                                <div id="imageDetailsPhysique" class="mt-2"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1301,7 +1304,7 @@
                                 </div>
                             </div>
                             
-                            <!-- Section normale (visible quand discipline simple) -->
+                            <!-- Section normale -->
                             <div id="simpleDisciplineContainer">
                                 <label class="form-label mt-2"><i class="fas fa-book"></i> Connaissances / Techniques à mobiliser</label>
                                 <input type="text" class="form-control" id="connaissances" placeholder="Ex: Mélanges homogènes/hétérogènes, Séparation, Concentration massique et molaire">
@@ -1336,8 +1339,7 @@
                                         <div class="col-md-6" id="imagesSimpleConfig" style="display:none;">
                                             <label class="form-label">Nombre d'images</label>
                                             <input type="number" class="form-control" id="nbImagesSimple" value="1" min="1" max="10">
-                                            <label class="form-label mt-2">Titre(s) des images (séparés par des points-virgules)</label>
-                                            <input type="text" class="form-control" id="titresImagesSimple" placeholder="Ex: Schéma de l'appareil de distillation; Graphique des températures">
+                                            <div id="imageDetailsSimple" class="mt-2"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1528,7 +1530,6 @@
                                 </div>
                             </div>
                             
-                            <!-- NOUVEAU : Paramètres pour les images des schémas (conservé pour compatibilité) -->
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-file-image"></i> Nombre d'images/schémas (global)</label>
@@ -1540,7 +1541,6 @@
                                 </div>
                             </div>
                             
-                            <!-- NOUVEAU : Choix du document joint à exploiter -->
                             <label class="form-label mt-2"><i class="fas fa-paperclip"></i> Document joint à exploiter</label>
                             <input type="text" class="form-control" id="documentJoint" placeholder="Ex: Document 1 : Tableau des masses molaires, Document 2 : Graphique des températures d'ébullition">
                             
@@ -1666,7 +1666,7 @@
     </div>
 
     <!-- ============================================================
-         FIREBASE SDK (compat) — chargé avant le script principal
+         FIREBASE SDK
          ============================================================ -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -1674,7 +1674,7 @@
 
     <script>
         // ============================================================
-        // CONFIGURATION FIREBASE — PROJET GENPCT-LICENCE
+        // CONFIGURATION FIREBASE
         // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDguZC4dAMIbKS00zkIJjqT8KpuARiTsyM",
@@ -1691,18 +1691,11 @@
         window._pctAuth = auth;
         window._pctDb = db;
 
-        // ⚠️ IMPORTANT — Déconnexion automatique à la fermeture de la page.
-        // Par défaut, Firebase Auth conserve la session dans le localStorage.
-        // Pour éviter de saturer le quota de 100 connexions simultanées,
-        // on force la persistance en mémoire (SESSION). La session est ainsi
-        // perdue dès que l'onglet est fermé ou rechargé → l'utilisateur devra
-        // se reconnecter à chaque nouvelle visite, libérant la place pour d'autres.
         auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
             .catch(err => console.warn('Persistance SESSION non appliquée :', err));
 
         // ============================================================
-        // PRÉSENCE — Enregistrer cet utilisateur comme connecté
-        // (pour le compteur temps réel visible par l'admin)
+        // PRÉSENCE
         // ============================================================
         function setupUserPresence(user) {
             if (!user) return;
@@ -1713,9 +1706,7 @@
 
             connectedRef.on('value', (snap) => {
                 if (snap.val() === true) {
-                    // Suppression automatique en cas de déconnexion réseau
                     presenceRef.onDisconnect().remove();
-                    // Enregistrer la présence
                     presenceRef.set({
                         email: email,
                         connectedAt: firebase.database.ServerValue.TIMESTAMP
@@ -1724,7 +1715,6 @@
             });
         }
 
-        // Nettoyer la présence à la déconnexion (bouton Déconnexion)
         async function cleanupPresence() {
             try {
                 const u = auth.currentUser;
@@ -1732,8 +1722,6 @@
             } catch(e) {}
         }
 
-        // Nettoyage automatique à la fermeture de la page
-        // (en plus de onDisconnect() qui est le filet de sécurité principal)
         window.addEventListener('beforeunload', () => {
             const u = auth.currentUser;
             if (u) {
@@ -1742,10 +1730,9 @@
         });
 
         // ============================================================
-        // GESTION DE L'EMAIL MÉMORISÉ (pour faciliter la connexion)
+        // EMAIL MÉMORISÉ
         // ============================================================
         const LAST_EMAIL_KEY = 'pct_last_email';
-
         function memoriserEmail(email) {
             try { localStorage.setItem(LAST_EMAIL_KEY, email); } catch(e) {}
         }
@@ -1762,22 +1749,19 @@
         }
 
         // ============================================================
-        // GESTION DE LA NOTE DYNAMIQUE SOUS LE FORMULAIRE
+        // NOTES DYNAMIQUES
         // ============================================================
         function setFooterNoteDefault() {
             const note = document.getElementById('authFooterNote');
             note.className = 'auth-footer-note';
             note.innerHTML = '<i class="fas fa-lock"></i> Votre licence sera liée définitivement à cet appareil.<br>Toute tentative d\'utilisation sur un autre appareil sera bloquée.';
         }
-
         function setFooterNoteLinkedWarning(emailConcerne) {
             const note = document.getElementById('authFooterNote');
             note.className = 'auth-footer-note linked-warning';
             const emailStr = emailConcerne ? ` (${emailConcerne})` : '';
             note.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Cette licence est déjà liée à un appareil' + emailStr + '.<br>Contactez le concepteur pour un transfert gratuit.';
         }
-
-        // Note spécifique : vérification de licence en cours (reconnexion automatique)
         function setFooterNoteReconnecting() {
             const note = document.getElementById('authFooterNote');
             note.className = 'auth-footer-note reconnecting';
@@ -1785,7 +1769,7 @@
         }
 
         // ============================================================
-        // TOAST PERMANENT — ÉTAT DE CONNEXION AU CLOUD
+        // TOAST CONNEXION
         // ============================================================
         (function initConnectionToast() {
             const toast = document.getElementById('connectionToast');
@@ -1821,7 +1805,7 @@
         })();
 
         // ============================================================
-        // SÉCURITÉ — Empreinte matérielle (fingerprint)
+        // FINGERPRINT
         // ============================================================
         async function getHardwareFingerprint() {
             const parts = [];
@@ -1849,7 +1833,7 @@
         }
 
         // ============================================================
-        // INTERFACE D'AUTHENTIFICATION
+        // AUTHENTIFICATION
         // ============================================================
         const authOverlay = document.getElementById('authOverlay');
         const signupForm = document.getElementById('signupForm');
@@ -1882,7 +1866,6 @@
             preRemplirEmail();
         };
 
-        // ---------- Création de compte + activation licence ----------
         document.getElementById('btnSignup').onclick = async () => {
             const email = document.getElementById('signupEmail').value.trim();
             const pass = document.getElementById('signupPass').value;
@@ -1904,14 +1887,12 @@
             setFooterNoteDefault();
 
             try {
-                // ÉTAPE 1 : VÉRIFIER QUE LA CLÉ EXISTE DANS valid_keys
                 const keySnap = await db.ref('valid_keys/' + licenseKey).once('value');
                 if (keySnap.val() !== true) {
                     btn.disabled = false;
                     return showMsg('❌ Clé de licence inconnue ou invalide. Vérifiez votre clé.', 'error');
                 }
 
-                // ÉTAPE 2 : VÉRIFIER QUE LA CLÉ N'A PAS DÉJÀ ÉTÉ UTILISÉE
                 const usedSnap = await db.ref('used_keys/' + licenseKey).once('value');
                 if (usedSnap.exists()) {
                     btn.disabled = false;
@@ -1926,15 +1907,12 @@
                     return showMsg('🚫 Cette clé a déjà été activée sur un autre appareil.', 'error');
                 }
 
-                // ÉTAPE 3 : CRÉER LE COMPTE FIREBASE AUTH
                 showMsg('Création du compte en cours...', 'info');
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 const uid = cred.user.uid;
 
-                // ÉTAPE 4 : GÉNÉRER LE FINGERPRINT MATÉRIEL
                 const hw = await getHardwareFingerprint();
 
-                // ÉTAPE 5 : ENREGISTRER LA LICENCE + MARQUER LA CLÉ COMME UTILISÉE
                 const updates = {};
                 updates['licenses/' + uid] = {
                     licenseKey: licenseKey,
@@ -1946,7 +1924,6 @@
                 await db.ref().update(updates);
 
                 memoriserEmail(email);
-
                 showMsg('✅ Activation réussie !', 'success');
             } catch (err) {
                 btn.disabled = false;
@@ -1960,7 +1937,6 @@
             }
         };
 
-        // ---------- Connexion ----------
         document.getElementById('btnLogin').onclick = async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPass').value;
@@ -1985,7 +1961,6 @@
             }
         };
 
-        // ---------- Déconnexion ----------
         document.getElementById('btnLogout').onclick = async () => {
             if (confirm('Voulez-vous vous déconnecter ?')) {
                 await cleanupPresence();
@@ -1994,9 +1969,6 @@
             }
         };
 
-        // ============================================================
-        // VÉRIFICATION DE LA LICENCE À CHAQUE CHANGEMENT D'ÉTAT AUTH
-        // ============================================================
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 authOverlay.classList.remove('hidden');
@@ -2015,7 +1987,6 @@
             if (label) label.textContent = user.email;
 
             showMsg('Vérification de la licence...', 'info');
-            // Note dynamique : reprise automatique en cours
             setFooterNoteReconnecting();
 
             try {
@@ -2043,13 +2014,11 @@
                     );
                 }
 
-                // ✅ Licence valide → afficher l'application
                 authOverlay.classList.add('hidden');
                 appContent.style.display = 'block';
                 mainNavbar.style.display = 'flex';
                 setFooterNoteDefault();
 
-                // 🔹 ENREGISTRER LA PRÉSENCE (pour le compteur admin temps réel)
                 setupUserPresence(user);
 
                 if (typeof chargerDonnees === 'function') chargerDonnees();
@@ -2062,19 +2031,14 @@
             }
         });
 
-        // ============================================================
-        // PRÉREMPLISSAGE DE L'EMAIL AU CHARGEMENT
-        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             preRemplirEmail();
         });
         preRemplirEmail();
 
         // ============================================================
-        // CODE EXISTANT DE L'APPLICATION (inchangé)
+        // GESTION DES CONTENEURS DISCIPLINE
         // ============================================================
-
-        // Gestion de l'affichage du container double discipline
         const disciplineSelect = document.getElementById('discipline');
         const simpleContainer = document.getElementById('simpleDisciplineContainer');
         const doubleContainer = document.getElementById('doubleDisciplineContainer');
@@ -2091,12 +2055,127 @@
         
         disciplineSelect.addEventListener('change', toggleDisciplineContainers);
         
+        // ============================================================
+        // GESTION DYNAMIQUE DES IMAGES
+        // ============================================================
+        
+        // Générer les champs détaillés pour chaque image
+        function generateImageFields(containerId, count, prefix) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= count; i++) {
+                const block = document.createElement('div');
+                block.className = 'image-detail-block';
+                block.innerHTML = `
+                    <div style="font-weight:600; font-size:0.82rem; color:var(--primary); margin-bottom:6px;">
+                        <i class="fas fa-image"></i> Image ${i}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Nom du fichier</label>
+                            <input type="text" class="form-control" id="${prefix}_file_${i}" value="image${i}.png" placeholder="image${i}.png">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Légende / Titre</label>
+                            <input type="text" class="form-control" id="${prefix}_caption_${i}" placeholder="Description de l'image">
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="form-label">Disposition</label>
+                            <select class="form-select" id="${prefix}_layout_${i}">
+                                <option value="center">Centrée</option>
+                                <option value="left">Alignée à gauche</option>
+                                <option value="right">Alignée à droite</option>
+                                <option value="inline">En ligne (texte)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Taille standard</label>
+                            <select class="form-select" id="${prefix}_size_${i}">
+                                <option value="small">Petite (0.3\\linewidth)</option>
+                                <option value="medium" selected>Moyenne (0.5\\linewidth)</option>
+                                <option value="large">Grande (0.7\\linewidth)</option>
+                                <option value="full">Pleine largeur (1.0\\linewidth)</option>
+                                <option value="custom">Personnalisée</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Dimensions manuelles</label>
+                            <div class="row g-1">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" id="${prefix}_width_${i}" placeholder="Largeur" value="">
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control" id="${prefix}_height_${i}" placeholder="Hauteur" value="">
+                                </div>
+                            </div>
+                            <div class="cm-hint">Ex: 8cm, 0.4\\linewidth, 5cm</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(block);
+            }
+            
+            // Ajouter les options de grille/mosaïque si count > 1
+            if (count > 1) {
+                const gridBlock = document.createElement('div');
+                gridBlock.className = 'image-grid-options';
+                gridBlock.innerHTML = `
+                    <div style="font-weight:600; font-size:0.82rem; color:var(--primary); margin-bottom:6px;">
+                        <i class="fas fa-th"></i> Disposition groupée (${count} images)
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Type de disposition</label>
+                            <select class="form-select" id="${prefix}_grid_type">
+                                <option value="none">Aucune (images séparées)</option>
+                                <option value="grid2">Grille 2 colonnes</option>
+                                <option value="grid3">Grille 3 colonnes</option>
+                                <option value="mosaic">Mosaïque (2x2)</option>
+                                <option value="row">Alignées horizontalement</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Largeur de la grille</label>
+                            <select class="form-select" id="${prefix}_grid_width">
+                                <option value="1.0\\linewidth">Pleine largeur (1.0\\linewidth)</option>
+                                <option value="0.8\\linewidth">Réduite (0.8\\linewidth)</option>
+                                <option value="0.6\\linewidth">Compacte (0.6\\linewidth)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-6">
+                            <label class="form-label">Espacement entre images</label>
+                            <select class="form-select" id="${prefix}_grid_gap">
+                                <option value="0.5cm">Normal (0.5cm)</option>
+                                <option value="0.2cm">Serré (0.2cm)</option>
+                                <option value="1cm">Aéré (1cm)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Légende globale (optionnel)</label>
+                            <input type="text" class="form-control" id="${prefix}_grid_caption" placeholder="Ex: Figure 1 : Ensemble des schémas">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(gridBlock);
+            }
+        }
+        
         // Gestion des toggles pour les images
         const hasImagesSimple = document.getElementById('hasImagesSimple');
         const imagesSimpleConfig = document.getElementById('imagesSimpleConfig');
         if(hasImagesSimple) {
             hasImagesSimple.addEventListener('change', function() {
                 imagesSimpleConfig.style.display = this.checked ? 'block' : 'none';
+                if (this.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesSimple').value) || 1;
+                    generateImageFields('imageDetailsSimple', nb, 'simple');
+                }
             });
         }
         
@@ -2105,6 +2184,10 @@
         if(hasImagesChimie) {
             hasImagesChimie.addEventListener('change', function() {
                 imagesChimieConfig.style.display = this.checked ? 'block' : 'none';
+                if (this.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesChimie').value) || 1;
+                    generateImageFields('imageDetailsChimie', nb, 'chimie');
+                }
             });
         }
         
@@ -2113,11 +2196,101 @@
         if(hasImagesPhysique) {
             hasImagesPhysique.addEventListener('change', function() {
                 imagesPhysiqueConfig.style.display = this.checked ? 'block' : 'none';
+                if (this.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesPhysique').value) || 1;
+                    generateImageFields('imageDetailsPhysique', nb, 'physique');
+                }
             });
         }
         
+        // Écouter les changements du nombre d'images pour régénérer les champs
+        const nbImagesSimple = document.getElementById('nbImagesSimple');
+        if (nbImagesSimple) {
+            nbImagesSimple.addEventListener('input', function() {
+                const nb = parseInt(this.value) || 1;
+                if (hasImagesSimple && hasImagesSimple.checked) {
+                    generateImageFields('imageDetailsSimple', nb, 'simple');
+                }
+            });
+        }
+        
+        const nbImagesChimie = document.getElementById('nbImagesChimie');
+        if (nbImagesChimie) {
+            nbImagesChimie.addEventListener('input', function() {
+                const nb = parseInt(this.value) || 1;
+                if (hasImagesChimie && hasImagesChimie.checked) {
+                    generateImageFields('imageDetailsChimie', nb, 'chimie');
+                }
+            });
+        }
+        
+        const nbImagesPhysique = document.getElementById('nbImagesPhysique');
+        if (nbImagesPhysique) {
+            nbImagesPhysique.addEventListener('input', function() {
+                const nb = parseInt(this.value) || 1;
+                if (hasImagesPhysique && hasImagesPhysique.checked) {
+                    generateImageFields('imageDetailsPhysique', nb, 'physique');
+                }
+            });
+        }
+        
+        // Fonction pour récupérer les données d'images d'un préfixe donné
+        function getImageData(prefix) {
+            const count = parseInt(document.getElementById('nbImages' + prefix.charAt(0).toUpperCase() + prefix.slice(1)).value) || 1;
+            const images = [];
+            for (let i = 1; i <= count; i++) {
+                const file = document.getElementById(prefix + '_file_' + i)?.value || `image${i}.png`;
+                const caption = document.getElementById(prefix + '_caption_' + i)?.value || '';
+                const layout = document.getElementById(prefix + '_layout_' + i)?.value || 'center';
+                const size = document.getElementById(prefix + '_size_' + i)?.value || 'medium';
+                const width = document.getElementById(prefix + '_width_' + i)?.value || '';
+                const height = document.getElementById(prefix + '_height_' + i)?.value || '';
+                images.push({ file, caption, layout, size, width, height });
+            }
+            
+            // Récupérer les options de grille si présentes
+            const gridType = document.getElementById(prefix + '_grid_type')?.value || 'none';
+            const gridWidth = document.getElementById(prefix + '_grid_width')?.value || '1.0\\linewidth';
+            const gridGap = document.getElementById(prefix + '_grid_gap')?.value || '0.5cm';
+            const gridCaption = document.getElementById(prefix + '_grid_caption')?.value || '';
+            
+            return { images, gridType, gridWidth, gridGap, gridCaption };
+        }
+        
+        // Formater les données d'images pour le prompt LaTeX
+        function formatImageDataForPrompt(imageData, sectionLabel) {
+            if (!imageData || !imageData.images || imageData.images.length === 0) return '';
+            
+            let result = `\n--- IMAGES POUR ${sectionLabel} ---\n`;
+            result += `Nombre d'images : ${imageData.images.length}\n`;
+            
+            imageData.images.forEach((img, idx) => {
+                const sizeMap = {
+                    'small': '0.3\\linewidth',
+                    'medium': '0.5\\linewidth',
+                    'large': '0.7\\linewidth',
+                    'full': '1.0\\linewidth'
+                };
+                let sizeStr = sizeMap[img.size] || '0.5\\linewidth';
+                if (img.size === 'custom' || img.width || img.height) {
+                    const w = img.width || sizeStr;
+                    const h = img.height ? ` height=${img.height}` : '';
+                    sizeStr = `${w}${h}`;
+                }
+                result += `  Image ${idx + 1} : Fichier "${img.file}" — Légende : "${img.caption}" — Disposition : ${img.layout} — Taille : ${sizeStr}\n`;
+            });
+            
+            if (imageData.gridType && imageData.gridType !== 'none') {
+                result += `  Disposition groupée : ${imageData.gridType} — Largeur : ${imageData.gridWidth} — Espacement : ${imageData.gridGap}`;
+                if (imageData.gridCaption) result += ` — Légende globale : "${imageData.gridCaption}"`;
+                result += `\n`;
+            }
+            
+            return result;
+        }
+
         // ============================================================
-        // SAUVEGARDE AUTOMATIQUE DANS LE LOCALSTORAGE
+        // SAUVEGARDE AUTOMATIQUE
         // ============================================================
         const PCT_KEY_PREFIX = 'pct_';
         
@@ -2126,11 +2299,13 @@
             const inputs = document.querySelectorAll('#promptForm input, #promptForm textarea, #promptForm select');
             
             inputs.forEach(input => {
-                const valeur = (input.type === 'checkbox') ? input.checked : input.value;
-                formData[input.id] = valeur;
-                try {
-                    localStorage.setItem(PCT_KEY_PREFIX + input.id, JSON.stringify(valeur));
-                } catch(e) { /* ignore quota errors */ }
+                if (input.id) {
+                    const valeur = (input.type === 'checkbox') ? input.checked : input.value;
+                    formData[input.id] = valeur;
+                    try {
+                        localStorage.setItem(PCT_KEY_PREFIX + input.id, JSON.stringify(valeur));
+                    } catch(e) { /* ignore quota errors */ }
+                }
             });
             
             try {
@@ -2156,13 +2331,31 @@
                 } catch(e) { /* ignore parse errors */ }
             }
             toggleDisciplineContainers();
-            if(hasImagesSimple) imagesSimpleConfig.style.display = hasImagesSimple.checked ? 'block' : 'none';
-            if(hasImagesChimie) imagesChimieConfig.style.display = hasImagesChimie.checked ? 'block' : 'none';
-            if(hasImagesPhysique) imagesPhysiqueConfig.style.display = hasImagesPhysique.checked ? 'block' : 'none';
+            if(hasImagesSimple) {
+                imagesSimpleConfig.style.display = hasImagesSimple.checked ? 'block' : 'none';
+                if (hasImagesSimple.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesSimple').value) || 1;
+                    generateImageFields('imageDetailsSimple', nb, 'simple');
+                }
+            }
+            if(hasImagesChimie) {
+                imagesChimieConfig.style.display = hasImagesChimie.checked ? 'block' : 'none';
+                if (hasImagesChimie.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesChimie').value) || 1;
+                    generateImageFields('imageDetailsChimie', nb, 'chimie');
+                }
+            }
+            if(hasImagesPhysique) {
+                imagesPhysiqueConfig.style.display = hasImagesPhysique.checked ? 'block' : 'none';
+                if (hasImagesPhysique.checked) {
+                    const nb = parseInt(document.getElementById('nbImagesPhysique').value) || 1;
+                    generateImageFields('imageDetailsPhysique', nb, 'physique');
+                }
+            }
         }
         
         // ============================================================
-        // API PUBLIQUE pour grille_correction.html
+        // API PUBLIQUE
         // ============================================================
         window.PCT_KEY_PREFIX = PCT_KEY_PREFIX;
         window.getPCTData = function() {
@@ -2189,6 +2382,9 @@
         document.getElementById('promptForm').addEventListener('change', sauvegarderDonnees);
         document.getElementById('promptForm').addEventListener('input', sauvegarderDonnees);
 
+        // ============================================================
+        // GÉNÉRATION DU PROMPT
+        // ============================================================
         function genererPrompt() {
             sauvegarderDonnees();
             const etablissement = document.getElementById('etablissement').value || "CEG GAMIA";
@@ -2281,7 +2477,7 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
 
 --- PARAMÈTRES DE MISE EN FORME LATEX (IMPÉRATIFS) ---
 1. STRUCTURE : Document class article, taille ${lSize}${lTwoCols ? ', twocolumn' : ''}, sans espace inutile pour les réponses (pas de lignes pointillées, pas d'espace réservé pour écrire). AUCUN BARÈME ni points dans le document.
-2. PACKAGES : inputenc, fontenc, geometry (marges=${lMarges}), amsmath, amssymb, graphicx, xcolor, lastpage, fancyhdr, array, tabularx, enumerate${lWatermark !== 'none' ? ', draftwatermark' : ''}. ${packString !== 'Aucun supplément' ? "Ajouter les packages : " + packString : ""}
+2. PACKAGES : inputenc, fontenc, geometry (marges=${lMarges}), amsmath, amssymb, graphicx, xcolor, lastpage, fancyhdr, array, tabularx, enumerate, float${lWatermark !== 'none' ? ', draftwatermark' : ''}. ${packString !== 'Aucun supplément' ? "Ajouter les packages : " + packString : ""}
 3. DESIGN :
     - Police : ${lFont}.
     - Couleur d'accent (titres/lignes) : ${lColor} (utiliser \\definecolor{accent}{HTML}{${lColor.replace('#','')}}).
@@ -2307,25 +2503,29 @@ Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
    \\end{center}
 5. GESTION DES IMAGES/SCHÉMAS : `;
             
+            // Gestion des images selon la discipline
             if (discipline === 'PHYSIQUE CHIMIE ET TECHNOLOGIE') {
-                let imagesChimie = "";
-                if(document.getElementById('hasImagesChimie').checked) {
-                    let nb = document.getElementById('nbImagesChimie').value;
-                    let titres = document.getElementById('titresImagesChimie').value;
-                    imagesChimie = `Pour la PARTIE A (CHIMIE), inclure ${nb} figure(s). Titres : ${titres}. `;
+                let imagesChimieStr = '';
+                if (document.getElementById('hasImagesChimie').checked) {
+                    const dataChimie = getImageData('chimie');
+                    imagesChimieStr = formatImageDataForPrompt(dataChimie, 'PARTIE A - CHIMIE ET TECHNOLOGIE');
                 }
-                let imagesPhysique = "";
-                if(document.getElementById('hasImagesPhysique').checked) {
-                    let nb = document.getElementById('nbImagesPhysique').value;
-                    let titres = document.getElementById('titresImagesPhysique').value;
-                    imagesPhysique = `Pour la PARTIE B (PHYSIQUE), inclure ${nb} figure(s). Titres : ${titres}. `;
+                let imagesPhysiqueStr = '';
+                if (document.getElementById('hasImagesPhysique').checked) {
+                    const dataPhysique = getImageData('physique');
+                    imagesPhysiqueStr = formatImageDataForPrompt(dataPhysique, 'PARTIE B - PHYSIQUE ET TECHNOLOGIE');
                 }
-                prompt += imagesChimie + imagesPhysique + "Pour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=0.7\\linewidth]{example-image} \\caption{Description} \\end{figure}.";
+                prompt += `Pour la PARTIE A (CHIMIE), inclure les images selon les spécifications suivantes :\n${imagesChimieStr || 'Aucune image.'}\n`;
+                prompt += `Pour la PARTIE B (PHYSIQUE), inclure les images selon les spécifications suivantes :\n${imagesPhysiqueStr || 'Aucune image.'}\n`;
+                prompt += `Pour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=...,height=...]{nom_fichier} \\caption{légende} \\end{figure}. Respecter le nom de fichier .png, la disposition et la taille demandées. Pour les dispositions groupées (grille/mosaïque), utiliser des mini-pages ou des sous-figures (subcaption) pour organiser les images selon le type de grille demandé.`;
             } else {
-                if(document.getElementById('hasImagesSimple').checked) {
-                    let nb = document.getElementById('nbImagesSimple').value;
-                    let titres = document.getElementById('titresImagesSimple').value;
-                    prompt += `Inclure ${nb} figure(s) correspondant à : ${titres}. Pour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=0.7\\linewidth]{example-image} \\caption{Description} \\end{figure}.`;
+                let imagesSimpleStr = '';
+                if (document.getElementById('hasImagesSimple').checked) {
+                    const dataSimple = getImageData('simple');
+                    imagesSimpleStr = formatImageDataForPrompt(dataSimple, 'IMAGES');
+                }
+                if (document.getElementById('hasImagesSimple').checked) {
+                    prompt += `Inclure les images selon les spécifications suivantes :\n${imagesSimpleStr}\nPour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=...,height=...]{nom_fichier} \\caption{légende} \\end{figure}. Respecter le nom de fichier .png, la disposition et la taille demandées. Pour les dispositions groupées (grille/mosaïque), utiliser des mini-pages ou des sous-figures (subcaption) pour organiser les images selon le type de grille demandé.`;
                 } else {
                     prompt += `Aucune image requise.`;
                 }
@@ -2470,13 +2670,15 @@ AUCUN BARÈME ni points.
                 document.querySelectorAll('.form-check-input').forEach(cb => cb.checked = false);
                 document.getElementById('promptResult').innerHTML = '<i class="fas fa-info-circle"></i> Formulaire réinitialisé.';
                 toggleDisciplineContainers();
-                if(hasImagesSimple) imagesSimpleConfig.style.display = 'none';
-                if(hasImagesChimie) imagesChimieConfig.style.display = 'none';
-                if(hasImagesPhysique) imagesPhysiqueConfig.style.display = 'none';
+                if(hasImagesSimple) { imagesSimpleConfig.style.display = 'none'; document.getElementById('imageDetailsSimple').innerHTML = ''; }
+                if(hasImagesChimie) { imagesChimieConfig.style.display = 'none'; document.getElementById('imageDetailsChimie').innerHTML = ''; }
+                if(hasImagesPhysique) { imagesPhysiqueConfig.style.display = 'none'; document.getElementById('imageDetailsPhysique').innerHTML = ''; }
             }
         }
 
-        // PWA Installation Logic
+        // ============================================================
+        // PWA
+        // ============================================================
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
 
