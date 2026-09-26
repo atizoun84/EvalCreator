@@ -1237,13 +1237,58 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
    - Vérifie systématiquement que la somme de tous les points (colonnes « Pts » + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
 
-8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER :
-   Si une réponse attendue est un schéma à dessiner, tu dois impérativement :
-   - Insérer une image incrustée dans la colonne « Éléments de réponse » à l'aide de la commande LaTeX \\includegraphics.
-   - Utiliser un environnement \\begin{minipage} ou un ajustement de largeur (ex : \\includegraphics[width=0.8\\linewidth]{nom_image}) pour que l'image s'adapte automatiquement à la largeur du texte.
-   - Prévoir un espace vertical suffisant (\\vspace) avant et après l'image pour une bonne lisibilité.
-   - Indiquer clairement la légende ou le titre du schéma sous l'image (ex : \\captionof{figure}{Schéma du montage}).
-   - Si aucune image réelle n'est disponible, insérer un cadre vide de taille appropriée avec la mention « Emplacement réservé pour le schéma » à l'aide de \\fbox{\\parbox{0.8\\linewidth}{\\centering \\vspace{2cm} Emplacement réservé pour le schéma \\vspace{2cm}}}.
+8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
+
+   ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS inventer un nom de fichier 
+   incohérent ou une extension inconnue. Utilise UNIQUEMENT les conventions 
+   ci-dessous pour nommer les fichiers.
+
+   ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
+   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
+   tu dois insérer dans la colonne « Éléments de réponse » un CADRE 
+   CARRÉ contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
+   de la commande LaTeX suivante :
+
+   \\fbox{\\parbox{0.85\\linewidth}{\\centering 
+     \\vspace{1.2cm} 
+     \\textbf{\\texttt{schema-X-Y.png}} 
+     \\vspace{0.2cm} 
+     \\textit{(à uploader sur Overleaf)} 
+     \\vspace{1.2cm}}}
+
+   CONVENTIONS DE NOMMAGE OBLIGATOIRES :
+   - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
+   - Exemples :
+       • Question 2-1 sans volet : schema-2-1.png
+       • Question 2-1 volet a)    : schema-2-1-a.png
+       • Question 1-3 volet b)    : schema-1-3-b.png
+       • Question 3-2 volet c)    : schema-3-2-c.png
+   - Extension UNIQUEMENT : .png (jamais .jpg, .jpeg, .pdf, .svg)
+   - Caractères autorisés : lettres minuscules, chiffres, tirets uniquement
+   - JAMAIS d'espaces, d'accents, de majuscules, ni de caractères spéciaux
+
+   INSTRUCTIONS COMPLÉMENTAIRES :
+   - Avant le cadre, indiquer en une phrase courte ce que le schéma 
+     doit représenter (ex : « Schéma du montage en série avec 3 lampes. »).
+   - Après le cadre, indiquer la légende attendue 
+     (ex : « Légende : montage en série »).
+   - Adapter la hauteur du \\vspace{1.2cm} (avant et après le nom) :
+       • Schéma simple (droite graduée, axe) : 0.8cm
+       • Schéma moyen (circuit, molécule)    : 1.2cm
+       • Schéma complexe (appareil, montage) : 1.8cm
+   - Si plusieurs schémas dans une même question, insérer plusieurs 
+     \\fbox successifs séparés par un \\vspace{0.3cm}.
+   - Le nom du fichier doit être UNIQUE dans tout le document.
+
+   ✅ JUSTIFICATION : Ce cadre carré affiche le nom exact du fichier 
+   que l'enseignant devra uploader sur Overleaf. Après upload et 
+   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
+   \\includegraphics[width=0.85\\linewidth]{schema-X-Y.png} pour afficher 
+   l'image réelle, OU conserver le cadre comme repère visuel.
+
+   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
+   dans le code généré — toujours passer par le \\fbox placeholder 
+   décrit ci-dessus.
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
