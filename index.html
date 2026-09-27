@@ -693,6 +693,106 @@
             color: var(--accent);
         }
 
+        /* ====== MODAL PROMPT SPÉCIAL ====== */
+        .special-prompt-modal .modal-content {
+            border-radius: 16px;
+            border: 1px solid rgba(178, 58, 72, 0.45);
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            background: #ffffff;
+        }
+        .special-prompt-modal .modal-header {
+            background: linear-gradient(135deg, var(--danger) 0%, #8f2d3a 100%);
+            color: #fff;
+            border-bottom: 2px solid var(--accent);
+            padding: 14px 22px;
+        }
+        .special-prompt-modal .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+        }
+        .special-prompt-modal .modal-title i {
+            color: var(--accent-light);
+        }
+        .special-prompt-modal .btn-close {
+            filter: invert(1) brightness(2);
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .special-prompt-modal .btn-close:hover {
+            opacity: 1;
+        }
+        .special-prompt-modal .modal-body {
+            padding: 26px 24px;
+            background: linear-gradient(180deg, #ffffff 0%, #fef7f7 100%);
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+        .special-prompt-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.75;
+            color: #b23a48;
+            font-weight: 700;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #fff5f5;
+            border-left: 4px solid var(--danger);
+            border-radius: 10px;
+            padding: 20px 22px;
+        }
+        .special-prompt-modal .modal-footer {
+            background: #fef7f7;
+            border-top: 1px solid rgba(178, 58, 72, 0.25);
+            padding: 14px 20px;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .special-prompt-modal .btn-copy-special {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .special-prompt-modal .btn-copy-special:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(19, 64, 116, 0.4);
+            color: #fff;
+        }
+        .special-prompt-modal .btn-close-special {
+            background: linear-gradient(135deg, var(--danger) 0%, #8f2d3a 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 30px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .special-prompt-modal .btn-close-special:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(178, 58, 72, 0.4);
+            color: #fff;
+        }
+
         /* ====== OVERLAY D'AUTHENTIFICATION (SÉCURITÉ) ====== */
         #authOverlay {
             position: fixed;
@@ -1066,6 +1166,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="grille_correction.html">
                             <i class="fas fa-clipboard-check"></i> Corrigé type &amp; Grille de correction
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#specialPromptModal">
+                            <i class="fas fa-code"></i> PROMPT SPÉCIAL DE MODIF CODE LaTeX
                         </a>
                     </li>
                     <li class="nav-item">
@@ -1684,6 +1789,45 @@
         </div>
     </footer>
     </div> <!-- /#appContent -->
+
+    <!-- ====== MODAL PROMPT SPÉCIAL DE MODIF CODE LaTeX ====== -->
+    <div class="modal fade special-prompt-modal" id="specialPromptModal" tabindex="-1" aria-labelledby="specialPromptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="specialPromptModalLabel">
+                        <i class="fas fa-code"></i>
+                        PROMPT SPÉCIAL DE MODIF CODE LaTeX
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="special-prompt-content" id="specialPromptText">Conserve l’intégralité du code LaTeX précédent sans aucune modification de structure, de logique ou de fonctionnement, sauf pour les modifications expressément demandées ci-dessous.
+
+Contraintes absolues :
+- Ne rien modifier dans les fonctionnalités, commandes, environnements, packages, styles, couleurs, paramètres ou sections non affectés par les modifications demandées.
+- Ne pas réécrire le code différemment.
+- Ne pas réorganiser, refactoriser, reformater ou “améliorer” le code existant.
+- Utiliser exactement la base actuelle du code LaTeX fournie.
+- Appliquer uniquement les modifications demandées, de façon chirurgicale, minimale et ciblée.
+- Si une modification demandée est ambiguë, appliquer l’interprétation la plus restrictive et la plus locale possible.
+
+Modifications à appliquer :
+[insérer ici les modifications demandées]
+
+Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identique à l’original.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-copy-special" id="btnCopySpecialPrompt">
+                        <i class="fas fa-copy"></i> Copier le prompt
+                    </button>
+                    <button type="button" class="btn-close-special" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ====== MODAL À PROPOS ====== -->
     <div class="modal fade about-modal" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
@@ -2847,6 +2991,21 @@ AUCUN BARÈME ni points.
                 if(logoCustomSizeRow) { logoCustomSizeRow.style.display = 'none'; }
             }
         }
+
+        // ============================================================
+        // COPIE DU PROMPT SPÉCIAL
+        // ============================================================
+        document.getElementById('btnCopySpecialPrompt').addEventListener('click', function() {
+            const text = document.getElementById('specialPromptText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = this;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            }).catch(() => {
+                alert('Erreur lors de la copie. Veuillez sélectionner manuellement.');
+            });
+        });
 
         // ============================================================
         // PWA
