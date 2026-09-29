@@ -1166,18 +1166,20 @@ II. STRUCTURE DE LA GRILLE (ANTI-DÉBORDEMENT A4 PAYSAGE)
 La grille reproduit EXACTEMENT l'architecture suivante :
 
 1. DIMENSIONNEMENT ET COMPATIBILITÉ OVERLEAF :
+   Le tableau principal compte 7 COLONNES : N° | C1 | Pts | C2 | Pts | C3 | Pts.
    Pour éviter TOUT débordement horizontal en orientation Paysage A4 (largeur utile ~27,7 cm),
    utiliser impérativement une classe 10pt avec des marges de 1 cm, \`tabcolsep=3pt\`,
-   et fixer la somme totale des largeurs de colonnes à 25,1 cm max :
-     - Cons ............................... 1,0 cm  (code/numéro de question)
-     - Éléments de réponse ................ 11,2 cm (contenu pédagogique attendu)
-     - Pts (total question) ............... 0,7 cm  (chiffres uniquement)
-     - Critère 1 (texte) .................. 3,3 cm  (la production se rapporte à la consigne)
-     - Pts critère 1 ...................... 0,6 cm  (chiffres uniquement)
-     - Critère 2 (texte) .................. 3,3 cm  (la production utilise les ressources...)
-     - Pts critère 2 ...................... 0,6 cm  (chiffres uniquement)
-     - Critère 3 (texte) .................. 3,8 cm  (la production est bien raisonnée)
-     - Pts critère 3 ...................... 0,6 cm  (chiffres uniquement)
+   et fixer la somme totale des largeurs de colonnes à 25,1 cm max (colonnes de type p{...},
+   car tabularx/X est incompatible avec longtable) :
+     - N° (numéro de question, centré) .... 1,2 cm
+     - Critère 1 (indicateurs C1) ......... 7,9 cm  (la production se rapporte à la consigne)
+     - Pts critère 1 ...................... 0,9 cm  (chiffres uniquement, centré)
+     - Critère 2 (indicateurs C2) ......... 7,9 cm  (la production utilise les ressources...)
+     - Pts critère 2 ...................... 0,9 cm  (chiffres uniquement, centré)
+     - Critère 3 (indicateurs C3) ......... 5,4 cm  (la production est bien raisonnée)
+     - Pts critère 3 ...................... 0,9 cm  (chiffres uniquement, centré)
+   Spécification de colonnes à utiliser EXACTEMENT :
+     |>{\\centering\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\centering\\arraybackslash}p{0.9cm}|
 
 2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
    Au-dessus du tableau principal, reproduire EXACTEMENT la même disposition que celle de l'épreuve :
@@ -1200,16 +1202,48 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
    \\end{center}
 
-3. ORGANISATION HIÉRARCHIQUE DES LIGNES :
-   - Ligne de titre de discipline (fusion multicolumn=9) : « A- PHYSIQUE ET TECHNOLOGIE »
-   - Lignes de parties (fusion multicolumn=9) : 
+3. ORGANISATION HIÉRARCHIQUE DES LIGNES ET STRUCTURE D'UN BLOC QUESTION :
+   - Ligne de titre de discipline (fusion multicolumn=7) : « A- PHYSIQUE ET TECHNOLOGIE »
+   - Lignes de parties (fusion multicolumn=7) : 
      « PARTIE 1 : MOBILISATION DES RESSOURCES »
      « PARTIE 2 : RÉSOLUTION DE PROBLÈMES » (divisée en Sous-tâche 1 et Sous-tâche 2 si 6e/5e).
    - Questions numérotées : 1-1, 1-2... / 2-1, 2-2...
 
+   CHAQUE QUESTION = UN BLOC DE 2 SOUS-LIGNES (structure anti-doublon des éléments de réponse) :
+     a) Sous-ligne « Éléments de réponse » : la cellule N° est en \\multirow{2}{*}{\\textbf{numéro de la question}},
+        puis \\multicolumn{6}{p{24.8cm}|}{...} fusionne les colonnes 2 à 7 et contient UNE SEULE FOIS
+        la réponse attendue (corrigé type) de la question, terminée par le total de la question
+        (\\hfill\\textbf{(Total : X pts)}).
+     b) Sous-ligne « Indicateurs » : la cellule N° est vide (elle prolonge le multirow), puis trois paires
+        indicateurs + points : indicateurs liés à C1 | pts C1 | indicateurs liés à C2 | pts C2 | indicateurs liés à C3 | pts C3.
+     c) Séparateurs : \\cline{2-7} entre les deux sous-lignes (pour laisser la cellule N° ouverte)
+        et \\hline à la fin du bloc.
+   - Les éléments de réponse ne doivent JAMAIS être répétés dans les colonnes des critères ni dans une autre ligne :
+     les colonnes C1, C2 et C3 contiennent uniquement des indicateurs (phrases courtes, voir section V) et des points.
+   - Le total d'une question est la somme des trois points (Pts C1 + Pts C2 + Pts C3).
+
+   Squelette EXACT à reproduire (en-tête répété + bloc question) :
+   \\begin{longtable}{|>{\\centering\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\centering\\arraybackslash}p{0.9cm}|}
+   \\hline
+   \\textbf{N°} & \\textbf{C1 : La production se rapporte à la consigne} & \\textbf{Pts} & \\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\textbf{Pts} & \\textbf{C3 : La production est bien raisonnée} & \\textbf{Pts} \\\\
+   \\hline\\hline
+   \\endfirsthead
+   \\hline
+   \\textbf{N°} & \\textbf{C1 : La production se rapporte à la consigne} & \\textbf{Pts} & \\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\textbf{Pts} & \\textbf{C3 : La production est bien raisonnée} & \\textbf{Pts} \\\\
+   \\hline\\hline
+   \\endhead
+   \\multicolumn{7}{|l|}{\\textbf{A- PHYSIQUE ET TECHNOLOGIE}} \\\\
+   \\hline
+   \\multirow{2}{*}{\\textbf{2-1}} &
+   \\multicolumn{6}{p{24.8cm}|}{\\textbf{Éléments de réponse :} ... \\hfill\\textbf{(Total : 2 pts)}} \\\\
+   \\cline{2-7}
+   & indicateurs liés à C1 & 0,5 & indicateurs liés à C2 & 0,5 & indicateurs liés à C3 & 1 \\\\
+   \\hline
+   \\end{longtable}
+
 4. GESTION MULTI-PAGES (IMPÉRATIF) :
    - Tableau principal obligatoirement en environnement \`longtable\`.
-   - Utiliser \`\\endfirsthead\` et \`\\endhead\` pour répéter automatiquement l'en-tête de 9 colonnes en haut de chaque page.
+   - Utiliser \`\\endfirsthead\` et \`\\endhead\` pour répéter automatiquement l'en-tête de 7 colonnes en haut de chaque page.
 
 5. TABLEAU FINAL DES CRITÈRES DE PERFECTIONNEMENT / INDICATEURS TRANSVERSAUX :
    Un tableau secondaire de 2 colonnes sous la \`longtable\` (largeur totale ajustée) :
@@ -1218,14 +1252,15 @@ La grille reproduit EXACTEMENT l'architecture suivante :
 
 6. VENTILATION DE LA PONDÉRATION DES CRITÈRES POUR LES QUESTIONS À PLUSIEURS VOLETS :
    Lorsqu'une question comporte PLUSIEURS VOLETS (sous-questions a), b), c)..., ou plusieurs calculs/déterminations distincts), tu dois IMPÉRATIVEMENT :
-   - Traiter la question comme UNE SEULE entrée principale dans la colonne « Cons » (ex : 2-1).
+   - Traiter la question comme UN SEUL bloc de 2 sous-lignes (cellule N°, ex : 2-1).
    - Attribuer à la question un total de points cohérent avec la clé de répartition APC.
-   - Répartir ce total ENTRE LES VOLETS dans la colonne « Éléments de réponse », en indiquant CLAIREMENT pour chaque volet sa part de points (ex : « a) Définition correcte .... 0,5 pt ; b) Calcul de la masse molaire ..... 0,75 pt ; c) Déduction ..... 0,75 pt »).
+   - Répartir ce total ENTRE LES VOLETS dans la cellule fusionnée « Éléments de réponse », en indiquant CLAIREMENT pour chaque volet sa part de points (ex : « a) Définition correcte .... 0,5 pt ; b) Calcul de la masse molaire ..... 0,75 pt ; c) Déduction ..... 0,75 pt »).
    - VENTILER ENSUITE CHAQUE PART DE VOLET DANS LES 3 CRITÈRES (Pertinence / Utilisation correcte des ressources / Cohérence-Raisonnement) de manière à ce que :
          • Pour chaque volet : Pts critère 1 + Pts critère 2 + Pts critère 3 = Pts du volet.
-         • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question (colonne « Pts »).
-   - NE JAMAIS dupliquer la ligne de la question ; regrouper les volets sur une seule ligne en utilisant des retours à la ligne (\\newline) dans la colonne « Éléments de réponse ».
-   - Vérifier que la somme verticale des points de la colonne « Pts » correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
+         • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question (rappelé en fin de cellule « Éléments de réponse »).
+   - Dans la sous-ligne « Indicateurs », écrire pour chaque critère un indicateur par volet (a), b), c)), séparés par \\newline, et inscrire dans la cellule Pts du critère le TOTAL des points de ce critère pour la question.
+   - NE JAMAIS dupliquer le bloc de la question ; regrouper les volets dans un seul bloc en utilisant des retours à la ligne (\\newline) dans la cellule « Éléments de réponse ».
+   - Vérifier que la somme des points des critères de toutes les questions correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
 
 7. CONTRAINTE ABSOLUE SUR LES VALEURS DE POINTS (MULTIPLES DE 0,25 UNIQUEMENT) :
    Toutes les attributions de points — au niveau des volets, des critères, des questions, des parties et des totaux — doivent OBLIGATOIREMENT être des ENTIERS ou des MULTIPLES DE 0,25 (c'est-à-dire 0,25 ; 0,5 ; 0,75 ; 1 ; 1,25 ; 1,5 ; 1,75 ; 2 ; etc.).
@@ -1235,7 +1270,7 @@ La grille reproduit EXACTEMENT l'architecture suivante :
         a) 0,5 pt  +  b) 0,75 pt  +  c) 0,75 pt  =  2 pts
         Et pour chaque volet, la somme des 3 critères doit également être un multiple de 0,25 (ex : 0,25 + 0,25 + 0 = 0,5 ; 0,25 + 0,25 + 0,25 = 0,75 ; etc.).
    - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
-   - Vérifie systématiquement que la somme de tous les points (colonnes « Pts » + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
+   - Vérifie systématiquement que la somme de tous les points (Pts C1 + C2 + C3 de toutes les questions + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
 
 8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
 
@@ -1245,7 +1280,7 @@ La grille reproduit EXACTEMENT l'architecture suivante :
 
    ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
    Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
-   tu dois insérer dans la colonne « Éléments de réponse » un CADRE 
+   tu dois insérer dans la cellule fusionnée « Éléments de réponse » un CADRE 
    CARRÉ contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
    de la commande LaTeX suivante :
 
@@ -1329,7 +1364,7 @@ la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`.
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`.
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
