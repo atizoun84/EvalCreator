@@ -2016,31 +2016,37 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
         })();
 
         // ============================================================
-        // FINGERPRINT
+        // FINGERPRINT (Version stable v2)
         // ============================================================
+        const FP_VERSION = 2;
+
         async function getHardwareFingerprint() {
             const parts = [];
+
+            // ✅ Données réellement stables
             parts.push('cores:' + (navigator.hardwareConcurrency || 'x'));
             parts.push('ram:' + (navigator.deviceMemory || 'x'));
-            parts.push('screen:' + screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
             parts.push('tz:' + Intl.DateTimeFormat().resolvedOptions().timeZone);
             parts.push('lang:' + navigator.language);
             parts.push('plat:' + (navigator.platform || 'x'));
-            try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
-                    if (dbg) parts.push('gpu:' + gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL));
-                }
-            } catch(e) {}
-            try {
-                const ac = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
-                parts.push('audio:' + ac.sampleRate);
-            } catch(e) {}
+
+            // ❌ SUPPRIMÉ : screen.width/height/colorDepth (trop instable)
+            // ❌ SUPPRIMÉ : WebGL renderer (change après update navigateur/GPU)
+            // ❌ SUPPRIMÉ : audio sampleRate (change avec casque Bluetooth)
+
+            // ✅ Remplacé par : un identifiant persistant stocké localement
+            let deviceId = localStorage.getItem('pct_device_id');
+            if (!deviceId) {
+                deviceId = (crypto.randomUUID ? crypto.randomUUID() :
+                           'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+                localStorage.setItem('pct_device_id', deviceId);
+            }
+            parts.push('deviceId:' + deviceId);
+
+            // ✅ Un seul hash déterministe
             const raw = parts.join('|');
             const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
         // ============================================================
@@ -2128,6 +2134,7 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
                 updates['licenses/' + uid] = {
                     licenseKey: licenseKey,
                     hardwareId: hw,
+                    fpVersion: FP_VERSION,
                     email: email,
                     activatedAt: firebase.database.ServerValue.TIMESTAMP
                 };
@@ -2214,15 +2221,29 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
 
                 if (!license.hardwareId) {
                     await db.ref('licenses/' + user.uid + '/hardwareId').set(currentHw);
+                    await db.ref('licenses/' + user.uid + '/fpVersion').set(FP_VERSION);
                     await db.ref('licenses/' + user.uid + '/reactivatedAt').set(firebase.database.ServerValue.TIMESTAMP);
                     showMsg('✅ Licence transférée sur ce nouvel appareil', 'success');
                 } else if (currentHw !== license.hardwareId) {
-                    await auth.signOut();
-                    setFooterNoteLinkedWarning(license.email || user.email);
-                    return showMsg(
-                        '🚫 Cette licence est liée à un autre appareil. Contactez le concepteur pour un transfert.',
-                        'error'
-                    );
+                    // Tolérance de migration : si la version du fingerprint stocké est ancienne (< v2),
+                    // on migre automatiquement sans bloquer l'utilisateur.
+                    const storedVersion = license.fpVersion || 1;
+                    if (storedVersion < FP_VERSION) {
+                        await db.ref('licenses/' + user.uid).update({
+                            hardwareId: currentHw,
+                            fpVersion: FP_VERSION,
+                            migratedAt: firebase.database.ServerValue.TIMESTAMP
+                        });
+                        console.warn('Fingerprint migré automatiquement vers v' + FP_VERSION);
+                        showMsg('✅ Licence migrée automatiquement vers la nouvelle version', 'success');
+                    } else {
+                        await auth.signOut();
+                        setFooterNoteLinkedWarning(license.email || user.email);
+                        return showMsg(
+                            '🚫 Cette licence est liée à un autre appareil. Contactez le concepteur pour un transfert.',
+                            'error'
+                        );
+                    }
                 }
 
                 authOverlay.classList.add('hidden');
@@ -2246,6 +2267,50 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
             preRemplirEmail();
         });
         preRemplirEmail();
+
+        // ============================================================
+        // MIGRATION AUTOMATIQUE BULK (Option B) : Forcer fpVersion = 0 partout
+        // ============================================================
+        // Ce bloc s'exécute silencieusement au chargement de la page pour
+        // forcer la migration de TOUS les utilisateurs dont fpVersion < FP_VERSION.
+        // Les anciens fingerprints deviendront obsolètes et seront migrés
+        // automatiquement lors de leur prochaine connexion.
+        (async function forceBulkMigration() {
+            try {
+                const migrationFlag = localStorage.getItem('pct_bulk_migration_v2_done');
+                if (migrationFlag === 'done') return;
+
+                const licensesSnap = await db.ref('licenses').once('value');
+                if (!licensesSnap.exists()) {
+                    localStorage.setItem('pct_bulk_migration_v2_done', 'done');
+                    return;
+                }
+
+                const licenses = licensesSnap.val();
+                const updates = {};
+                let modifiedCount = 0;
+
+                for (const uid in licenses) {
+                    const lic = licenses[uid];
+                    const version = lic && lic.fpVersion;
+                    if (!version || version < FP_VERSION) {
+                        updates['licenses/' + uid + '/fpVersion'] = 0;
+                        updates['licenses/' + uid + '/bulkMigratedAt'] = firebase.database.ServerValue.TIMESTAMP;
+                        modifiedCount++;
+                    }
+                }
+
+                if (modifiedCount > 0) {
+                    await db.ref().update(updates);
+                    console.log('Migration bulk : ' + modifiedCount + ' licence(s) marquée(s) pour migration automatique.');
+                }
+
+                localStorage.setItem('pct_bulk_migration_v2_done', 'done');
+            } catch (err) {
+                // Silencieux : ne doit jamais bloquer l'utilisateur
+                console.warn('Migration bulk ignorée :', err && err.message ? err.message : err);
+            }
+        })();
 
         // ============================================================
         // GESTION DES CONTENEURS DISCIPLINE
