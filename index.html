@@ -1196,6 +1196,20 @@
                     </div>
                     <div class="card-body">
                         <form id="promptForm">
+                            <!-- ===== Option entête générale (image) ===== -->
+                            <div class="sub-section mb-2" style="background:#fff8e1; border-left:3px solid var(--accent);">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="hasEnteteGenerale">
+                                    <label class="form-check-label" for="hasEnteteGenerale" style="font-weight:600;">
+                                        <i class="fas fa-image"></i> L'établissement utilise une <strong>entête générale</strong> (image pleine largeur)
+                                    </label>
+                                </div>
+                                <div class="cm-hint">
+                                    L'image doit être importée dans Overleaf sous le nom fixe <code>entete.png</code>.
+                                    Elle remplacera le cartouche Pays / Direction / Établissement / Année scolaire.
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="fas fa-flag"></i> Pays</label>
@@ -2628,6 +2642,7 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
                     generateImageFields('imageDetailsPhysique', nb, 'physique');
                 }
             }
+            if (typeof toggleEnteteGenerale === 'function') toggleEnteteGenerale();
         }
         
         // ============================================================
@@ -2679,6 +2694,59 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
         }
 
         // ============================================================
+        // GESTION ENTÊTE GÉNÉRALE (IMAGE)
+        // ============================================================
+        const hasEnteteGenerale = document.getElementById('hasEnteteGenerale');
+        const champsEnteteStandard = ['pays', 'directionDepartementale', 'etablissement', 'anneeScolaire'];
+
+        function toggleEnteteGenerale() {
+            if (!hasEnteteGenerale) return;
+            const actif = hasEnteteGenerale.checked;
+
+            champsEnteteStandard.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.disabled = actif;
+                const wrapper = el.closest('.col-md-6, .col-md-4, .col-12');
+                if (wrapper) {
+                    wrapper.style.opacity = actif ? '0.4' : '1';
+                    wrapper.style.pointerEvents = actif ? 'none' : 'auto';
+                }
+            });
+
+            // Si entête générale cochée → on désactive aussi le logo établissement (inutile)
+            const logoChk = document.getElementById('hasLogoEtablissement');
+            if (logoChk && actif) {
+                logoChk.checked = false;
+                const cfg = document.getElementById('logoConfig');
+                if (cfg) cfg.style.display = 'none';
+            }
+
+            // Message d'information sous la case
+            let info = document.getElementById('enteteInfo');
+            if (actif) {
+                if (!info) {
+                    info = document.createElement('div');
+                    info.id = 'enteteInfo';
+                    info.className = 'alert alert-warning mt-2 mb-0 small';
+                    info.innerHTML = '<i class="fas fa-info-circle"></i> Les champs Pays, Direction, Établissement et Année scolaire sont désactivés. Le titre de l\'épreuve, la classe, le coefficient et la durée restent éditables.';
+                    hasEnteteGenerale.closest('.sub-section').appendChild(info);
+                }
+            } else if (info) {
+                info.remove();
+            }
+        }
+
+        if (hasEnteteGenerale) {
+            hasEnteteGenerale.addEventListener('change', () => {
+                toggleEnteteGenerale();
+                sauvegarderDonnees();
+            });
+            // Restaurer l'état au chargement
+            toggleEnteteGenerale();
+        }
+
+        // ============================================================
         // GÉNÉRATION DU PROMPT
         // ============================================================
         function genererPrompt() {
@@ -2714,6 +2782,8 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
             const packString = selectedPacks.length > 0 ? selectedPacks.join(', ') : 'Aucun supplément';
             
             const documentJoint = document.getElementById('documentJoint').value || "Aucun document joint";
+
+            const hasEntete = document.getElementById('hasEnteteGenerale')?.checked || false;
 
             const competencesDisciplinaires = [];
             document.querySelectorAll('#compDisciplinaires input:checked').forEach(cb => {
@@ -2766,6 +2836,80 @@ L'établissement dispose d'un logo/timbre. Tu dois :
 5. Adapter les proportions pour que l'ensemble reste harmonieux et tienne sur la largeur de la page.
 6. Le logo doit être traité comme un élément d'identité visuelle de l'établissement, placé avec goût.`;
             }
+
+            // ---- Bloc informations épreuve (conditionnel) ----
+            let infosEpreuve = '';
+            if (hasEntete) {
+                infosEpreuve = `ÉTABLISSEMENT : entête générale fournie via image (voir consignes LaTeX ci-dessous)
+Année scolaire : ${anneeScolaire}
+Titre : ${titreEpreuve}
+Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}`;
+            } else {
+                infosEpreuve = `PAYS : ${pays}
+DIRECTION DÉPARTEMENTALE : ${directionDepartementale}
+ÉTABLISSEMENT : ${etablissement}
+Année scolaire : ${anneeScolaire}
+Titre : ${titreEpreuve}
+Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
+${hasLogo ? `Logo établissement : ${logoFileName} (taille : ${logoSizeTexte})` : 'Logo établissement : Aucun'}`;
+            }
+
+            // ---- Instruction LaTeX spécifique entête générale ----
+            let enteteLatexInstruction = '';
+            if (hasEntete) {
+                enteteLatexInstruction = `L'établissement utilise une entête générale officielle fournie sous forme d'image.
+
+CONSIGNES IMPÉRATIVES :
+1. En TOUT DÉBUT du document (juste après \\begin{document}), insérer :
+   \\begin{center}
+       \\includegraphics[width=\\linewidth]{entete.png}
+   \\end{center}
+2. NE PAS insérer de cartouche Pays / Direction / Établissement / Année scolaire.
+3. Juste SOUS l'image entete.png, ajouter uniquement :
+   - Une ligne centrée : le titre "${titreEpreuve} (${anneeScolaire})" en gras.
+   - Une ligne horizontale (\\rule{0.9\\linewidth}{${lRule}}) de séparation.
+   - Une ligne centrée : "Classe : ${classe} $\\cdot$ Coef. : ${coefficient} $\\cdot$ Durée : ${duree}" en gras.
+4. NE PAS ajouter de logo établissement supplémentaire.
+5. L'image doit occuper TOUTE la largeur de la page (\\linewidth), sans dépasser.
+6. Ne pas recadrer ni déformer l'image : conserver son ratio (utiliser uniquement width).
+
+Exemple de structure attendue :
+\\begin{center}
+    \\includegraphics[width=\\linewidth]{entete.png}\\\\[6pt]
+    {\\textbf{${titreEpreuve} (${anneeScolaire})}}\\\\[2pt]
+    \\rule{0.9\\linewidth}{${lRule}}\\\\[4pt]
+    {\\textbf{Classe : ${classe} $\\cdot$ Coef. : ${coefficient} $\\cdot$ Durée : ${duree}}}
+\\end{center}`;
+            }
+
+            // ---- Bloc point 4 (EN-TÊTE) conditionnel ----
+            let point4Entete = '';
+            if (hasEntete) {
+                point4Entete = `4. EN-TÊTE : ${enteteLatexInstruction}`;
+            } else {
+                point4Entete = `4. EN-TÊTE (CARTOUCHE OFFICIEL) : Créer un cartouche professionnel en respectant STRICTEMENT cette disposition :
+   - Le LIBELLÉ DU PAYS (${pays}) doit être placé EN HAUT À GAUCHE.
+   - La DIRECTION DÉPARTEMENTALE (${directionDepartementale}) doit être placée EN HAUT À DROITE (côté opposé au pays).
+   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
+   - Puis centrer en dessous le nom de l'établissement, le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   ${hasLogo ? `   - INSÉRER LE LOGO "${logoFileName}" DANS LE CARTOUCHE de manière élégante et professionnelle : placer le logo à gauche du cartouche, centré verticalement, à l'aide d'une minipage. Le logo doit avoir une taille cohérente avec l'en-tête (${logoSizeTexte}). Utiliser une structure du type : \\begin{minipage}[c]{0.15\\textwidth}\\centering\\includegraphics[${logoSizeTexte}]{${logoFileName}}\\end{minipage}% \\begin{minipage}[c]{0.85\\textwidth} ... \\end{minipage}. Adapter les proportions pour un rendu harmonieux.` : '   - Aucun logo à insérer.'}
+   
+   Exemple de structure à reproduire :
+   \\begin{center}
+   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
+   {\\small \\textbf{${pays}}} & {\\small \\textbf{${directionDepartementale}}} \\\\
+   \\end{tabularx}\\\\[4pt]
+   {\\Large \\textbf{${etablissement}} \\\\ [2pt]}
+   {\\textbf{${titreEpreuve} (${anneeScolaire})} \\\\ [2pt]}
+   {\\rule{0.9\\linewidth}{${lRule}}} \\\\ [4pt]
+   {\\textbf{Classe : ${classe}^{ème} $\\cdot$ Coef. : ${coefficient} $\\cdot$ Durée : ${duree}}}
+   \\end{center}`;
+            }
+
+            // ---- Ligne finale d'en-tête selon discipline double ----
+            const ligneEnteteFinale = hasEntete
+                ? "- Un en-tête unique pour toute l'épreuve : insertion de l'image entete.png en pleine largeur, suivie du titre, de la règle et de la ligne Classe/Coef./Durée (PAS de cartouche Pays/Direction/Établissement)"
+                : `- Un en-tête unique pour l'ensemble de l'épreuve (avec le PAYS en haut à gauche et la DIRECTION DÉPARTEMENTALE en haut à droite)${hasLogo ? ' et le logo ' + logoFileName + ' à gauche' : ''}`;
 
             const caracteristiquesContexte = `
 --- CARACTÉRISTIQUES DU CONTEXTE (APPROCHE PAR COMPÉTENCES) ---
@@ -2820,13 +2964,7 @@ Ta tâche est de générer l'épreuve complète en respectant le canevas APC et 
 ${caracteristiquesContexte}
 
 --- INFORMATIONS DE L'ÉPREUVE ---
-PAYS : ${pays}
-DIRECTION DÉPARTEMENTALE : ${directionDepartementale}
-ÉTABLISSEMENT : ${etablissement}
-Année scolaire : ${anneeScolaire}
-Titre : ${titreEpreuve}
-Classe : ${classe} | Coef. : ${coefficient} | Durée : ${duree}
-${hasLogo ? `Logo établissement : ${logoFileName} (taille : ${logoSizeTexte})` : 'Logo établissement : Aucun'}
+${infosEpreuve}
 
 --- PARAMÈTRES DE MISE EN FORME LATEX (IMPÉRATIFS) ---
 1. STRUCTURE : Document class article, taille ${lSize}${lTwoCols ? ', twocolumn' : ''}, sans espace inutile pour les réponses (pas de lignes pointillées, pas d'espace réservé pour écrire). AUCUN BARÈME ni points dans le document.
@@ -2838,23 +2976,7 @@ ${hasLogo ? `Logo établissement : ${logoFileName} (taille : ${logoSizeTexte})` 
     - Espacement : setstretch{${lSpacing}} (package setspace).
     - Numérotation : ${lPageNum === 'bottom' ? 'Page X sur \\pageref{LastPage} en bas' : lPageNum === 'top' ? 'En haut de page' : 'Désactivée'}.
     - Filigrane : ${lWatermark !== 'none' ? 'Afficher "' + lWatermark + '" en gris clair' : 'Aucun'}.
-4. EN-TÊTE (CARTOUCHE OFFICIEL) : Créer un cartouche professionnel en respectant STRICTEMENT cette disposition :
-   - Le LIBELLÉ DU PAYS (${pays}) doit être placé EN HAUT À GAUCHE.
-   - La DIRECTION DÉPARTEMENTALE (${directionDepartementale}) doit être placée EN HAUT À DROITE (côté opposé au pays).
-   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
-   - Puis centrer en dessous le nom de l'établissement, le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
-   ${hasLogo ? `   - INSÉRER LE LOGO "${logoFileName}" DANS LE CARTOUCHE de manière élégante et professionnelle : placer le logo à gauche du cartouche, centré verticalement, à l'aide d'une minipage. Le logo doit avoir une taille cohérente avec l'en-tête (${logoSizeTexte}). Utiliser une structure du type : \\begin{minipage}[c]{0.15\\textwidth}\\centering\\includegraphics[${logoSizeTexte}]{${logoFileName}}\\end{minipage}% \\begin{minipage}[c]{0.85\\textwidth} ... \\end{minipage}. Adapter les proportions pour un rendu harmonieux.` : '   - Aucun logo à insérer.'}
-   
-   Exemple de structure à reproduire :
-   \\begin{center}
-   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
-   {\\small \\textbf{${pays}}} & {\\small \\textbf{${directionDepartementale}}} \\\\
-   \\end{tabularx}\\\\[4pt]
-   {\\Large \\textbf{${etablissement}} \\\\ [2pt]}
-   {\\textbf{${titreEpreuve} (${anneeScolaire})} \\\\ [2pt]}
-   {\\rule{0.9\\linewidth}{${lRule}}} \\\\ [4pt]
-   {\\textbf{Classe : ${classe}^{ème} $\\cdot$ Coef. : ${coefficient} $\\cdot$ Durée : ${duree}}}
-   \\end{center}
+${point4Entete}
 5. GESTION DES IMAGES/SCHÉMAS : `;
             
             // Gestion des images selon la discipline
@@ -2962,8 +3084,8 @@ ${regleSousQuestions(sousQ2Physique)} (pour la Partie 2)
 
 ---
 Génère le code LaTeX complet avec :
-- Un en-tête unique pour l'ensemble de l'épreuve (avec le PAYS en haut à gauche et la DIRECTION DÉPARTEMENTALE en haut à droite)
-${hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le cartouche à gauche, avec une taille de ' + logoSizeTexte + ', de manière élégante et professionnelle' : ''}
+${ligneEnteteFinale}
+${hasEntete ? '' : (hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le cartouche à gauche, avec une taille de ' + logoSizeTexte + ', de manière élégante et professionnelle' : '')}
 - Une section A "CHIMIE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Une section B "PHYSIQUE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Les compétences et les paramètres de mise en forme s'appliquent à l'ensemble du document
@@ -2986,6 +3108,10 @@ ${hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le cartouche à gauc
                 // Libellés dynamiques selon l'état des boutons poussoir
                 const labelSousQ1 = sousQ1Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 const labelSousQ2 = sousQ2Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+
+                const ligneEnteteSimple = hasEntete
+                    ? `Génère le code LaTeX complet avec l'en-tête : insertion de l'image entete.png en pleine largeur, suivie du titre "${titreEpreuve} (${anneeScolaire})", d'une règle et de la ligne Classe/Coef./Durée (PAS de cartouche Pays/Direction/Établissement)`
+                    : `Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite)${hasLogo ? ', incluant le logo "' + logoFileName + '" à gauche du cartouche avec une taille de ' + logoSizeTexte : ''}`;
                 
                 prompt += `
 
@@ -3007,7 +3133,7 @@ ${regleSousQuestions(sousQ1Simple)} (pour la Partie 1)
 ${regleSousQuestions(sousQ2Simple)} (pour la Partie 2)
 
 ---
-Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite)${hasLogo ? ', incluant le logo "' + logoFileName + '" à gauche du cartouche avec une taille de ' + logoSizeTexte : ''}, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
+${ligneEnteteSimple}, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
 Toutes les données numériques sont dans le support, jamais dans les questions.
 Structure: Contexte -> Tâche -> Support -> Partie 1 -> Partie 2.
 AUCUN BARÈME ni points.
@@ -3054,6 +3180,7 @@ AUCUN BARÈME ni points.
                 if(hasImagesPhysique) { imagesPhysiqueConfig.style.display = 'none'; document.getElementById('imageDetailsPhysique').innerHTML = ''; }
                 if(logoConfig) { logoConfig.style.display = 'none'; }
                 if(logoCustomSizeRow) { logoCustomSizeRow.style.display = 'none'; }
+                if (typeof toggleEnteteGenerale === 'function') toggleEnteteGenerale();
             }
         }
 

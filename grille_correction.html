@@ -1181,26 +1181,7 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    Spécification de colonnes à utiliser EXACTEMENT :
      |>{\\centering\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\centering\\arraybackslash}p{0.9cm}|
 
-2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
-   Au-dessus du tableau principal, reproduire EXACTEMENT la même disposition que celle de l'épreuve :
-   - Le LIBELLÉ DU PAYS ([PAYS]) doit être placé EN HAUT À GAUCHE.
-   - La DIRECTION DÉPARTEMENTALE ([DIRECTION_DEPARTEMENTALE]) doit être placée EN HAUT À DROITE (côté opposé au pays).
-   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
-   - Puis centrer en dessous le nom de l'établissement, la mention « GRILLE DE CORRECTION », le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
-   - AJOUTER OBLIGATOIREMENT une ligne présentant les compétences disciplinaires et transversales évaluées, sous la forme :
-     \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
-   
-   Exemple de structure à reproduire :
-   \\begin{center}
-   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
-   {\\small \\textbf{[PAYS]}} & {\\small \\textbf{[DIRECTION_DEPARTEMENTALE]}} \\\\
-   \\end{tabularx}\\\\[4pt]
-   {\\Large \\textbf{[ETAB]}}\\\\[2pt]
-   {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
-   {\\rule{0.9\\linewidth}{0.5pt}}\\\\[4pt]
-   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
-   {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
-   \\end{center}
+[SECTION_II_ENTETE]
 
 3. ORGANISATION HIÉRARCHIQUE DES LIGNES ET STRUCTURE D'UN BLOC QUESTION :
    - Ligne de titre de discipline (fusion multicolumn=7) : « A- PHYSIQUE ET TECHNOLOGIE »
@@ -1368,7 +1349,7 @@ IV. PARAMÈTRES DE MISE EN FORME LaTeX
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
-6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, compétences disciplinaires et transversales, période, coef, durée.
+[SECTION_IV_ENTETE]
 7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
 
 ------------------------------------------------------------
@@ -1399,7 +1380,7 @@ IMPORTANT :
     « C2 : La production utilise les ressources visées par la situation d'évaluation ».
   - Dans la colonne « Critère 3 (texte) », le libellé est exactement :
     « C3 : La production est bien raisonnée ».
-  - Pour CHAQUE question et CHAQUE volet, tu dois formuler, dans la colonne du
+  - Pour CHAQUE question et CHAQUE volets, tu dois formuler, dans la colonne du
     critère correspondant, une phrase courte et spécifique à la question,
     en suivant les exemples ci-dessus (ex : « un calcul de la masse molaire est fait »,
     « le calcul comporte la masse m = 5 g et la masse molaire M = 40 g/mol »,
@@ -1449,6 +1430,18 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             return [];
         }
 
+        // NOUVEL UTILITAIRE : Détecte si l'option « entête générale (image) » est
+        // activée dans index.html (clé localStorage : pct_hasEnteteGenerale).
+        function isEnteteGeneraleActive() {
+            const raw = localStorage.getItem('pct_hasEnteteGenerale');
+            if (raw === null || raw === undefined) return false;
+            try {
+                return JSON.parse(raw) === true;
+            } catch(e) {
+                return String(raw).trim().toLowerCase() === 'true';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             loadStoredGeneralInfo();
         });
@@ -1480,6 +1473,30 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const cycle = getLocalStorageValue(['pct_cycle', 'cycle']);
             const duree = getLocalStorageValue(['pct_duree', 'duree']);
             const coef = getLocalStorageValue(['pct_coefficient', 'pct_coef', 'coef']);
+
+            // ============================================================
+            // NOUVEAU : Détection de l'option « entête générale (image) »
+            // ------------------------------------------------------------
+            // Si cette option est activée dans index.html, les champs Pays,
+            // Direction Départementale, Établissement et Année scolaire y sont
+            // désactivés et leurs valeurs ne doivent PAS être importées ici
+            // (car elles peuvent être obsolètes). On affiche à la place une
+            // mention indiquant que ces informations sont fournies via l'image.
+            // ============================================================
+            const enteteActive = isEnteteGeneraleActive();
+
+            if (enteteActive) {
+                const mentionEntete = '📄 Fourni par l\'entête générale (image entete.png)';
+                document.getElementById('displayPays').innerText = mentionEntete;
+                document.getElementById('displayDirectionDepartementale').innerText = mentionEntete;
+                document.getElementById('displayEtablissement').innerText = mentionEntete;
+                document.getElementById('displayAnnee').innerText = mentionEntete;
+            } else {
+                document.getElementById('displayPays').innerText = pays ? pays.toUpperCase() : 'Non configuré';
+                document.getElementById('displayDirectionDepartementale').innerText = directionDepartementale ? directionDepartementale.toUpperCase() : 'Non configuré';
+                document.getElementById('displayEtablissement').innerText = etab ? etab : 'Non configuré';
+                document.getElementById('displayAnnee').innerText = annee ? annee : 'Non configuré';
+            }
 
             // ============================================================
             // RÉCUPÉRATION DES COMPÉTENCES COCHÉES (adaptée au format réel
@@ -1536,10 +1553,8 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const compDisc = compDiscList.length > 0 ? compDiscList.join(' • ') : null;
             const compTrans = compTransList.length > 0 ? compTransList.join(' • ') : null;
 
-            document.getElementById('displayPays').innerText = pays ? pays.toUpperCase() : 'Non configuré';
-            document.getElementById('displayDirectionDepartementale').innerText = directionDepartementale ? directionDepartementale.toUpperCase() : 'Non configuré';
-            document.getElementById('displayEtablissement').innerText = etab ? etab : 'Non configuré';
-            document.getElementById('displayAnnee').innerText = annee ? annee : 'Non configuré';
+            // (Les affichages Pays / Direction / Établissement / Année ont déjà été faits plus haut
+            //  selon l'état de l'option « entête générale ».)
             document.getElementById('displayClasse').innerText = classe ? classe : 'Non configuré';
             document.getElementById('displayTypeEval').innerText = typeEval ? typeEval : 'Non configuré';
             document.getElementById('displayCompetencesDisciplinaires').innerText = compDisc ? compDisc : 'Non configuré';
@@ -1588,7 +1603,9 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
                 'pct_ctv1', 'pct_ctv2', 'pct_ctv3', 'pct_ctv4',
                 // Anciennes clés (fallback)
                 'pct_competencesDisciplinaires', 'competencesDisciplinaires', 'pct_competences_disc',
-                'pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans'
+                'pct_competencesTransversales', 'competencesTransversales', 'pct_competences_trans',
+                // Clé de l'option « entête générale (image) »
+                'pct_hasEnteteGenerale'
             ];
 
             keysToRemove.forEach(key => localStorage.removeItem(key));
@@ -1623,7 +1640,76 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const coef = document.getElementById('inputCoefficient').value;
             const scoreTotal = document.getElementById('calculatedTotalScore').innerText;
 
+            // ============================================================
+            // NOUVEAU : Adaptation des sections II.2 et IV.6 du template
+            // selon l'état de l'option « entête générale (image) ».
+            // ============================================================
+            const enteteActive = isEnteteGeneraleActive();
+
+            let sectionIIEntete = '';
+            if (enteteActive) {
+                sectionIIEntete = `2. EN-TÊTE INSTITUTIONNEL (IMAGE ENTÊTE GÉNÉRALE) :
+   L'établissement utilise une entête générale officielle fournie sous forme d'image
+   (fichier "entete.png" importé dans le projet Overleaf).
+   
+   CONSIGNES IMPÉRATIVES :
+   - En TOUT DÉBUT du document (juste après \\begin{document}), insérer l'image d'entête générale :
+     \\begin{center}
+         \\includegraphics[width=\\linewidth]{entete.png}
+     \\end{center}
+   - NE PAS insérer de cartouche Pays / Direction / Établissement / Année scolaire.
+   - Juste SOUS l'image entete.png, ajouter uniquement :
+       • Une ligne centrée : « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) » en gras.
+       • Une ligne horizontale (\\rule{0.9\\linewidth}{0.5pt}) de séparation.
+       • Une ligne centrée : « Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE] » en gras.
+       • Une ligne présentant les compétences évaluées :
+         \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
+   - Ne pas recadrer ni déformer l'image : conserver son ratio (utiliser uniquement width).
+   
+   Exemple de structure attendue :
+   \\begin{center}
+       \\includegraphics[width=\\linewidth]{entete.png}\\\\[6pt]
+       {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
+       \\rule{0.9\\linewidth}{0.5pt}\\\\[4pt]
+       {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
+       {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
+   \\end{center}`;
+            } else {
+                sectionIIEntete = `2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
+   Au-dessus du tableau principal, reproduire EXACTEMENT la même disposition que celle de l'épreuve :
+   - Le LIBELLÉ DU PAYS ([PAYS]) doit être placé EN HAUT À GAUCHE.
+   - La DIRECTION DÉPARTEMENTALE ([DIRECTION_DEPARTEMENTALE]) doit être placée EN HAUT À DROITE (côté opposé au pays).
+   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
+   - Puis centrer en dessous le nom de l'établissement, la mention « GRILLE DE CORRECTION », le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
+   - AJOUTER OBLIGATOIREMENT une ligne présentant les compétences disciplinaires et transversales évaluées, sous la forme :
+     \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
+   
+   Exemple de structure à reproduire :
+   \\begin{center}
+   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
+   {\\small \\textbf{[PAYS]}} & {\\small \\textbf{[DIRECTION_DEPARTEMENTALE]}} \\\\
+   \\end{tabularx}\\\\[4pt]
+   {\\Large \\textbf{[ETAB]}}\\\\[2pt]
+   {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
+   {\\rule{0.9\\linewidth}{0.5pt}}\\\\[4pt]
+   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
+   {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
+   \\end{center}`;
+            }
+
+            let sectionIVEntete = '';
+            if (enteteActive) {
+                sectionIVEntete = `6. En-tête : Image « entête générale » (fichier "entete.png") insérée EN PLEINE LARGEUR tout en haut du document via \\includegraphics[width=\\linewidth]{entete.png}, suivie uniquement du titre « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) », d'une règle horizontale, de la ligne Classe / Coef. / Durée et des compétences disciplinaires et transversales. PAS de cartouche Pays / Direction / Établissement / Année.`;
+            } else {
+                sectionIVEntete = `6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, compétences disciplinaires et transversales, période, coef, durée.`;
+            }
+
             let finalPrompt = defaultPromptTemplate;
+            // Remplacement des blocs d'en-tête conditionnels (à faire AVANT les autres remplacements,
+            // pour que les placeholders internes [PAYS], [ANNEE], etc. soient bien remplacés ensuite).
+            finalPrompt = finalPrompt.replace('[SECTION_II_ENTETE]', sectionIIEntete);
+            finalPrompt = finalPrompt.replace('[SECTION_IV_ENTETE]', sectionIVEntete);
+            // Remplacements standards des placeholders
             finalPrompt = finalPrompt.replaceAll('[PAYS]', pays);
             finalPrompt = finalPrompt.replaceAll('[DIRECTION_DEPARTEMENTALE]', directionDepartementale);
             finalPrompt = finalPrompt.replace('[ETAB]', etab);
