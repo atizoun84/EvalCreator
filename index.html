@@ -2030,37 +2030,84 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
         })();
 
         // ============================================================
-        // FINGERPRINT (Version stable v2)
+        // FINGERPRINT V3 — Tolérance à la dérive + Transfert temporel
+        // Configuration : option 15 jours
         // ============================================================
-        const FP_VERSION = 2;
+        const FP_VERSION = 3;
+        const DEVICE_TRANSFER_COOLDOWN_DAYS = 15;      // ⏱️ Délai avant transfert auto
+        const FINGERPRINT_SIMILARITY_THRESHOLD = 0.6;  // 60% de composants identiques = même appareil
 
-        async function getHardwareFingerprint() {
-            const parts = [];
-
-            // ✅ Données réellement stables
-            parts.push('cores:' + (navigator.hardwareConcurrency || 'x'));
-            parts.push('ram:' + (navigator.deviceMemory || 'x'));
-            parts.push('tz:' + Intl.DateTimeFormat().resolvedOptions().timeZone);
-            parts.push('lang:' + navigator.language);
-            parts.push('plat:' + (navigator.platform || 'x'));
-
-            // ❌ SUPPRIMÉ : screen.width/height/colorDepth (trop instable)
-            // ❌ SUPPRIMÉ : WebGL renderer (change après update navigateur/GPU)
-            // ❌ SUPPRIMÉ : audio sampleRate (change avec casque Bluetooth)
-
-            // ✅ Remplacé par : un identifiant persistant stocké localement
-            let deviceId = localStorage.getItem('pct_device_id');
-            if (!deviceId) {
-                deviceId = (crypto.randomUUID ? crypto.randomUUID() :
-                           'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
-                localStorage.setItem('pct_device_id', deviceId);
+        // --- Récupère (ou crée) l'identifiant persistant du navigateur ---
+        function getOrCreateDeviceId() {
+            try {
+                let deviceId = localStorage.getItem('pct_device_id');
+                if (!deviceId) {
+                    deviceId = (crypto.randomUUID ? crypto.randomUUID() :
+                               'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+                    localStorage.setItem('pct_device_id', deviceId);
+                }
+                return deviceId;
+            } catch (e) {
+                // Navigation privée stricte : on retourne un ID volatile
+                return 'noid-' + Date.now() + '-' + Math.random().toString(36).slice(2);
             }
-            parts.push('deviceId:' + deviceId);
+        }
 
-            // ✅ Un seul hash déterministe
-            const raw = parts.join('|');
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+        // --- Collecte les composants matériels/logiques stables ---
+        function getFingerprintComponents() {
+            // Langue normalisée sur le code primaire (fr-FR → fr) : beaucoup plus stable
+            let primaryLang = 'x';
+            try { primaryLang = (navigator.language || 'x').split('-')[0].toLowerCase(); } catch(e) {}
+
+            // navigator.platform est déprécié : on privilégie userAgentData si dispo
+            let platform = 'x';
+            try {
+                platform = (navigator.userAgentData && navigator.userAgentData.platform)
+                         || navigator.platform || 'x';
+            } catch(e) {}
+
+            return {
+                deviceId: getOrCreateDeviceId(),
+                cores:    String(navigator.hardwareConcurrency || 'x'),
+                ram:      String(navigator.deviceMemory || 'x'),
+                tz:       (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'x',
+                lang:     primaryLang,
+                platform: platform
+            };
+        }
+
+        // --- Utilitaire SHA-256 ---
+        async function sha256(str) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
             return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // --- Calcule le hash final à partir des composants ---
+        async function computeFingerprintHash(c) {
+            return await sha256([
+                'cores:'    + c.cores,
+                'ram:'      + c.ram,
+                'tz:'       + c.tz,
+                'lang:'     + c.lang,
+                'plat:'     + c.platform,
+                'deviceId:' + c.deviceId
+            ].join('|'));
+        }
+
+        // --- Compare 2 jeux de composants (hors deviceId) → score 0..1 ---
+        function fingerprintSimilarity(stored, current) {
+            if (!stored || !current) return 0;
+            const keys = ['cores', 'ram', 'tz', 'lang', 'platform'];
+            let match = 0;
+            for (const k of keys) {
+                if (String(stored[k] || '') === String(current[k] || '')) match++;
+            }
+            return match / keys.length;
+        }
+
+        // --- Fonction publique conservée pour compatibilité ---
+        async function getHardwareFingerprint() {
+            return await computeFingerprintHash(getFingerprintComponents());
         }
 
         // ============================================================
@@ -2142,15 +2189,19 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 const uid = cred.user.uid;
 
-                const hw = await getHardwareFingerprint();
+                const components = getFingerprintComponents();
+                const hw = await computeFingerprintHash(components);
 
                 const updates = {};
                 updates['licenses/' + uid] = {
                     licenseKey: licenseKey,
                     hardwareId: hw,
+                    hardwareComponents: components,       // 🆕 indispensable
                     fpVersion: FP_VERSION,
                     email: email,
-                    activatedAt: firebase.database.ServerValue.TIMESTAMP
+                    activatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    lastDeviceChangeAt: firebase.database.ServerValue.TIMESTAMP,
+                    deviceChangeCount: 0
                 };
                 updates['used_keys/' + licenseKey] = uid;
                 await db.ref().update(updates);
@@ -2231,35 +2282,121 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
                     return showMsg('❌ Aucune licence trouvée pour ce compte.', 'error');
                 }
 
-                const currentHw = await getHardwareFingerprint();
+                const currentComponents = getFingerprintComponents();
+                const currentHw = await computeFingerprintHash(currentComponents);
+                const now = Date.now();
 
+                // ---------- CAS 1 : Première activation ----------
                 if (!license.hardwareId) {
-                    await db.ref('licenses/' + user.uid + '/hardwareId').set(currentHw);
-                    await db.ref('licenses/' + user.uid + '/fpVersion').set(FP_VERSION);
-                    await db.ref('licenses/' + user.uid + '/reactivatedAt').set(firebase.database.ServerValue.TIMESTAMP);
-                    showMsg('✅ Licence transférée sur ce nouvel appareil', 'success');
-                } else if (currentHw !== license.hardwareId) {
-                    // Tolérance de migration : si la version du fingerprint stocké est ancienne (< v2),
-                    // on migre automatiquement sans bloquer l'utilisateur.
+                    await db.ref('licenses/' + user.uid).update({
+                        hardwareId: currentHw,
+                        hardwareComponents: currentComponents,
+                        fpVersion: FP_VERSION,
+                        activatedAt: license.activatedAt || firebase.database.ServerValue.TIMESTAMP,
+                        lastDeviceChangeAt: firebase.database.ServerValue.TIMESTAMP,
+                        deviceChangeCount: 0
+                    });
+                    console.log('[LICENSE] Première activation');
+                    showMsg('✅ Licence activée sur cet appareil', 'success');
+                }
+
+                // ---------- CAS 2 : Empreinte identique → rien à faire ----------
+                else if (currentHw === license.hardwareId) {
+                    // Backfill éventuel des composants manquants (migration douce)
+                    if (!license.hardwareComponents) {
+                        await db.ref('licenses/' + user.uid).update({
+                            hardwareComponents: currentComponents,
+                            fpVersion: FP_VERSION
+                        });
+                    }
+                    console.log('[LICENSE] Vérification OK (identité stricte)');
+                }
+
+                // ---------- CAS 3 : Empreinte différente → analyse tolérante ----------
+                else {
+                    let resolution = 'blocked';
+                    let reason = 'cooldown-active';
                     const storedVersion = license.fpVersion || 1;
-                    if (storedVersion < FP_VERSION) {
+
+                    // 3a. Ancien fingerprint (v1/v2) → migration transparente
+                    if (storedVersion < FP_VERSION && !license.hardwareComponents) {
+                        resolution = 'same-device';
+                        reason = 'migration-v' + storedVersion;
+                    }
+                    // 3b. deviceId localStorage identique → même navigateur
+                    else if (license.hardwareComponents &&
+                             license.hardwareComponents.deviceId &&
+                             license.hardwareComponents.deviceId === currentComponents.deviceId) {
+                        resolution = 'same-device';
+                        reason = 'deviceId-match';
+                    }
+                    // 3c. Similarité ≥ 60% → même appareil probable
+                    else if (license.hardwareComponents) {
+                        const sim = fingerprintSimilarity(license.hardwareComponents, currentComponents);
+                        if (sim >= FINGERPRINT_SIMILARITY_THRESHOLD) {
+                            resolution = 'same-device';
+                            reason = 'similarity-' + sim.toFixed(2);
+                        }
+                    }
+
+                    // 3d. Sinon, cooldown écoulé → transfert automatique légitime
+                    if (resolution === 'blocked') {
+                        const lastChange = license.lastDeviceChangeAt || license.activatedAt || 0;
+                        const cooldownMs = DEVICE_TRANSFER_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+                        if ((now - lastChange) > cooldownMs) {
+                            resolution = 'auto-transfer';
+                            reason = 'cooldown-elapsed';
+                        }
+                    }
+
+                    // --- Application de la résolution ---
+                    if (resolution === 'same-device') {
                         await db.ref('licenses/' + user.uid).update({
                             hardwareId: currentHw,
+                            hardwareComponents: currentComponents,
                             fpVersion: FP_VERSION,
-                            migratedAt: firebase.database.ServerValue.TIMESTAMP
+                            lastRebindAt: firebase.database.ServerValue.TIMESTAMP,
+                            lastRebindReason: reason
                         });
-                        console.warn('Fingerprint migré automatiquement vers v' + FP_VERSION);
-                        showMsg('✅ Licence migrée automatiquement vers la nouvelle version', 'success');
-                    } else {
+                        console.log('[LICENSE] Re-binding silencieux (' + reason + ')');
+                        showMsg('✅ Licence vérifiée', 'success');
+                    }
+                    else if (resolution === 'auto-transfer') {
+                        await db.ref('licenses/' + user.uid).update({
+                            hardwareId: currentHw,
+                            hardwareComponents: currentComponents,
+                            fpVersion: FP_VERSION,
+                            lastDeviceChangeAt: firebase.database.ServerValue.TIMESTAMP,
+                            deviceChangeCount: (license.deviceChangeCount || 0) + 1,
+                            lastRebindReason: reason
+                        });
+                        console.log('[LICENSE] Transfert automatique (cooldown écoulé)');
+                        showMsg('✅ Licence transférée sur ce nouvel appareil', 'success');
+                    }
+                    else {
+                        // 🔴 Blocage avec compte à rebours informatif
                         await auth.signOut();
                         setFooterNoteLinkedWarning(license.email || user.email);
+
+                        const lastChange = license.lastDeviceChangeAt || license.activatedAt || 0;
+                        const cooldownMs = DEVICE_TRANSFER_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+                        const elapsed = now - lastChange;
+                        const daysLeft = Math.max(
+                            1,
+                            Math.ceil((cooldownMs - elapsed) / (24 * 60 * 60 * 1000))
+                        );
+
+                        console.log('[LICENSE] Blocage — ' + reason + ' — reste ' + daysLeft + ' j');
                         return showMsg(
-                            '🚫 Cette licence est liée à un autre appareil. Contactez le concepteur pour un transfert.',
+                            '🚫 Cette licence est déjà active sur un autre appareil. ' +
+                            'Par sécurité, un transfert automatique sera possible dans ' +
+                            daysLeft + ' jour(s). Contactez le concepteur pour un transfert immédiat.',
                             'error'
                         );
                     }
                 }
 
+                // ---------- Succès : on affiche l'application ----------
                 authOverlay.classList.add('hidden');
                 appContent.style.display = 'block';
                 mainNavbar.style.display = 'flex';
@@ -2281,50 +2418,6 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
             preRemplirEmail();
         });
         preRemplirEmail();
-
-        // ============================================================
-        // MIGRATION AUTOMATIQUE BULK (Option B) : Forcer fpVersion = 0 partout
-        // ============================================================
-        // Ce bloc s'exécute silencieusement au chargement de la page pour
-        // forcer la migration de TOUS les utilisateurs dont fpVersion < FP_VERSION.
-        // Les anciens fingerprints deviendront obsolètes et seront migrés
-        // automatiquement lors de leur prochaine connexion.
-        (async function forceBulkMigration() {
-            try {
-                const migrationFlag = localStorage.getItem('pct_bulk_migration_v2_done');
-                if (migrationFlag === 'done') return;
-
-                const licensesSnap = await db.ref('licenses').once('value');
-                if (!licensesSnap.exists()) {
-                    localStorage.setItem('pct_bulk_migration_v2_done', 'done');
-                    return;
-                }
-
-                const licenses = licensesSnap.val();
-                const updates = {};
-                let modifiedCount = 0;
-
-                for (const uid in licenses) {
-                    const lic = licenses[uid];
-                    const version = lic && lic.fpVersion;
-                    if (!version || version < FP_VERSION) {
-                        updates['licenses/' + uid + '/fpVersion'] = 0;
-                        updates['licenses/' + uid + '/bulkMigratedAt'] = firebase.database.ServerValue.TIMESTAMP;
-                        modifiedCount++;
-                    }
-                }
-
-                if (modifiedCount > 0) {
-                    await db.ref().update(updates);
-                    console.log('Migration bulk : ' + modifiedCount + ' licence(s) marquée(s) pour migration automatique.');
-                }
-
-                localStorage.setItem('pct_bulk_migration_v2_done', 'done');
-            } catch (err) {
-                // Silencieux : ne doit jamais bloquer l'utilisateur
-                console.warn('Migration bulk ignorée :', err && err.message ? err.message : err);
-            }
-        })();
 
         // ============================================================
         // GESTION DES CONTENEURS DISCIPLINE
