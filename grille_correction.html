@@ -1255,22 +1255,27 @@ La grille reproduit EXACTEMENT l'architecture suivante :
 
 8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
 
-   ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS inventer un nom de fichier 
-   incohérent ou une extension inconnue. Utilise UNIQUEMENT les conventions 
-   ci-dessous pour nommer les fichiers.
+   ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS remplacer une image par du 
+   texte placeholder. Il est formellement interdit d'insérer :
+     - un simple texte comme "nom_image.png" ou "(à uploader sur Overleaf)" 
+       à la place de l'image ;
+     - \\texttt{nom_image.png} ou \\textbf{nom_image.png} comme substitut ;
+     - un \\fbox ou \\parbox contenant du texte en prétendant qu'il s'agit 
+       d'une image.
 
    ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
-   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
-   tu dois insérer dans la cellule fusionnée « Éléments de réponse » un CADRE 
-   CARRÉ contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
-   de la commande LaTeX suivante :
+   Chaque fois qu'une réponse attendue comporte un schéma, une figure, un 
+   graphique ou un oscillogramme, tu dois OBLIGATOIREMENT utiliser la 
+   commande \\includegraphics du package graphicx.
 
-   \\fbox{\\parbox{0.85\\linewidth}{\\centering 
-     \\vspace{1.2cm} 
-     \\textbf{\\texttt{schema-X-Y.png}} 
-     \\vspace{0.2cm} 
-     \\textit{(à uploader sur Overleaf)} 
-     \\vspace{1.2cm}}}
+   FORMAT OBLIGATOIRE (avec légende) :
+   \\begin{center}
+   \\includegraphics[width=0.5\\linewidth]{nom_exact_du_fichier.png}
+   \\captionof{figure}{Légende de la figure}
+   \\end{center}
+
+   OU, si l'image doit être encadrée :
+   \\fbox{\\includegraphics[width=0.5\\linewidth]{nom_exact_du_fichier.png}}
 
    CONVENTIONS DE NOMMAGE OBLIGATOIRES :
    - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
@@ -1283,28 +1288,40 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Caractères autorisés : lettres minuscules, chiffres, tirets uniquement
    - JAMAIS d'espaces, d'accents, de majuscules, ni de caractères spéciaux
 
-   INSTRUCTIONS COMPLÉMENTAIRES :
-   - Avant le cadre, indiquer en une phrase courte ce que le schéma 
-     doit représenter (ex : « Schéma du montage en série avec 3 lampes. »).
-   - Après le cadre, indiquer la légende attendue 
-     (ex : « Légende : montage en série »).
-   - Adapter la hauteur du \\vspace{1.2cm} (avant et après le nom) :
-       • Schéma simple (droite graduée, axe) : 0.8cm
-       • Schéma moyen (circuit, molécule)    : 1.2cm
-       • Schéma complexe (appareil, montage) : 1.8cm
-   - Si plusieurs schémas dans une même question, insérer plusieurs 
-     \\fbox successifs séparés par un \\vspace{0.3cm}.
+   PRÉREQUIS À VÉRIFIER DANS LE PRÉAMBULE :
+   - \\usepackage{graphicx} doit être présent.
+   - \\usepackage{caption} si des légendes sont utilisées (pour \\captionof).
+
+   ADAPTATION DE LA TAILLE DE L'IMAGE (REDIMENSIONNEMENT AUTOMATIQUE) :
+   - L'image doit être redimensionnée automatiquement pour ne JAMAIS casser 
+     la mise en forme du tableau.
+   - La largeur maximale autorisée dépend du contexte :
+       • Dans la cellule fusionnée « Éléments de réponse » (\\multicolumn{6} 
+         de ~24,8 cm) : width=0.5\\linewidth est recommandé.
+       • Dans une cellule étroite (C1, C2, C3) : width=0.9\\linewidth maximum.
+   - NE JAMAIS utiliser width=1.0\\linewidth dans la cellule fusionnée 
+     des éléments de réponse : préférer 0.5\\linewidth ou 0.6\\linewidth 
+     pour conserver une marge visuelle et éviter le débordement.
+   - Ne jamais fixer une hauteur (height=...) sans width=... simultanément, 
+     pour éviter la déformation du ratio.
+
+   EMPLACEMENT :
+   - Placer \\includegraphics à l'endroit exact où l'image doit apparaître 
+     dans le flux du document (dans la cellule du tableau, dans la section, etc.).
+   - Utiliser un environnement center ou figure selon le contexte et adapté.
+   - Avant la figure, indiquer en une phrase courte ce que le schéma doit 
+     représenter (ex : « Schéma du montage en série avec 3 lampes. »).
+   - Après la figure, indiquer la légende attendue si elle n'est pas déjà 
+     fournie par \\captionof.
    - Le nom du fichier doit être UNIQUE dans tout le document.
+   - Le nom du fichier doit correspondre exactement à celui fourni par 
+     l'utilisateur (respecter majuscules, tirets, underscores, extension).
+   - Si le chemin est fourni (ex. images/schema.png), le reproduire tel quel.
 
-   ✅ JUSTIFICATION : Ce cadre carré affiche le nom exact du fichier 
-   que l'enseignant devra uploader sur Overleaf. Après upload et 
-   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
-   \\includegraphics[width=0.85\\linewidth]{schema-X-Y.png} pour afficher 
-   l'image réelle, OU conserver le cadre comme repère visuel.
-
-   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
-   dans le code généré — toujours passer par le \\fbox placeholder 
-   décrit ci-dessus.
+   📌 RAPPEL FINAL : NE JAMAIS utiliser de placeholder textuel à la place 
+   de \\includegraphics. Le fichier image doit être référencé par son nom 
+   exact (ex : schema-2-1-a.png) et l'enseignant devra l'uploader sur 
+   Overleaf pour que la compilation affiche l'image réelle.
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
