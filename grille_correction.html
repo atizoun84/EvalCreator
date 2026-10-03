@@ -1260,17 +1260,25 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    ci-dessous pour nommer les fichiers.
 
    ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
-   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
-   tu dois insérer dans la cellule fusionnée « Éléments de réponse » un CADRE 
-   CARRÉ contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
-   de la commande LaTeX suivante :
+   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, tu dois 
+   insérer dans la cellule fusionnée « Éléments de réponse » un BLOC D'INCLUSION 
+   D'IMAGE ADAPTATIF qui affiche automatiquement l'image si elle a été uploadée 
+   sur Overleaf, et bascule sur un cadre de repère sinon. Utilise EXACTEMENT 
+   la commande LaTeX suivante (avec la logique \\IfFileExists) :
 
-   \\fbox{\\parbox{0.85\\linewidth}{\\centering 
-     \\vspace{1.2cm} 
-     \\textbf{\\texttt{schema-X-Y.png}} 
-     \\vspace{0.2cm} 
-     \\textit{(à uploader sur Overleaf)} 
-     \\vspace{1.2cm}}}
+   \\IfFileExists{schema-X-Y.png}{%
+     \\begin{center}
+       \\includegraphics[width=0.75\\linewidth,keepaspectratio]{schema-X-Y.png}\\\\[4pt]
+       \\textit{\\small Légende attendue : ...}
+     \\end{center}
+   }{%
+     \\fbox{\\parbox{0.85\\linewidth}{\\centering 
+       \\vspace{0.8cm} 
+       \\textbf{\\texttt{schema-X-Y.png}} 
+       \\vspace{0.2cm} 
+       \\textit{(à uploader sur Overleaf)} 
+       \\vspace{0.8cm}}}%
+   }
 
    CONVENTIONS DE NOMMAGE OBLIGATOIRES :
    - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
@@ -1284,27 +1292,43 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - JAMAIS d'espaces, d'accents, de majuscules, ni de caractères spéciaux
 
    INSTRUCTIONS COMPLÉMENTAIRES :
-   - Avant le cadre, indiquer en une phrase courte ce que le schéma 
+   - Avant le bloc, indiquer en une phrase courte ce que le schéma 
      doit représenter (ex : « Schéma du montage en série avec 3 lampes. »).
-   - Après le cadre, indiquer la légende attendue 
-     (ex : « Légende : montage en série »).
-   - Adapter la hauteur du \\vspace{1.2cm} (avant et après le nom) :
-       • Schéma simple (droite graduée, axe) : 0.8cm
-       • Schéma moyen (circuit, molécule)    : 1.2cm
-       • Schéma complexe (appareil, montage) : 1.8cm
+   - Après le bloc (uniquement dans la branche fallback \\fbox), indiquer 
+     la légende attendue (ex : « Légende : montage en série »).
    - Si plusieurs schémas dans une même question, insérer plusieurs 
-     \\fbox successifs séparés par un \\vspace{0.3cm}.
+     blocs \\IfFileExists successifs séparés par un \\vspace{0.3cm}.
    - Le nom du fichier doit être UNIQUE dans tout le document.
 
-   ✅ JUSTIFICATION : Ce cadre carré affiche le nom exact du fichier 
-   que l'enseignant devra uploader sur Overleaf. Après upload et 
-   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
-   \\includegraphics[width=0.85\\linewidth]{schema-X-Y.png} pour afficher 
-   l'image réelle, OU conserver le cadre comme repère visuel.
+   ✅ JUSTIFICATION : La commande \\IfFileExists teste la présence du fichier 
+   image dans le projet Overleaf. 
+     • SI le fichier existe (l'enseignant l'a uploadé) → l'image réelle 
+       s'affiche automatiquement via \\includegraphics, ajustée à la largeur 
+       de la cellule avec keepaspectratio (aucune déformation, la hauteur 
+       de la cellule s'adapte strictement à la hauteur naturelle de l'image).
+     • SINON → un cadre \\fbox placeholder apparaît, affichant le nom exact 
+       du fichier attendu comme repère visuel.
 
-   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
-   dans le code généré — toujours passer par le \\fbox placeholder 
-   décrit ci-dessus.
+   📌 RAPPEL FINAL : Utiliser SYSTÉMATIQUEMENT la logique \\IfFileExists 
+   décrite ci-dessus pour toute insertion de schéma. Ne JAMAIS utiliser 
+   \\includegraphics seul (sans \\IfFileExists), car cela provoquerait une 
+   erreur de compilation si l'image n'est pas présente. Ne JAMAIS utiliser 
+   \\fbox seul non plus, car l'image uploadée ne s'afficherait alors jamais.
+
+   🎯 CONSEILS D'ADAPTATION À LA CELLULE (\\multicolumn{6}{p{24.8cm}|}{...}) :
+   - La largeur par défaut de l'image est 0.75\\linewidth (largeur de la cellule) ; 
+     l'IA peut la réduire à 0.5\\linewidth pour un petit schéma ou l'augmenter 
+     à 0.9\\linewidth pour un schéma détaillé.
+   - Toujours inclure keepaspectratio pour éviter toute déformation.
+   - NE PAS fixer de height fixe : laisser la cellule p{...} s'adapter à la 
+     hauteur naturelle de l'image (largeur pilotée ⇒ hauteur automatique).
+   - Si un texte doit accompagner l'image dans la même cellule, utiliser un minipage :
+     \\begin{minipage}[c]{0.6\\linewidth} texte... \\end{minipage}\\hfill
+     \\begin{minipage}[c]{0.38\\linewidth}\\centering\\includegraphics[width=\\linewidth,keepaspectratio]{schema-X-Y.png}\\end{minipage}
+   - Pour un habillage (texte qui coule autour de l'image), utiliser le package 
+     wrapstuff (PAS wrapfig, incompatible avec longtable) :
+     \\begin{wrapstuff}[r,width=0.35\\linewidth]\\includegraphics[width=\\linewidth]{schema-X-Y.png}\\end{wrapstuff}
+   - Conserver les conventions de nommage : schema-<numéro>-<lettre>.png
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1345,7 +1369,7 @@ la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`.
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`, \`wrapstuff\`.
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
