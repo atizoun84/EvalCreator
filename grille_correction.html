@@ -1253,24 +1253,41 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
    - Vérifie systématiquement que la somme de tous les points (Pts C1 + C2 + C3 de toutes les questions + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
 
-8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
+8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE — CORRIGÉE) :
 
-   ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS inventer un nom de fichier 
-   incohérent ou une extension inconnue. Utilise UNIQUEMENT les conventions 
-   ci-dessous pour nommer les fichiers.
+   ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS remplacer une image par du
+   texte placeholder. Il est formellement interdit d'insérer :
+     - un simple texte comme "nom_image.png" ou "(à uploader sur Overleaf)"
+       à la place de l'image ;
+     - \\texttt{nom_image.png} ou \\textbf{nom_image.png} comme substitut ;
+     - un \\fbox ou \\parbox contenant du texte en prétendant qu'il s'agit
+       d'une image ;
+     - un \\includegraphics SANS width= ni height= (risque de débordement) ;
+     - un \\includegraphics avec uniquement width=1.0\\linewidth dans la
+       cellule fusionnée (débordement garanti).
 
    ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
-   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
-   tu dois insérer dans la cellule fusionnée « Éléments de réponse » un CADRE 
-   CARRÉ contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
-   de la commande LaTeX suivante :
+   Chaque fois qu'une réponse attendue comporte un schéma, une figure, un
+   graphique ou un oscillogramme, tu dois OBLIGATOIREMENT utiliser la
+   commande personnalisée \\pctimage (définie dans le préambule) qui
+   redimensionne automatiquement l'image pour l'adapter à la cellule :
 
-   \\fbox{\\parbox{0.85\\linewidth}{\\centering 
-     \\vspace{1.2cm} 
-     \\textbf{\\texttt{schema-X-Y.png}} 
-     \\vspace{0.2cm} 
-     \\textit{(à uploader sur Overleaf)} 
-     \\vspace{1.2cm}}}
+   FORMAT OBLIGATOIRE (avec légende) :
+   \\begin{center}
+   \\pctimage{nom_exact_du_fichier.png}{0.5\\linewidth}
+   \\end{center}
+
+   OU, si l'image doit être encadrée :
+   \\fbox{\\pctimage{nom_exact_du_fichier.png}{0.5\\linewidth}}
+
+   La commande \\pctimage :
+     - Vérifie l'existence du fichier via \\IfFileExists ;
+     - Si le fichier existe : l'insère avec \\includegraphics et le
+       redimensionne via \\adjustbox{max width=..., max height=...} pour
+       ne JAMAIS dépasser la cellule (largeur ET hauteur contrôlées) ;
+     - Si le fichier est introuvable : affiche un cadre rouge visible
+       « Image introuvable : nom_fichier.png » au lieu de provoquer une
+       erreur silencieuse ou un débordement.
 
    CONVENTIONS DE NOMMAGE OBLIGATOIRES :
    - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
@@ -1283,28 +1300,79 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Caractères autorisés : lettres minuscules, chiffres, tirets uniquement
    - JAMAIS d'espaces, d'accents, de majuscules, ni de caractères spéciaux
 
-   INSTRUCTIONS COMPLÉMENTAIRES :
-   - Avant le cadre, indiquer en une phrase courte ce que le schéma 
-     doit représenter (ex : « Schéma du montage en série avec 3 lampes. »).
-   - Après le cadre, indiquer la légende attendue 
-     (ex : « Légende : montage en série »).
-   - Adapter la hauteur du \\vspace{1.2cm} (avant et après le nom) :
-       • Schéma simple (droite graduée, axe) : 0.8cm
-       • Schéma moyen (circuit, molécule)    : 1.2cm
-       • Schéma complexe (appareil, montage) : 1.8cm
-   - Si plusieurs schémas dans une même question, insérer plusieurs 
-     \\fbox successifs séparés par un \\vspace{0.3cm}.
+   PRÉREQUIS À VÉRIFIER DANS LE PRÉAMBULE (OBLIGATOIRE) :
+   - \\usepackage{graphicx} doit être présent.
+   - \\usepackage{adjustbox} doit être présent (pour le redimensionnement
+     automatique et sûr).
+   - \\usepackage{caption} si des légendes sont utilisées (pour \\captionof).
+   - La commande \\pctimage doit être définie dans le préambule (voir le
+     modèle fourni ci-dessous).
+
+   DÉFINITION OFFICIELLE DE \\pctimage À INCLURE DANS LE PRÉAMBULE :
+   \\makeatletter
+   \\newcommand{\\pctimage}[2]{%
+     \\IfFileExists{#1}{%
+       \\adjustbox{max width=#2, max height=0.55\\textheight, keepaspectratio}{%
+         \\includegraphics{#1}%
+       }%
+     }{%
+       \\fcolorbox{red}{yellow!20}{\\parbox{0.85\\linewidth}{\\centering
+         \\textbf{\\textcolor{red}{⚠ Image introuvable}}\\\\[2pt]
+         \\texttt{\\detokenize{#1}}\\\\[2pt]
+         \\footnotesize Uploadez ce fichier .png sur Overleaf.}}%
+     }%
+   }
+   \\makeatletter
+
+   ADAPTATION DE LA TAILLE DE L'IMAGE (REDIMENSIONNEMENT AUTOMATIQUE) :
+   - L'image doit être redimensionnée automatiquement pour ne JAMAIS casser
+     la mise en forme du tableau.
+   - La largeur maximale autorisée dépend du contexte (2ème argument de \\pctimage) :
+       • Dans la cellule fusionnée « Éléments de réponse » (\\multicolumn{6}
+         de ~24,8 cm) : 0.5\\linewidth (recommandé) ou 0.6\\linewidth max.
+       • Dans une cellule étroite (C1, C2, C3) : 0.9\\linewidth maximum.
+       • Dans un tableau secondaire ou une figure hors tableau : 0.8\\linewidth.
+   - NE JAMAIS utiliser 1.0\\linewidth dans la cellule fusionnée
+     des éléments de réponse : préférer 0.5\\linewidth pour conserver
+     une marge visuelle et éviter le débordement.
+   - Ne jamais fixer une hauteur (height=...) sans width=... simultanément,
+     pour éviter la déformation du ratio.
+   - La commande \\pctimage contrôle à la fois max width ET max height
+     (0.55\\textheight) pour garantir que l'image reste dans sa cellule
+     même si elle est très haute.
+
+   EMPLACEMENT :
+   - Placer \\pctimage à l'endroit exact où l'image doit apparaître
+     dans le flux du document (dans la cellule du tableau, dans la section, etc.).
+   - Utiliser un environnement center ou figure selon le contexte et adapté.
+   - Avant la figure, indiquer en une phrase courte ce que le schéma doit
+     représenter (ex : « Schéma du montage en série avec 3 lampes. »).
+   - Après la figure, indiquer la légende attendue si elle n'est pas déjà
+     fournie par \\captionof.
    - Le nom du fichier doit être UNIQUE dans tout le document.
+   - Le nom du fichier doit correspondre exactement à celui fourni par
+     l'utilisateur (respecter majuscules, tirets, underscores, extension).
+   - Si le chemin est fourni (ex. images/schema.png), le reproduire tel quel
+     dans le premier argument de \\pctimage.
 
-   ✅ JUSTIFICATION : Ce cadre carré affiche le nom exact du fichier 
-   que l'enseignant devra uploader sur Overleaf. Après upload et 
-   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
-   \\includegraphics[width=0.85\\linewidth]{schema-X-Y.png} pour afficher 
-   l'image réelle, OU conserver le cadre comme repère visuel.
+   EXEMPLE CONCRET DANS UNE CELLULE FUSIONNÉE « Éléments de réponse » :
+   \\multirow{2}{*}{\\textbf{2-1}} &
+   \\multicolumn{6}{p{24.8cm}|}{%
+     \\textbf{Éléments de réponse :} Schéma du montage.\\\\
+     \\begin{center}
+     \\pctimage{schema-2-1.png}{0.5\\linewidth}
+     \\end{center}
+     \\hfill\\textbf{(Total : 2 pts)}} \\\\
+   \\cline{2-7}
+   & indicateurs liés à C1 & 0,5 & indicateurs liés à C2 & 0,5 & indicateurs liés à C3 & 1 \\\\
+   \\hline
 
-   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
-   dans le code généré — toujours passer par le \\fbox placeholder 
-   décrit ci-dessus.
+   📌 RAPPEL FINAL : NE JAMAIS utiliser de placeholder textuel à la place
+   de \\pctimage. Le fichier image doit être référencé par son nom exact
+   (ex : schema-2-1-a.png) et l'enseignant devra l'uploader sur Overleaf
+   pour que la compilation affiche l'image réelle. Si l'image est manquante,
+   la commande \\pctimage affichera automatiquement un cadre rouge visible
+   avec le nom du fichier à uploader.
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1345,12 +1413,16 @@ la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`.
+2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`, \`adjustbox\`.
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
 [SECTION_IV_ENTETE]
 7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
+8. Commande personnalisée \\pctimage : DOIT être définie dans le préambule
+   (voir la définition officielle fournie dans la section II.8 ci-dessus).
+   Cette commande est INDISPENSABLE pour l'insertion d'images sans
+   débordement et avec détection automatique des fichiers manquants.
 
 ------------------------------------------------------------
 V. DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 ET C3
