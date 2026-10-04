@@ -1140,6 +1140,19 @@ détaillée, en respectant SCRUPULEUSEMENT :
   - les PARAMÈTRES DE MISE EN FORME LaTeX de la section IV ;
   - les DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 et C3 (Section V).
 
+⚠️ RÈGLE ABSOLUE DE COMPILATION : Le code LaTeX produit doit compiler SANS AUCUNE
+ERREUR sur Overleaf (pdflatex). Tu dois impérativement :
+  - Utiliser UNIQUEMENT des packages standards disponibles sur Overleaf ;
+  - Échapper correctement tous les caractères spéciaux (%, &, _, #, $, {, }, ~, ^, \\) ;
+  - Ne JAMAIS utiliser de commandes non définies ou de packages exotiques ;
+  - Ne JAMAIS mettre d'images inexistantes (\\includegraphics) : dans la grille, utiliser
+    UNIQUEMENT des placeholders \\fbox ; dans la page annexe, mettre \\includegraphics
+    COMMENTÉ ou précédé d'un \\IfFileExists pour éviter le blocage si l'image est absente ;
+  - Vérifier la cohérence des accolades, des environnements (\\begin{...}/\\end{...}) ;
+  - Ne pas dépasser la largeur A4 paysage : les tableaux doivent être calibrés avec
+    des largeurs fixes p{...} et non tabularx/X dans longtable ;
+  - Utiliser \\documentclass[10pt,a4paper,landscape]{article} et non standalone.
+
 ------------------------------------------------------------
 I. INFORMATIONS GÉNÉRALES
 ------------------------------------------------------------
@@ -1216,7 +1229,7 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    \\multicolumn{7}{|l|}{\\textbf{A- PHYSIQUE ET TECHNOLOGIE}} \\\\
    \\hline
    \\multirow{2}{*}{\\textbf{2-1}} &
-   \\multicolumn{6}{p{24.8cm}|}{\\textbf{Éléments de réponse :} ... \\hfill\\textbf{(Total : 2 pts)}} \\\\
+   \\multicolumn{6}{p{24.8cm}|}{... \\hfill\\textbf{(Total : 2 pts)}} \\\\
    \\cline{2-7}
    & indicateurs liés à C1 & 0,5 & indicateurs liés à C2 & 0,5 & indicateurs liés à C3 & 1 \\\\
    \\hline
@@ -1235,50 +1248,81 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    Lorsqu'une question comporte PLUSIEURS VOLETS (sous-questions a), b), c)..., ou plusieurs calculs/déterminations distincts), tu dois IMPÉRATIVEMENT :
    - Traiter la question comme UN SEUL bloc de 2 sous-lignes (cellule N°, ex : 2-1).
    - Attribuer à la question un total de points cohérent avec la clé de répartition APC.
-   - Répartir ce total ENTRE LES VOLETS dans la cellule fusionnée « Éléments de réponse », en indiquant CLAIREMENT pour chaque volet sa part de points (ex : « a) Définition correcte .... 0,5 pt ; b) Calcul de la masse molaire ..... 0,75 pt ; c) Déduction ..... 0,75 pt »).
+   - Répartir ce total ENTRE LES VOLETS dans la cellule fusionnée, en indiquant CLAIREMENT pour chaque volet sa part de points (ex : « a) Définition correcte .... 0,5 pt ; b) Calcul de la masse molaire ..... 0,75 pt ; c) Déduction ..... 0,75 pt »).
    - VENTILER ENSUITE CHAQUE PART DE VOLET DANS LES 3 CRITÈRES (Pertinence / Utilisation correcte des ressources / Cohérence-Raisonnement) de manière à ce que :
          • Pour chaque volet : Pts critère 1 + Pts critère 2 + Pts critère 3 = Pts du volet.
-         • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question (rappelé en fin de cellule « Éléments de réponse »).
+         • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question.
    - Dans la sous-ligne « Indicateurs », écrire pour chaque critère un indicateur par volet (a), b), c)), séparés par \\newline, et inscrire dans la cellule Pts du critère le TOTAL des points de ce critère pour la question.
-   - NE JAMAIS dupliquer le bloc de la question ; regrouper les volets dans un seul bloc en utilisant des retours à la ligne (\\newline) dans la cellule « Éléments de réponse ».
+   - NE JAMAIS dupliquer le bloc de la question ; regrouper les volets dans un seul bloc en utilisant des retours à la ligne (\\newline).
    - Vérifier que la somme des points des critères de toutes les questions correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
 
-7. CONTRAINTE ABSOLUE SUR LES VALEURS DE POINTS (MULTIPLES DE 0,25 UNIQUEMENT) :
-   Toutes les attributions de points — au niveau des volets, des critères, des questions, des parties et des totaux — doivent OBLIGATOIREMENT être des ENTIERS ou des MULTIPLES DE 0,25 (c'est-à-dire 0,25 ; 0,5 ; 0,75 ; 1 ; 1,25 ; 1,5 ; 1,75 ; 2 ; etc.).
-   - IL EST FORMELLEMENT INTERDIT d'utiliser des valeurs telles que 0,33 ; 0,67 ; 0,34 ; 0,66 ; 0,1 ; 0,2 ; 0,3 ; 0,4 ; 0,6 ; 0,7 ; 0,8 ; 0,9 ; 1,1 ; 1,2 ; etc.
-   - Pour respecter cette contrainte, tu dois ajuster la répartition des points entre les volets et entre les critères en utilisant exclusivement des incréments de 0,25.
+7. CONTRAINTE ABSOLUE SUR LES VALEURS DE POINTS (MULTIPLES DE 0,25 UNIQUEMENT, JAMAIS 0) :
+   Toutes les attributions de points — au niveau des volets, des critères, des questions, des parties et des totaux — doivent OBLIGATOIREMENT être des ENTIERS ou des MULTIPLES DE 0,25 STRICTEMENT POSITIFS (0,25 ; 0,5 ; 0,75 ; 1 ; 1,25 ; 1,5 ; 1,75 ; 2 ; etc.).
+   - ⚠️ INTERDICTION ABSOLUE D'ATTRIBUER 0 POINT À UN CRITÈRE : un critère qui n'est pas concerné par une question doit recevoir la mention « — » dans la colonne des points, et NON « 0 ». Cependant, si un critère est concerné par la question (même partiellement), il doit recevoir AU MOINS 0,25 point.
+   - IL EST FORMELLEMENT INTERDIT d'utiliser des valeurs telles que 0 ; 0,33 ; 0,67 ; 0,34 ; 0,66 ; 0,1 ; 0,2 ; 0,3 ; 0,4 ; 0,6 ; 0,7 ; 0,8 ; 0,9 ; 1,1 ; 1,2 ; etc.
+   - Pour respecter cette contrainte, tu dois ajuster la répartition des points entre les volets et entre les critères en utilisant exclusivement des incréments de 0,25 et en garantissant qu'aucun critère évalué ne reçoive 0.
    - Exemple de ventilation correcte pour une question de 2 points à 3 volets :
         a) 0,5 pt  +  b) 0,75 pt  +  c) 0,75 pt  =  2 pts
-        Et pour chaque volet, la somme des 3 critères doit également être un multiple de 0,25 (ex : 0,25 + 0,25 + 0 = 0,5 ; 0,25 + 0,25 + 0,25 = 0,75 ; etc.).
-   - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25, tu dois ajuster le nombre de points de certains volets vers le haut ou vers le bas (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
+        Et pour chaque volet, chaque critère concerné reçoit au minimum 0,25 pt.
+   - Si un total de partie ou de question ne permet pas une répartition exacte en multiples de 0,25 non nuls, tu dois ajuster le nombre de points de certains volets vers le haut (par pas de 0,25) pour que la somme finale reste correcte et respecte la contrainte.
    - Vérifie systématiquement que la somme de tous les points (Pts C1 + C2 + C3 de toutes les questions + critères de perfectionnement) est exactement égale à [SCORE_PONDERATION].
 
-8. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
+8. RÉDACTION DES ÉLÉMENTS DE RÉPONSE (RÈGLE DE PRÉSENTATION) :
+
+   ⚠️ INTERDICTION FORMELLE : Ne JAMAIS écrire la mention « Éléments de réponse : »
+   ou « Élément de réponse : » en tête de la cellule fusionnée. Le contenu de la cellule
+   doit commencer DIRECTEMENT par la réponse attendue (corrigé type).
+
+   ✅ POUR LES QUESTIONS SANS CALCUL (définitions, explications, QCM, etc.) :
+   Écrire directement la réponse attendue, en une ou plusieurs phrases claires,
+   sans aucune mention introductive.
+
+   Exemple de cellule correcte :
+   \\multicolumn{6}{p{24.8cm}|}{La masse molaire d'un corps pur est la masse d'une mole de ce corps. Elle s'exprime en g/mol. \\hfill\\textbf{(Total : 1,5 pt)}} \\\\
+
+   ✅ POUR LES QUESTIONS AVEC CALCULS : UTILISER OBLIGATOIREMENT LE CANEVAS SUIVANT :
+   
+   \\textbf{On pose :} [écrire la formule littérale avec les différentes transformations 
+   si nécessaire et y insérer les connecteurs logiques, et à la fin ENCADRER la formule 
+   opérationnelle à l'aide de \\boxed{...}] \\newline
+   \\textbf{A.N :} [lister les données numériques utiles pour le calcul de la réponse 
+   et faire les conversions d'unités si nécessaire, séparées par des points-virgules] \\newline
+   \\textbf{Calcul :} [poser la formule opérationnelle SANS l'encadrer, effectuer le calcul 
+   et donner la réponse finale, par exemple R=2A, puis ENCADRER le résultat final 
+   à l'aide de \\boxed{...}]
+
+   Exemple concret de cellule correcte pour un calcul de masse molaire :
+   \\multicolumn{6}{p{24.8cm}|}{%
+     \\textbf{On pose :} $M = \\dfrac{m}{n}$ \\quad (relation entre masse, masse molaire et quantité de matière) \\quad $\\boxed{M = \\dfrac{m}{n}}$ \\newline
+     \\textbf{A.N :} $m = 5\\,\\text{g}$ ; $n = 0{,}125\\,\\text{mol}$ \\newline
+     \\textbf{Calcul :} $M = \\dfrac{5}{0{,}125} = 40\\,\\text{g/mol}$ \\quad $\\boxed{M = 40\\,\\text{g/mol}}$ 
+     \\hfill\\textbf{(Total : 1,5 pt)}} \\\\
+
+   ⚠️ RAPPEL : 
+     - Le bloc « On pose » se termine OBLIGATOIREMENT par la formule opérationnelle encadrée (\\boxed{...}).
+     - Le bloc « A.N » liste uniquement les données numériques et les conversions d'unités.
+     - Le bloc « Calcul » pose la formule opérationnelle sans l'encadrer, effectue le calcul 
+       et se termine par le résultat final encadré (\\boxed{...}).
+     - NE JAMAIS écrire « Éléments de réponse : » avant le contenu.
+
+9. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
 
    ⚠️ INTERDICTION FORMELLE : Tu ne dois JAMAIS inventer un nom de fichier 
    incohérent ou une extension inconnue. Utilise UNIQUEMENT les conventions 
    ci-dessous pour nommer les fichiers.
 
    ✅ RÈGLE À APPLIQUER SYSTÉMATIQUEMENT :
-   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, tu dois 
-   insérer dans la cellule fusionnée « Éléments de réponse » un BLOC D'INCLUSION 
-   D'IMAGE ADAPTATIF qui affiche automatiquement l'image si elle a été uploadée 
-   sur Overleaf, et bascule sur un cadre de repère sinon. Utilise EXACTEMENT 
-   la commande LaTeX suivante (avec la logique \\IfFileExists) :
+   Chaque fois qu'une réponse attendue comporte un schéma à dessiner, 
+   tu dois insérer dans la cellule fusionnée un CADRE RECTANGULAIRE 
+   contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
+   de la commande LaTeX suivante :
 
-   \\IfFileExists{schema-X-Y.png}{%
-     \\begin{center}
-       \\includegraphics[width=0.75\\linewidth,keepaspectratio]{schema-X-Y.png}\\\\[4pt]
-       \\textit{\\small Légende attendue : ...}
-     \\end{center}
-   }{%
-     \\fbox{\\parbox{0.85\\linewidth}{\\centering 
-       \\vspace{0.8cm} 
-       \\textbf{\\texttt{schema-X-Y.png}} 
-       \\vspace{0.2cm} 
-       \\textit{(à uploader sur Overleaf)} 
-       \\vspace{0.8cm}}}%
-   }
+   \\fbox{\\parbox{\\linewidth}{\\centering 
+     \\vspace{0.4cm} 
+     \\textbf{\\texttt{schema-X-Y.png}} 
+     \\vspace{0.2cm} 
+     \\textit{(à uploader sur Overleaf)} 
+     \\vspace{0.4cm}}}
 
    CONVENTIONS DE NOMMAGE OBLIGATOIRES :
    - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
@@ -1292,43 +1336,102 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - JAMAIS d'espaces, d'accents, de majuscules, ni de caractères spéciaux
 
    INSTRUCTIONS COMPLÉMENTAIRES :
-   - Avant le bloc, indiquer en une phrase courte ce que le schéma 
+   - Avant le cadre, indiquer en une phrase courte ce que le schéma 
      doit représenter (ex : « Schéma du montage en série avec 3 lampes. »).
-   - Après le bloc (uniquement dans la branche fallback \\fbox), indiquer 
-     la légende attendue (ex : « Légende : montage en série »).
+   - Après le cadre, indiquer la légende attendue 
+     (ex : « Légende : montage en série »).
+   - Le cadre doit tenir sur DEUX LIGNES en hauteur et la largeur doit 
+     s'adapter à la cellule (utiliser \\linewidth dans le \\parbox).
    - Si plusieurs schémas dans une même question, insérer plusieurs 
-     blocs \\IfFileExists successifs séparés par un \\vspace{0.3cm}.
+     \\fbox successifs séparés par un \\vspace{0.3cm}.
    - Le nom du fichier doit être UNIQUE dans tout le document.
 
-   ✅ JUSTIFICATION : La commande \\IfFileExists teste la présence du fichier 
-   image dans le projet Overleaf. 
-     • SI le fichier existe (l'enseignant l'a uploadé) → l'image réelle 
-       s'affiche automatiquement via \\includegraphics, ajustée à la largeur 
-       de la cellule avec keepaspectratio (aucune déformation, la hauteur 
-       de la cellule s'adapte strictement à la hauteur naturelle de l'image).
-     • SINON → un cadre \\fbox placeholder apparaît, affichant le nom exact 
-       du fichier attendu comme repère visuel.
+   ✅ JUSTIFICATION : Ce cadre rectangulaire affiche le nom exact du fichier 
+   que l'enseignant devra uploader sur Overleaf. Après upload et 
+   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
+   \\includegraphics[width=\\linewidth]{schema-X-Y.png} pour afficher 
+   l'image réelle dans la page annexe.
 
-   📌 RAPPEL FINAL : Utiliser SYSTÉMATIQUEMENT la logique \\IfFileExists 
-   décrite ci-dessus pour toute insertion de schéma. Ne JAMAIS utiliser 
-   \\includegraphics seul (sans \\IfFileExists), car cela provoquerait une 
-   erreur de compilation si l'image n'est pas présente. Ne JAMAIS utiliser 
-   \\fbox seul non plus, car l'image uploadée ne s'afficherait alors jamais.
+   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
+   dans la grille principale — toujours passer par le \\fbox placeholder 
+   décrit ci-dessus.
 
-   🎯 CONSEILS D'ADAPTATION À LA CELLULE (\\multicolumn{6}{p{24.8cm}|}{...}) :
-   - La largeur par défaut de l'image est 0.75\\linewidth (largeur de la cellule) ; 
-     l'IA peut la réduire à 0.5\\linewidth pour un petit schéma ou l'augmenter 
-     à 0.9\\linewidth pour un schéma détaillé.
-   - Toujours inclure keepaspectratio pour éviter toute déformation.
-   - NE PAS fixer de height fixe : laisser la cellule p{...} s'adapter à la 
-     hauteur naturelle de l'image (largeur pilotée ⇒ hauteur automatique).
-   - Si un texte doit accompagner l'image dans la même cellule, utiliser un minipage :
-     \\begin{minipage}[c]{0.6\\linewidth} texte... \\end{minipage}\\hfill
-     \\begin{minipage}[c]{0.38\\linewidth}\\centering\\includegraphics[width=\\linewidth,keepaspectratio]{schema-X-Y.png}\\end{minipage}
-   - Pour un habillage (texte qui coule autour de l'image), utiliser le package 
-     wrapstuff (PAS wrapfig, incompatible avec longtable) :
-     \\begin{wrapstuff}[r,width=0.35\\linewidth]\\includegraphics[width=\\linewidth]{schema-X-Y.png}\\end{wrapstuff}
-   - Conserver les conventions de nommage : schema-<numéro>-<lettre>.png
+10. PAGE ANNEXE DES SCHÉMAS (NOUVEAU — À AJOUTER EN FIN DE DOCUMENT) :
+   Après la grille de correction principale (tableau longtable) et le tableau
+   des critères de perfectionnement, ajouter une PAGE ANNEXE DÉDIÉE AUX SCHÉMAS.
+   
+   ⚠️ RÈGLE ABSOLUE : Cette page ne doit être générée QUE s'il existe au moins
+   un schéma à dessiner dans l'épreuve. S'il n'y a aucun schéma, NE PAS créer
+   cette page.
+   
+   STRUCTURE DE LA PAGE ANNEXE :
+   
+   a) Saut de page obligatoire avant la section :
+      \\newpage
+   
+   b) En-tête identique à celui de la grille de correction (reprendre EXACTEMENT
+      le même en-tête que celui défini en section II.2 ou II.2bis, selon le cas).
+   
+   c) Titre de la section :
+      \\begin{center}
+          {\\Large \\textbf{ANNEXE : SCHÉMAS À RÉALISER}}\\\\[4pt]
+          \\rule{0.9\\linewidth}{0.5pt}
+      \\end{center}
+   
+   d) Pour CHAQUE schéma de l'épreuve, afficher un bloc structuré comme suit :
+      - Un titre indiquant la question et le volet concernés :
+        \\textbf{Schéma de la question X-Y (volet Z)} \\\\
+      - Un encadré placeholder ET une image conditionnelle pour éviter tout 
+        blocage de compilation si le fichier image n'est pas encore uploadé.
+        Utiliser EXACTEMENT la structure suivante :
+
+        \\begin{center}
+        \\IfFileExists{schema-X-Y.png}{%
+          \\includegraphics[width=0.25\\linewidth]{schema-X-Y.png}%
+        }{%
+          \\fbox{\\parbox{0.25\\linewidth}{\\centering 
+            \\vspace{2.5cm} 
+            \\textbf{\\texttt{schema-X-Y.png}} \\\\[4pt]
+            \\textit{(à uploader sur Overleaf)} 
+            \\vspace{2.5cm}}}%
+        }\\\\[6pt]
+        \\textit{Légende : ...}
+        \\end{center}
+
+        ⚠️ La largeur de 0.25\\linewidth correspond à 1/4 de la largeur utile 
+        de la page A4 paysage (soit environ 6,9 cm). NE PAS modifier cette largeur.
+
+        ⚠️ IMPORTANT POUR ÉVITER LE BLOCAGE : \\IfFileExists est une commande
+        standard (package graphicx) qui affiche l'image si elle existe, sinon
+        affiche le cadre placeholder. C'est ce qui garantit que la compilation
+        ne bloque JAMAIS, même si l'enseignant n'a pas encore uploadé l'image.
+
+        ⚠️ ALTERNATIVE SIMPLE si \\IfFileExists pose problème : commenter la 
+        ligne \\includegraphics avec un % devant, ou utiliser uniquement le 
+        \\fbox placeholder. Ne JAMAIS mettre un \\includegraphics non protégé.
+
+      - Séparer chaque bloc de schéma par un espace vertical :
+        \\vspace{1cm}
+   
+   e) Si le nombre de schémas est important (plus de 4), les répartir
+      sur plusieurs pages annexes en insérant des \\newpage si nécessaire.
+   
+   f) La page annexe doit respecter la même mise en forme générale
+      (police, marges, orientation paysage) que le reste du document.
+   
+   ⚠️ IMPORTANT : Les noms de fichiers indiqués dans les \\includegraphics 
+   de la page annexe doivent être STRICTEMENT IDENTIQUES à ceux utilisés 
+   dans les placeholders \\fbox de la grille principale (section II.9).
+   
+   ⚠️ RAPPEL CRUCIAL SUR L'AFFICHAGE DES IMAGES :
+   - Dans la GRILLE PRINCIPALE : les schémas sont représentés par des 
+     placeholders \\fbox{\\parbox{...}{\\texttt{schema-X-Y.png}}} (cadre avec nom).
+   - Dans la PAGE ANNEXE : les schémas sont affichés avec \\includegraphics 
+     protégé par \\IfFileExists (image réelle uploadée) OU par un placeholder 
+     \\fbox si l'image n'existe pas encore.
+   - NE JAMAIS mettre \\includegraphics non protégé dans la grille principale.
+   - NE JAMAIS mettre \\fbox placeholder seul dans la page annexe sans 
+     \\IfFileExists (sinon l'image ne s'affichera pas une fois uploadée).
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1363,18 +1466,41 @@ La somme des points du barème sur 20 doit STRICTEMENT respecter la classe de l'
 
 RÈGLES D'IMPUTATION DANS LES 3 CRITÈRES :
 Pour chaque question (et pour chaque volet d'une question à plusieurs volets),
-la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet, et chaque point attribué doit être un multiple de 0,25.
+la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet, et chaque point attribué doit être un multiple de 0,25 STRICTEMENT POSITIF (jamais 0). Si un critère n'est pas concerné par la question, écrire « — » au lieu de 0.
 
 ------------------------------------------------------------
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
-2. Packages : \`inputenc\`, \`fontenc\`, \`geometry\`, \`amsmath\`, \`amssymb\`, \`xcolor\`, \`lastpage\`, \`fancyhdr\`, \`array\`, \`longtable\`, \`tabularx\`, \`multirow\`, \`setspace\`, \`helvet\`, \`graphicx\`, \`caption\`, \`wrapstuff\`.
+2. Packages OBLIGATOIRES (tous standards Overleaf) :
+   \`\\usepackage[utf8]{inputenc}\`,
+   \`\\usepackage[T1]{fontenc}\`,
+   \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`,
+   \`\\usepackage{amsmath}\`,
+   \`\\usepackage{amssymb}\`,
+   \`\\usepackage{xcolor}\`,
+   \`\\usepackage{lastpage}\`,
+   \`\\usepackage{fancyhdr}\`,
+   \`\\usepackage{array}\`,
+   \`\\usepackage{longtable}\`,
+   \`\\usepackage{tabularx}\`,
+   \`\\usepackage{multirow}\`,
+   \`\\usepackage{setspace}\`,
+   \`\\usepackage{helvet}\`,
+   \`\\usepackage{graphicx}\`,
+   \`\\usepackage{caption}\`
 3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
 4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
 5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
 [SECTION_IV_ENTETE]
 7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
+
+⚠️ RAPPELS ANTI-BLOCAGE COMPILATION :
+  - Échapper % en \\%, & en \\&, _ en \\_, # en \\#, $ en \\$, { en \\{, } en \\}, ~ en \\textasciitilde{}, ^ en \\textasciicircum{}, \\ en \\textbackslash{}.
+  - Les \\ifFileExists, \\includegraphics, \\fbox, \\parbox, \\boxed, \\dfrac, \\multirow, \\multicolumn, \\cline, \\hline, \\endfirsthead, \\endhead, \\end{longtable} doivent être bien formés.
+  - Ne JAMAIS laisser une accolade ouverte. Vérifier l'équilibre de toutes les paires \\begin{...}/\\end{...}.
+  - Ne JAMAIS mettre d'image sans \\IfFileExists ou sans commentaire % devant \\includegraphics.
+  - Le document DOIT se terminer par \\end{document}.
 
 ------------------------------------------------------------
 V. DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 ET C3
@@ -1406,14 +1532,21 @@ IMPORTANT :
     « C3 : La production est bien raisonnée ».
   - Pour CHAQUE question et CHAQUE volets, tu dois formuler, dans la colonne du
     critère correspondant, une phrase courte et spécifique à la question,
-    en suivant les exemples ci-dessus (ex : « un calcul de la masse molaire est fait »,
-    « le calcul comporte la masse m = 5 g et la masse molaire M = 40 g/mol »,
-    « le calcul est juste et donne n = 0,125 mol »).
+    en suivant les exemples ci-dessus.
 
 ------------------------------------------------------------
 VI. FORMAT DE SORTIE
 ------------------------------------------------------------
 Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun texte explicatif avant ou après, prêt à être copié-collé et compilé sur Overleaf.
+
+⚠️ CONTRÔLE FINAL AVANT ENVOI : Vérifie une dernière fois que :
+  1. Tous les \\begin{...} ont un \\end{...} correspondant ;
+  2. Aucun caractère spécial non échappé ;
+  3. Aucun \\includegraphics non protégé par \\IfFileExists ou % ;
+  4. Le document se termine bien par \\end{document} ;
+  5. Les largeurs de colonnes totalisent bien ≤ 25,1 cm pour la longtable ;
+  6. Aucun point attribué n'est égal à 0 (utiliser « — » si nécessaire) ;
+  7. Toutes les sommes de points sont correctes et totalisent [SCORE_PONDERATION].
 % ============================================================
 % FIN DU PROMPT
 % ============================================================`;
@@ -1677,9 +1810,15 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
    (fichier "entete.png" importé dans le projet Overleaf).
    
    CONSIGNES IMPÉRATIVES :
-   - En TOUT DÉBUT du document (juste après \\begin{document}), insérer l'image d'entête générale :
+   - En TOUT DÉBUT du document (juste après \\begin{document}), insérer l'image d'entête générale
+     EN LA PROTÉGEANT par \\IfFileExists pour éviter tout blocage de compilation si l'image
+     n'est pas encore uploadée :
      \\begin{center}
-         \\includegraphics[width=\\linewidth]{entete.png}
+       \\IfFileExists{entete.png}{%
+         \\includegraphics[width=\\linewidth]{entete.png}%
+       }{%
+         \\fbox{\\parbox{\\linewidth}{\\centering \\vspace{2cm} \\textbf{\\texttt{entete.png}} \\\\[4pt] \\textit{(à uploader sur Overleaf)} \\vspace{2cm}}}%
+       }
      \\end{center}
    - NE PAS insérer de cartouche Pays / Direction / Établissement / Année scolaire.
    - Juste SOUS l'image entete.png, ajouter uniquement :
@@ -1692,7 +1831,11 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
    
    Exemple de structure attendue :
    \\begin{center}
-       \\includegraphics[width=\\linewidth]{entete.png}\\\\[6pt]
+       \\IfFileExists{entete.png}{%
+         \\includegraphics[width=\\linewidth]{entete.png}%
+       }{%
+         \\fbox{\\parbox{\\linewidth}{\\centering \\vspace{2cm} \\textbf{\\texttt{entete.png}} \\\\[4pt] \\textit{(à uploader sur Overleaf)} \\vspace{2cm}}}%
+       }\\\\[6pt]
        {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
        \\rule{0.9\\linewidth}{0.5pt}\\\\[4pt]
        {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
@@ -1723,7 +1866,7 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
 
             let sectionIVEntete = '';
             if (enteteActive) {
-                sectionIVEntete = `6. En-tête : Image « entête générale » (fichier "entete.png") insérée EN PLEINE LARGEUR tout en haut du document via \\includegraphics[width=\\linewidth]{entete.png}, suivie uniquement du titre « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) », d'une règle horizontale, de la ligne Classe / Coef. / Durée et des compétences disciplinaires et transversales. PAS de cartouche Pays / Direction / Établissement / Année.`;
+                sectionIVEntete = `6. En-tête : Image « entête générale » (fichier "entete.png") insérée EN PLEINE LARGEUR tout en haut du document via \\IfFileExists{entete.png}{\\includegraphics[width=\\linewidth]{entete.png}}{\\fbox{...}} (protection anti-blocage), suivie uniquement du titre « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) », d'une règle horizontale, de la ligne Classe / Coef. / Durée et des compétences disciplinaires et transversales. PAS de cartouche Pays / Direction / Établissement / Année.`;
             } else {
                 sectionIVEntete = `6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, compétences disciplinaires et transversales, période, coef, durée.`;
             }
