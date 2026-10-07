@@ -1143,15 +1143,15 @@ détaillée, en respectant SCRUPULEUSEMENT :
 ⚠️ RÈGLE ABSOLUE DE COMPILATION : Le code LaTeX produit doit compiler SANS AUCUNE
 ERREUR sur Overleaf (pdflatex). Tu dois impérativement :
   - Utiliser UNIQUEMENT des packages standards disponibles sur Overleaf ;
-  - Échapper correctement tous les caractères spéciaux (%, &, _, #, $, {, }, ~, ^, \\) ;
+  - Échapper correctement tous les caractères spéciaux (%, &, _, #, $, {, }, ~, ^, \\\\) ;
   - Ne JAMAIS utiliser de commandes non définies ou de packages exotiques ;
-  - Ne JAMAIS mettre d'images inexistantes (\\includegraphics) : dans la grille, utiliser
-    UNIQUEMENT des placeholders \\fbox ; dans la page annexe, mettre \\includegraphics
-    COMMENTÉ ou précédé d'un \\IfFileExists pour éviter le blocage si l'image est absente ;
-  - Vérifier la cohérence des accolades, des environnements (\\begin{...}/\\end{...}) ;
+  - Ne JAMAIS mettre d'images inexistantes (\\\\includegraphics) : dans la grille, utiliser
+    UNIQUEMENT des placeholders \\\\fbox ; dans la page annexe, mettre \\\\includegraphics
+    COMMENTÉ ou précédé d'un \\\\IfFileExists pour éviter le blocage si l'image est absente ;
+  - Vérifier la cohérence des accolades, des environnements (\\\\begin{...}/\\\\end{...}) ;
   - Ne pas dépasser la largeur A4 paysage : les tableaux doivent être calibrés avec
     des largeurs fixes p{...} et non tabularx/X dans longtable ;
-  - Utiliser \\documentclass[10pt,a4paper,landscape]{article} et non standalone.
+  - Utiliser \\\\documentclass[10pt,a4paper,landscape]{article} et non standalone.
 
 ------------------------------------------------------------
 I. INFORMATIONS GÉNÉRALES
@@ -1192,7 +1192,7 @@ La grille reproduit EXACTEMENT l'architecture suivante :
      - Critère 3 (indicateurs C3) ......... 5,4 cm  (la production est bien raisonnée)
      - Pts critère 3 ...................... 0,9 cm  (chiffres uniquement, centré)
    Spécification de colonnes à utiliser EXACTEMENT :
-     |>{\\centering\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\centering\\arraybackslash}p{0.9cm}|
+     |>{\\\\centering\\\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|
 
 [SECTION_II_ENTETE]
 
@@ -1204,40 +1204,40 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Questions numérotées : 1-1, 1-2... / 2-1, 2-2...
 
    CHAQUE QUESTION = UN BLOC DE 2 SOUS-LIGNES (structure anti-doublon des éléments de réponse) :
-     a) Sous-ligne « Éléments de réponse » : la cellule N° est en \\multirow{2}{*}{\\textbf{numéro de la question}},
-        puis \\multicolumn{6}{p{24.8cm}|}{...} fusionne les colonnes 2 à 7 et contient UNE SEULE FOIS
+     a) Sous-ligne « Éléments de réponse » : la cellule N° est en \\\\multirow{2}{*}{\\\\textbf{numéro de la question}},
+        puis \\\\multicolumn{6}{p{24.8cm}|}{...} fusionne les colonnes 2 à 7 et contient UNE SEULE FOIS
         la réponse attendue (corrigé type) de la question, terminée par le total de la question
-        (\\hfill\\textbf{(Total : X pts)}).
+        (\\\\hfill\\\\textbf{(Total : X pts)}).
      b) Sous-ligne « Indicateurs » : la cellule N° est vide (elle prolonge le multirow), puis trois paires
         indicateurs + points : indicateurs liés à C1 | pts C1 | indicateurs liés à C2 | pts C2 | indicateurs liés à C3 | pts C3.
-     c) Séparateurs : \\cline{2-7} entre les deux sous-lignes (pour laisser la cellule N° ouverte)
-        et \\hline à la fin du bloc.
+     c) Séparateurs : \\\\cline{2-7} entre les deux sous-lignes (pour laisser la cellule N° ouverte)
+        et \\\\hline à la fin du bloc.
    - Les éléments de réponse ne doivent JAMAIS être répétés dans les colonnes des critères ni dans une autre ligne :
      les colonnes C1, C2 et C3 contiennent uniquement des indicateurs (phrases courtes, voir section V) et des points.
    - Le total d'une question est la somme des trois points (Pts C1 + Pts C2 + Pts C3).
 
    Squelette EXACT à reproduire (en-tête répété + bloc question) :
-   \\begin{longtable}{|>{\\centering\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\centering\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\centering\\arraybackslash}p{0.9cm}|}
-   \\hline
-   \\textbf{N°} & \\textbf{C1 : La production se rapporte à la consigne} & \\textbf{Pts} & \\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\textbf{Pts} & \\textbf{C3 : La production est bien raisonnée} & \\textbf{Pts} \\\\
-   \\hline\\hline
-   \\endfirsthead
-   \\hline
-   \\textbf{N°} & \\textbf{C1 : La production se rapporte à la consigne} & \\textbf{Pts} & \\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\textbf{Pts} & \\textbf{C3 : La production est bien raisonnée} & \\textbf{Pts} \\\\
-   \\hline\\hline
-   \\endhead
-   \\multicolumn{7}{|l|}{\\textbf{A- PHYSIQUE ET TECHNOLOGIE}} \\\\
-   \\hline
-   \\multirow{2}{*}{\\textbf{2-1}} &
-   \\multicolumn{6}{p{24.8cm}|}{... \\hfill\\textbf{(Total : 2 pts)}} \\\\
-   \\cline{2-7}
-   & indicateurs liés à C1 & 0,5 & indicateurs liés à C2 & 0,5 & indicateurs liés à C3 & 1 \\\\
-   \\hline
-   \\end{longtable}
+   \\\\begin{longtable}{|>{\\\\centering\\\\arraybackslash}p{1.2cm}|p{7.9cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|p{7.9cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|p{5.4cm}|>{\\\\centering\\\\arraybackslash}p{0.9cm}|}
+   \\\\hline
+   \\\\textbf{N°} & \\\\textbf{C1 : La production se rapporte à la consigne} & \\\\textbf{Pts} & \\\\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\\\textbf{Pts} & \\\\textbf{C3 : La production est bien raisonnée} & \\\\textbf{Pts} \\\\\\\\
+   \\\\hline\\\\hline
+   \\\\endfirsthead
+   \\\\hline
+   \\\\textbf{N°} & \\\\textbf{C1 : La production se rapporte à la consigne} & \\\\textbf{Pts} & \\\\textbf{C2 : La production utilise les ressources visées par la situation d'évaluation} & \\\\textbf{Pts} & \\\\textbf{C3 : La production est bien raisonnée} & \\\\textbf{Pts} \\\\\\\\
+   \\\\hline\\\\hline
+   \\\\endhead
+   \\\\multicolumn{7}{|l|}{\\\\textbf{A- PHYSIQUE ET TECHNOLOGIE}} \\\\\\\\
+   \\\\hline
+   \\\\multirow{2}{*}{\\\\textbf{2-1}} &
+   \\\\multicolumn{6}{p{24.8cm}|}{... \\\\hfill\\\\textbf{(Total : 2 pts)}} \\\\\\\\
+   \\\\cline{2-7}
+   & indicateurs liés à C1 & 0,5 & indicateurs liés à C2 & 0,5 & indicateurs liés à C3 & 1 \\\\\\\\
+   \\\\hline
+   \\\\end{longtable}
 
 4. GESTION MULTI-PAGES (IMPÉRATIF) :
    - Tableau principal obligatoirement en environnement \`longtable\`.
-   - Utiliser \`\\endfirsthead\` et \`\\endhead\` pour répéter automatiquement l'en-tête de 7 colonnes en haut de chaque page.
+   - Utiliser \`\\\\endfirsthead\` et \`\\\\endhead\` pour répéter automatiquement l'en-tête de 7 colonnes en haut de chaque page.
 
 5. TABLEAU FINAL DES CRITÈRES DE PERFECTIONNEMENT / INDICATEURS TRANSVERSAUX :
    Un tableau secondaire de 2 colonnes sous la \`longtable\` (largeur totale ajustée) :
@@ -1252,8 +1252,8 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - VENTILER ENSUITE CHAQUE PART DE VOLET DANS LES 3 CRITÈRES (Pertinence / Utilisation correcte des ressources / Cohérence-Raisonnement) de manière à ce que :
          • Pour chaque volet : Pts critère 1 + Pts critère 2 + Pts critère 3 = Pts du volet.
          • Pour la question entière : Somme des points des critères 1, 2 et 3 = Total de la question.
-   - Dans la sous-ligne « Indicateurs », écrire pour chaque critère un indicateur par volet (a), b), c)), séparés par \\newline, et inscrire dans la cellule Pts du critère le TOTAL des points de ce critère pour la question.
-   - NE JAMAIS dupliquer le bloc de la question ; regrouper les volets dans un seul bloc en utilisant des retours à la ligne (\\newline).
+   - Dans la sous-ligne « Indicateurs », écrire pour chaque critère un indicateur par volet (a), b), c)), séparés par \\\\newline, et inscrire dans la cellule Pts du critère le TOTAL des points de ce critère pour la question.
+   - NE JAMAIS dupliquer le bloc de la question ; regrouper les volets dans un seul bloc en utilisant des retours à la ligne (\\\\newline).
    - Vérifier que la somme des points des critères de toutes les questions correspond bien au total de la partie, puis au total de l'épreuve ([SCORE_PONDERATION] pts).
 
 7. CONTRAINTE ABSOLUE SUR LES VALEURS DE POINTS (MULTIPLES DE 0,25 UNIQUEMENT, JAMAIS 0) :
@@ -1278,32 +1278,94 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    sans aucune mention introductive.
 
    Exemple de cellule correcte :
-   \\multicolumn{6}{p{24.8cm}|}{La masse molaire d'un corps pur est la masse d'une mole de ce corps. Elle s'exprime en g/mol. \\hfill\\textbf{(Total : 1,5 pt)}} \\\\
+   \\\\multicolumn{6}{p{24.8cm}|}{La masse molaire d'un corps pur est la masse d'une mole de ce corps. Elle s'exprime en g/mol. \\\\hfill\\\\textbf{(Total : 1,5 pt)}} \\\\\\\\
 
    ✅ POUR LES QUESTIONS AVEC CALCULS : UTILISER OBLIGATOIREMENT LE CANEVAS SUIVANT :
    
-   \\textbf{On pose :} [écrire la formule littérale avec les différentes transformations 
+   \\\\textbf{On pose :} [écrire la formule littérale avec les différentes transformations 
    si nécessaire et y insérer les connecteurs logiques, et à la fin ENCADRER la formule 
-   opérationnelle à l'aide de \\boxed{...}] \\newline
-   \\textbf{A.N :} [lister les données numériques utiles pour le calcul de la réponse 
-   et faire les conversions d'unités si nécessaire, séparées par des points-virgules] \\newline
-   \\textbf{Calcul :} [poser la formule opérationnelle SANS l'encadrer, effectuer le calcul 
+   opérationnelle à l'aide de \\\\boxed{...}] \\\\newline
+   \\\\textbf{A.N :} [lister les données numériques utiles pour le calcul de la réponse 
+   et faire les conversions d'unités si nécessaire, séparées par des points-virgules] \\\\newline
+   \\\\textbf{Calcul :} [poser la formule opérationnelle SANS l'encadrer, effectuer le calcul 
    et donner la réponse finale, par exemple R=2A, puis ENCADRER le résultat final 
-   à l'aide de \\boxed{...}]
+   à l'aide de \\\\boxed{...}]
 
    Exemple concret de cellule correcte pour un calcul de masse molaire :
-   \\multicolumn{6}{p{24.8cm}|}{%
-     \\textbf{On pose :} $M = \\dfrac{m}{n}$ \\quad (relation entre masse, masse molaire et quantité de matière) \\quad $\\boxed{M = \\dfrac{m}{n}}$ \\newline
-     \\textbf{A.N :} $m = 5\\,\\text{g}$ ; $n = 0{,}125\\,\\text{mol}$ \\newline
-     \\textbf{Calcul :} $M = \\dfrac{5}{0{,}125} = 40\\,\\text{g/mol}$ \\quad $\\boxed{M = 40\\,\\text{g/mol}}$ 
-     \\hfill\\textbf{(Total : 1,5 pt)}} \\\\
+   \\\\multicolumn{6}{p{24.8cm}|}{%
+     \\\\textbf{On pose :} $M = \\\\dfrac{m}{n}$ \\\\quad (relation entre masse, masse molaire et quantité de matière) \\\\quad $\\\\boxed{M = \\\\dfrac{m}{n}}$ \\\\newline
+     \\\\textbf{A.N :} $m = 5\\\\,\\\\text{g}$ ; $n = 0{,}125\\\\,\\\\text{mol}$ \\\\newline
+     \\\\textbf{Calcul :} $M = \\\\dfrac{5}{0{,}125} = 40\\\\,\\\\text{g/mol}$ \\\\quad $\\\\boxed{M = 40\\\\,\\\\text{g/mol}}$ 
+     \\\\hfill\\\\textbf{(Total : 1,5 pt)}} \\\\\\\\
 
    ⚠️ RAPPEL : 
-     - Le bloc « On pose » se termine OBLIGATOIREMENT par la formule opérationnelle encadrée (\\boxed{...}).
+     - Le bloc « On pose » se termine OBLIGATOIREMENT par la formule opérationnelle encadrée (\\\\boxed{...}).
      - Le bloc « A.N » liste uniquement les données numériques et les conversions d'unités.
      - Le bloc « Calcul » pose la formule opérationnelle sans l'encadrer, effectue le calcul 
-       et se termine par le résultat final encadré (\\boxed{...}).
+       et se termine par le résultat final encadré (\\\\boxed{...}).
      - NE JAMAIS écrire « Éléments de réponse : » avant le contenu.
+
+   ✅ POUR LES QUESTIONS DEMANDANT D'EXPLIQUER L'ÉQUILIBRE D'UN SOLIDE :
+   La réponse attendue doit être structurée OBLIGATOIREMENT en TROIS ÉTAPES
+   distinctes, clairement identifiées et présentées dans cet ordre précis :
+
+     1) \\\\textbf{Bilan des forces :}
+        Lister TOUTES les forces extérieures appliquées au solide en indiquant
+        UNIQUEMENT leur nom et leur notation vectorielle. NE PAS préciser leurs
+        caractéristiques (ni point d'application, ni direction, ni sens, ni intensité).
+        Utiliser des puces avec \\\\newline.
+
+     2) \\\\textbf{Schéma simplifié du système :}
+        Insérer le placeholder \\\\fbox décrit à la section II.9 pour le schéma
+        demandé (nom de fichier schema-X-Y.png ou schema-X-Y-a.png selon le
+        volet), précédé d'une phrase courte indiquant ce que le schéma
+        représente, et suivi d'une légende si nécessaire.
+
+     3) \\\\textbf{Condition d'équilibre :}
+        Énoncer la condition d'équilibre du solide UNIQUEMENT sous forme
+        vectorielle (par exemple $\\\\sum \\\\vec{F} = \\\\vec{0}$ pour un solide
+        soumis à des forces coplanaires, ou $\\\\sum \\\\vec{M}_{/O} = \\\\vec{0}$
+        s'il y a des moments).
+        ⚠️ ADAPTATION OBLIGATOIRE SELON LA CLASSE :
+          • Si la classe est 6ème, 5ème, 4ème ou 3ème : écrire UNIQUEMENT
+            la relation vectorielle (ex. $\\\\vec{P} + \\\\vec{R} + \\\\vec{T} = \\\\vec{0}$),
+            SANS aucune exploitation par projections scalaires.
+          • Si la classe est 2nde, 1ère ou Terminale : écrire la relation
+            vectorielle PUIS AJOUTER l'exploitation par projections scalaires
+            sur les axes du repère choisi (par exemple : $P_x + R_x + T_x = 0$
+            et $P_y + R_y + T_y = 0$, avec les expressions scalaires qui en
+            découlent).
+
+   Exemple concret de cellule correcte (question 1-2 sur 2 pts) :
+   \\\\multicolumn{6}{p{24.8cm}|}{%
+     \\\\textbf{Bilan des forces :} \\\\newline
+     $\\\\bullet$ $\\\\vec{P}$ : poids du solide ; \\\\newline
+     $\\\\bullet$ $\\\\vec{R}$ : réaction du support ; \\\\newline
+     $\\\\bullet$ $\\\\vec{T}$ : tension du fil. \\\\newline
+     \\\\textbf{Schéma simplifié du système :} \\\\newline
+     Schéma du solide soumis aux trois forces $\\\\vec{P}$, $\\\\vec{R}$ et $\\\\vec{T}$. \\\\newline
+     \\\\fbox{\\\\parbox{\\\\linewidth}{\\\\centering \\\\vspace{0.4cm} \\\\textbf{\\\\texttt{schema-1-2.png}} \\\\vspace{0.2cm} \\\\textit{(à uploader sur Overleaf)} \\\\vspace{0.4cm}}} \\\\newline
+     Légende : bilan des forces appliquées au solide. \\\\newline
+     \\\\textbf{Condition d'équilibre :} le solide est en équilibre, donc $\\\\sum \\\\vec{F} = \\\\vec{0}$, soit $\\\\vec{P} + \\\\vec{R} + \\\\vec{T} = \\\\vec{0}$.
+     \\\\hfill\\\\textbf{(Total : 2 pts)}} \\\\\\\\
+
+   ⚠️ RAPPEL SPÉCIFIQUE ÉQUILIBRE :
+     - Les TROIS ÉTAPES doivent apparaître DANS CET ORDRE STRICT :
+       (1) Bilan des forces, (2) Schéma simplifié du système, (3) Condition d'équilibre.
+     - Le bilan des forces doit mentionner UNIQUEMENT le nom et la notation
+       vectorielle de CHAQUE force. NE PAS préciser le point d'application,
+       la direction, le sens ou l'intensité.
+     - Le schéma simplifié NE DOIT JAMAIS être omis : utiliser le placeholder
+       \\\\fbox standard de la section II.9 si l'image n'est pas encore disponible.
+     - La condition d'équilibre doit être écrite SOUS FORME VECTORIELLE.
+       L'exploitation par projections scalaires dépend STRICTEMENT de la classe :
+         • 6ème, 5ème, 4ème, 3ème : PAS de projections scalaires, uniquement
+           la relation vectorielle.
+         • 2nde, 1ère, Terminale : écrire la relation vectorielle PUIS ajouter
+           l'exploitation par projections scalaires sur les axes.
+     - Cette structure en 3 étapes est OBLIGATOIRE dès que l'énoncé demande
+       d'« expliquer l'équilibre d'un solide », d'« étudier l'équilibre » ou
+       de « montrer que le solide est en équilibre ».
 
 9. INSERTION D'IMAGES POUR LES SCHÉMAS À DESSINER (RÈGLE ABSOLUE) :
 
@@ -1317,12 +1379,12 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    contenant le NOM DU FICHIER IMAGE attendu, à l'aide EXACTEMENT 
    de la commande LaTeX suivante :
 
-   \\fbox{\\parbox{\\linewidth}{\\centering 
-     \\vspace{0.4cm} 
-     \\textbf{\\texttt{schema-X-Y.png}} 
-     \\vspace{0.2cm} 
-     \\textit{(à uploader sur Overleaf)} 
-     \\vspace{0.4cm}}}
+   \\\\fbox{\\\\parbox{\\\\linewidth}{\\\\centering 
+     \\\\vspace{0.4cm} 
+     \\\\textbf{\\\\texttt{schema-X-Y.png}} 
+     \\\\vspace{0.2cm} 
+     \\\\textit{(à uploader sur Overleaf)} 
+     \\\\vspace{0.4cm}}}
 
    CONVENTIONS DE NOMMAGE OBLIGATOIRES :
    - Nom du fichier : schema-<numéro-question>-<lettre-volet>.png
@@ -1341,19 +1403,19 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    - Après le cadre, indiquer la légende attendue 
      (ex : « Légende : montage en série »).
    - Le cadre doit tenir sur DEUX LIGNES en hauteur et la largeur doit 
-     s'adapter à la cellule (utiliser \\linewidth dans le \\parbox).
+     s'adapter à la cellule (utiliser \\\\linewidth dans le \\\\parbox).
    - Si plusieurs schémas dans une même question, insérer plusieurs 
-     \\fbox successifs séparés par un \\vspace{0.3cm}.
+     \\\\fbox successifs séparés par un \\\\vspace{0.3cm}.
    - Le nom du fichier doit être UNIQUE dans tout le document.
 
    ✅ JUSTIFICATION : Ce cadre rectangulaire affiche le nom exact du fichier 
    que l'enseignant devra uploader sur Overleaf. Après upload et 
-   compilation, l'enseignant peut remplacer manuellement le \\fbox par 
-   \\includegraphics[width=\\linewidth]{schema-X-Y.png} pour afficher 
+   compilation, l'enseignant peut remplacer manuellement le \\\\fbox par 
+   \\\\includegraphics[width=\\\\linewidth]{schema-X-Y.png} pour afficher 
    l'image réelle dans la page annexe.
 
-   📌 RAPPEL FINAL : NE JAMAIS utiliser \\includegraphics directement 
-   dans la grille principale — toujours passer par le \\fbox placeholder 
+   📌 RAPPEL FINAL : NE JAMAIS utiliser \\\\includegraphics directement 
+   dans la grille principale — toujours passer par le \\\\fbox placeholder 
    décrit ci-dessus.
 
 10. PAGE ANNEXE DES SCHÉMAS (NOUVEAU — À AJOUTER EN FIN DE DOCUMENT) :
@@ -1367,71 +1429,71 @@ La grille reproduit EXACTEMENT l'architecture suivante :
    STRUCTURE DE LA PAGE ANNEXE :
    
    a) Saut de page obligatoire avant la section :
-      \\newpage
+      \\\\newpage
    
    b) En-tête identique à celui de la grille de correction (reprendre EXACTEMENT
       le même en-tête que celui défini en section II.2 ou II.2bis, selon le cas).
    
    c) Titre de la section :
-      \\begin{center}
-          {\\Large \\textbf{ANNEXE : SCHÉMAS À RÉALISER}}\\\\[4pt]
-          \\rule{0.9\\linewidth}{0.5pt}
-      \\end{center}
+      \\\\begin{center}
+          {\\\\Large \\\\textbf{ANNEXE : SCHÉMAS À RÉALISER}}\\\\\\\\[4pt]
+          \\\\rule{0.9\\\\linewidth}{0.5pt}
+      \\\\end{center}
    
    d) Pour CHAQUE schéma de l'épreuve, afficher un bloc structuré comme suit :
       - Un titre indiquant la question et le volet concernés :
-        \\textbf{Schéma de la question X-Y (volet Z)} \\\\
+        \\\\textbf{Schéma de la question X-Y (volet Z)} \\\\\\\\
       - Un encadré placeholder ET une image conditionnelle pour éviter tout 
         blocage de compilation si le fichier image n'est pas encore uploadé.
         Utiliser EXACTEMENT la structure suivante :
 
-        \\begin{center}
-        \\IfFileExists{schema-X-Y.png}{%
-          \\includegraphics[width=0.25\\linewidth]{schema-X-Y.png}%
+        \\\\begin{center}
+        \\\\IfFileExists{schema-X-Y.png}{%
+          \\\\includegraphics[width=0.25\\\\linewidth]{schema-X-Y.png}%
         }{%
-          \\fbox{\\parbox{0.25\\linewidth}{\\centering 
-            \\vspace{2.5cm} 
-            \\textbf{\\texttt{schema-X-Y.png}} \\\\[4pt]
-            \\textit{(à uploader sur Overleaf)} 
-            \\vspace{2.5cm}}}%
-        }\\\\[6pt]
-        \\textit{Légende : ...}
-        \\end{center}
+          \\\\fbox{\\\\parbox{0.25\\\\linewidth}{\\\\centering 
+            \\\\vspace{2.5cm} 
+            \\\\textbf{\\\\texttt{schema-X-Y.png}} \\\\\\\\[4pt]
+            \\\\textit{(à uploader sur Overleaf)} 
+            \\\\vspace{2.5cm}}}%
+        }\\\\\\\\[6pt]
+        \\\\textit{Légende : ...}
+        \\\\end{center}
 
-        ⚠️ La largeur de 0.25\\linewidth correspond à 1/4 de la largeur utile 
+        ⚠️ La largeur de 0.25\\\\linewidth correspond à 1/4 de la largeur utile 
         de la page A4 paysage (soit environ 6,9 cm). NE PAS modifier cette largeur.
 
-        ⚠️ IMPORTANT POUR ÉVITER LE BLOCAGE : \\IfFileExists est une commande
+        ⚠️ IMPORTANT POUR ÉVITER LE BLOCAGE : \\\\IfFileExists est une commande
         standard (package graphicx) qui affiche l'image si elle existe, sinon
         affiche le cadre placeholder. C'est ce qui garantit que la compilation
         ne bloque JAMAIS, même si l'enseignant n'a pas encore uploadé l'image.
 
-        ⚠️ ALTERNATIVE SIMPLE si \\IfFileExists pose problème : commenter la 
-        ligne \\includegraphics avec un % devant, ou utiliser uniquement le 
-        \\fbox placeholder. Ne JAMAIS mettre un \\includegraphics non protégé.
+        ⚠️ ALTERNATIVE SIMPLE si \\\\IfFileExists pose problème : commenter la 
+        ligne \\\\includegraphics avec un % devant, ou utiliser uniquement le 
+        \\\\fbox placeholder. Ne JAMAIS mettre un \\\\includegraphics non protégé.
 
       - Séparer chaque bloc de schéma par un espace vertical :
-        \\vspace{1cm}
+        \\\\vspace{1cm}
    
    e) Si le nombre de schémas est important (plus de 4), les répartir
-      sur plusieurs pages annexes en insérant des \\newpage si nécessaire.
+      sur plusieurs pages annexes en insérant des \\\\newpage si nécessaire.
    
    f) La page annexe doit respecter la même mise en forme générale
       (police, marges, orientation paysage) que le reste du document.
    
-   ⚠️ IMPORTANT : Les noms de fichiers indiqués dans les \\includegraphics 
+   ⚠️ IMPORTANT : Les noms de fichiers indiqués dans les \\\\includegraphics 
    de la page annexe doivent être STRICTEMENT IDENTIQUES à ceux utilisés 
-   dans les placeholders \\fbox de la grille principale (section II.9).
+   dans les placeholders \\\\fbox de la grille principale (section II.9).
    
    ⚠️ RAPPEL CRUCIAL SUR L'AFFICHAGE DES IMAGES :
    - Dans la GRILLE PRINCIPALE : les schémas sont représentés par des 
-     placeholders \\fbox{\\parbox{...}{\\texttt{schema-X-Y.png}}} (cadre avec nom).
-   - Dans la PAGE ANNEXE : les schémas sont affichés avec \\includegraphics 
-     protégé par \\IfFileExists (image réelle uploadée) OU par un placeholder 
-     \\fbox si l'image n'existe pas encore.
-   - NE JAMAIS mettre \\includegraphics non protégé dans la grille principale.
-   - NE JAMAIS mettre \\fbox placeholder seul dans la page annexe sans 
-     \\IfFileExists (sinon l'image ne s'affichera pas une fois uploadée).
+     placeholders \\\\fbox{\\\\parbox{...}{\\\\texttt{schema-X-Y.png}}} (cadre avec nom).
+   - Dans la PAGE ANNEXE : les schémas sont affichés avec \\\\includegraphics 
+     protégé par \\\\IfFileExists (image réelle uploadée) OU par un placeholder 
+     \\\\fbox si l'image n'existe pas encore.
+   - NE JAMAIS mettre \\\\includegraphics non protégé dans la grille principale.
+   - NE JAMAIS mettre \\\\fbox placeholder seul dans la page annexe sans 
+     \\\\IfFileExists (sinon l'image ne s'affichera pas une fois uploadée).
 
 ------------------------------------------------------------
 III. CLÉ OFFICIELLE DE RÉPARTITION DES POINTS (PONDÉRATION APC)
@@ -1471,36 +1533,36 @@ la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte
 ------------------------------------------------------------
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
-1. Document class : \`\\documentclass[10pt,a4paper,landscape]{article}\`
+1. Document class : \`\\\\documentclass[10pt,a4paper,landscape]{article}\`
 2. Packages OBLIGATOIRES (tous standards Overleaf) :
-   \`\\usepackage[utf8]{inputenc}\`,
-   \`\\usepackage[T1]{fontenc}\`,
-   \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`,
-   \`\\usepackage{amsmath}\`,
-   \`\\usepackage{amssymb}\`,
-   \`\\usepackage{xcolor}\`,
-   \`\\usepackage{lastpage}\`,
-   \`\\usepackage{fancyhdr}\`,
-   \`\\usepackage{array}\`,
-   \`\\usepackage{longtable}\`,
-   \`\\usepackage{tabularx}\`,
-   \`\\usepackage{multirow}\`,
-   \`\\usepackage{setspace}\`,
-   \`\\usepackage{helvet}\`,
-   \`\\usepackage{graphicx}\`,
-   \`\\usepackage{caption}\`
-3. Marges : \`\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
-4. Police : \`\\renewcommand{\\familydefault}{\\sfdefault}\`
-5. Rembourrage : \`\\setlength{\\tabcolsep}{3pt}\` et \`\\renewcommand{\\arraystretch}{1.15}\`
+   \`\\\\usepackage[utf8]{inputenc}\`,
+   \`\\\\usepackage[T1]{fontenc}\`,
+   \`\\\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`,
+   \`\\\\usepackage{amsmath}\`,
+   \`\\\\usepackage{amssymb}\`,
+   \`\\\\usepackage{xcolor}\`,
+   \`\\\\usepackage{lastpage}\`,
+   \`\\\\usepackage{fancyhdr}\`,
+   \`\\\\usepackage{array}\`,
+   \`\\\\usepackage{longtable}\`,
+   \`\\\\usepackage{tabularx}\`,
+   \`\\\\usepackage{multirow}\`,
+   \`\\\\usepackage{setspace}\`,
+   \`\\\\usepackage{helvet}\`,
+   \`\\\\usepackage{graphicx}\`,
+   \`\\\\usepackage{caption}\`
+3. Marges : \`\\\\usepackage[a4paper,landscape,margin=1cm]{geometry}\`
+4. Police : \`\\\\renewcommand{\\\\familydefault}{\\\\sfdefault}\`
+5. Rembourrage : \`\\\\setlength{\\\\tabcolsep}{3pt}\` et \`\\\\renewcommand{\\\\arraystretch}{1.15}\`
 [SECTION_IV_ENTETE]
-7. Pied de page : \`Page X sur \\pageref{LastPage}\` via \`fancyhdr\`.
+7. Pied de page : \`Page X sur \\\\pageref{LastPage}\` via \`fancyhdr\`.
 
 ⚠️ RAPPELS ANTI-BLOCAGE COMPILATION :
-  - Échapper % en \\%, & en \\&, _ en \\_, # en \\#, $ en \\$, { en \\{, } en \\}, ~ en \\textasciitilde{}, ^ en \\textasciicircum{}, \\ en \\textbackslash{}.
-  - Les \\ifFileExists, \\includegraphics, \\fbox, \\parbox, \\boxed, \\dfrac, \\multirow, \\multicolumn, \\cline, \\hline, \\endfirsthead, \\endhead, \\end{longtable} doivent être bien formés.
-  - Ne JAMAIS laisser une accolade ouverte. Vérifier l'équilibre de toutes les paires \\begin{...}/\\end{...}.
-  - Ne JAMAIS mettre d'image sans \\IfFileExists ou sans commentaire % devant \\includegraphics.
-  - Le document DOIT se terminer par \\end{document}.
+  - Échapper % en \\\\%, & en \\\\&, _ en \\\\_, # en \\\\#, $ en \\\\$, { en \\\\{, } en \\\\}, ~ en \\\\textasciitilde{}, ^ en \\\\textasciicircum{}, \\\\ en \\\\textbackslash{}.
+  - Les \\\\ifFileExists, \\\\includegraphics, \\\\fbox, \\\\parbox, \\\\boxed, \\\\dfrac, \\\\multirow, \\\\multicolumn, \\\\cline, \\\\hline, \\\\endfirsthead, \\\\endhead, \\\\end{longtable} doivent être bien formés.
+  - Ne JAMAIS laisser une accolade ouverte. Vérifier l'équilibre de toutes les paires \\\\begin{...}/\\\\end{...}.
+  - Ne JAMAIS mettre d'image sans \\\\IfFileExists ou sans commentaire % devant \\\\includegraphics.
+  - Le document DOIT se terminer par \\\\end{document}.
 
 ------------------------------------------------------------
 V. DÉFINITIONS ET EXEMPLES DES CRITÈRES C1, C2 ET C3
@@ -1540,10 +1602,10 @@ VI. FORMAT DE SORTIE
 Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun texte explicatif avant ou après, prêt à être copié-collé et compilé sur Overleaf.
 
 ⚠️ CONTRÔLE FINAL AVANT ENVOI : Vérifie une dernière fois que :
-  1. Tous les \\begin{...} ont un \\end{...} correspondant ;
+  1. Tous les \\\\begin{...} ont un \\\\end{...} correspondant ;
   2. Aucun caractère spécial non échappé ;
-  3. Aucun \\includegraphics non protégé par \\IfFileExists ou % ;
-  4. Le document se termine bien par \\end{document} ;
+  3. Aucun \\\\includegraphics non protégé par \\\\IfFileExists ou % ;
+  4. Le document se termine bien par \\\\end{document} ;
   5. Les largeurs de colonnes totalisent bien ≤ 25,1 cm pour la longtable ;
   6. Aucun point attribué n'est égal à 0 (utiliser « — » si nécessaire) ;
   7. Toutes les sommes de points sont correctes et totalisent [SCORE_PONDERATION].
@@ -1711,7 +1773,7 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             const compTrans = compTransList.length > 0 ? compTransList.join(' • ') : null;
 
             // (Les affichages Pays / Direction / Établissement / Année ont déjà été faits plus haut
-            //  selon l'état de l'option « entête générale ».)
+            //  selon l'état de l'option « entête générale ».  )
             document.getElementById('displayClasse').innerText = classe ? classe : 'Non configuré';
             document.getElementById('displayTypeEval').innerText = typeEval ? typeEval : 'Non configuré';
             document.getElementById('displayCompetencesDisciplinaires').innerText = compDisc ? compDisc : 'Non configuré';
@@ -1810,63 +1872,63 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
    (fichier "entete.png" importé dans le projet Overleaf).
    
    CONSIGNES IMPÉRATIVES :
-   - En TOUT DÉBUT du document (juste après \\begin{document}), insérer l'image d'entête générale
-     EN LA PROTÉGEANT par \\IfFileExists pour éviter tout blocage de compilation si l'image
+   - En TOUT DÉBUT du document (juste après \\\\begin{document}), insérer l'image d'entête générale
+     EN LA PROTÉGEANT par \\\\IfFileExists pour éviter tout blocage de compilation si l'image
      n'est pas encore uploadée :
-     \\begin{center}
-       \\IfFileExists{entete.png}{%
-         \\includegraphics[width=\\linewidth]{entete.png}%
+     \\\\begin{center}
+       \\\\IfFileExists{entete.png}{%
+         \\\\includegraphics[width=\\\\linewidth]{entete.png}%
        }{%
-         \\fbox{\\parbox{\\linewidth}{\\centering \\vspace{2cm} \\textbf{\\texttt{entete.png}} \\\\[4pt] \\textit{(à uploader sur Overleaf)} \\vspace{2cm}}}%
+         \\\\fbox{\\\\parbox{\\\\linewidth}{\\\\centering \\\\vspace{2cm} \\\\textbf{\\\\texttt{entete.png}} \\\\\\\\[4pt] \\\\textit{(à uploader sur Overleaf)} \\\\vspace{2cm}}}%
        }
-     \\end{center}
+     \\\\end{center}
    - NE PAS insérer de cartouche Pays / Direction / Établissement / Année scolaire.
    - Juste SOUS l'image entete.png, ajouter uniquement :
        • Une ligne centrée : « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) » en gras.
-       • Une ligne horizontale (\\rule{0.9\\linewidth}{0.5pt}) de séparation.
-       • Une ligne centrée : « Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE] » en gras.
+       • Une ligne horizontale (\\\\rule{0.9\\\\linewidth}{0.5pt}) de séparation.
+       • Une ligne centrée : « Classe : [CLASSE] $\\\\cdot$ Coef. : [COEF] $\\\\cdot$ Durée : [DUREE] » en gras.
        • Une ligne présentant les compétences évaluées :
-         \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
+         \\\\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\\\quad \\\\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
    - Ne pas recadrer ni déformer l'image : conserver son ratio (utiliser uniquement width).
    
    Exemple de structure attendue :
-   \\begin{center}
-       \\IfFileExists{entete.png}{%
-         \\includegraphics[width=\\linewidth]{entete.png}%
+   \\\\begin{center}
+       \\\\IfFileExists{entete.png}{%
+         \\\\includegraphics[width=\\\\linewidth]{entete.png}%
        }{%
-         \\fbox{\\parbox{\\linewidth}{\\centering \\vspace{2cm} \\textbf{\\texttt{entete.png}} \\\\[4pt] \\textit{(à uploader sur Overleaf)} \\vspace{2cm}}}%
-       }\\\\[6pt]
-       {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
-       \\rule{0.9\\linewidth}{0.5pt}\\\\[4pt]
-       {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
-       {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
-   \\end{center}`;
+         \\\\fbox{\\\\parbox{\\\\linewidth}{\\\\centering \\\\vspace{2cm} \\\\textbf{\\\\texttt{entete.png}} \\\\\\\\[4pt] \\\\textit{(à uploader sur Overleaf)} \\\\vspace{2cm}}}%
+       }\\\\\\\\[6pt]
+       {\\\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\\\\\[2pt]
+       \\\\rule{0.9\\\\linewidth}{0.5pt}\\\\\\\\[4pt]
+       {\\\\textbf{Classe : [CLASSE] $\\\\cdot$ Coef. : [COEF] $\\\\cdot$ Durée : [DUREE]}}\\\\\\\\[2pt]
+       {\\\\small \\\\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\\\quad \\\\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
+   \\\\end{center}`;
             } else {
                 sectionIIEntete = `2. EN-TÊTE INSTITUTIONNEL (CARTOUCHE OFFICIEL) :
    Au-dessus du tableau principal, reproduire EXACTEMENT la même disposition que celle de l'épreuve :
    - Le LIBELLÉ DU PAYS ([PAYS]) doit être placé EN HAUT À GAUCHE.
    - La DIRECTION DÉPARTEMENTALE ([DIRECTION_DEPARTEMENTALE]) doit être placée EN HAUT À DROITE (côté opposé au pays).
-   - Utiliser un \\begin{tabularx}{\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
+   - Utiliser un \\\\begin{tabularx}{\\\\linewidth}{@{}X r@{}} pour aligner le pays à gauche et la direction départementale à droite sur la même ligne.
    - Puis centrer en dessous le nom de l'établissement, la mention « GRILLE DE CORRECTION », le titre de l'épreuve, une ligne de séparation et les informations Classe/Coef./Durée.
    - AJOUTER OBLIGATOIREMENT une ligne présentant les compétences disciplinaires et transversales évaluées, sous la forme :
-     \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
+     \\\\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\\\quad \\\\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]
    
    Exemple de structure à reproduire :
-   \\begin{center}
-   \\begin{tabularx}{\\linewidth}{@{}X r@{}}
-   {\\small \\textbf{[PAYS]}} & {\\small \\textbf{[DIRECTION_DEPARTEMENTALE]}} \\\\
-   \\end{tabularx}\\\\[4pt]
-   {\\Large \\textbf{[ETAB]}}\\\\[2pt]
-   {\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\[2pt]
-   {\\rule{0.9\\linewidth}{0.5pt}}\\\\[4pt]
-   {\\textbf{Classe : [CLASSE] $\\cdot$ Coef. : [COEF] $\\cdot$ Durée : [DUREE]}}\\\\[2pt]
-   {\\small \\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\quad \\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
-   \\end{center}`;
+   \\\\begin{center}
+   \\\\begin{tabularx}{\\\\linewidth}{@{}X r@{}}
+   {\\\\small \\\\textbf{[PAYS]}} & {\\\\small \\\\textbf{[DIRECTION_DEPARTEMENTALE]}} \\\\\\\\
+   \\\\end{tabularx}\\\\\\\\[4pt]
+   {\\\\Large \\\\textbf{[ETAB]}}\\\\\\\\[2pt]
+   {\\\\textbf{GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE])}}\\\\\\\\[2pt]
+   {\\\\rule{0.9\\\\linewidth}{0.5pt}}\\\\\\\\[4pt]
+   {\\\\textbf{Classe : [CLASSE] $\\\\cdot$ Coef. : [COEF] $\\\\cdot$ Durée : [DUREE]}}\\\\\\\\[2pt]
+   {\\\\small \\\\textbf{Compétences disciplinaires :} [COMPETENCES_DISCIPLINAIRES] \\\\quad \\\\textbf{Compétences transversales :} [COMPETENCES_TRANSVERSALES]}
+   \\\\end{center}`;
             }
 
             let sectionIVEntete = '';
             if (enteteActive) {
-                sectionIVEntete = `6. En-tête : Image « entête générale » (fichier "entete.png") insérée EN PLEINE LARGEUR tout en haut du document via \\IfFileExists{entete.png}{\\includegraphics[width=\\linewidth]{entete.png}}{\\fbox{...}} (protection anti-blocage), suivie uniquement du titre « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) », d'une règle horizontale, de la ligne Classe / Coef. / Durée et des compétences disciplinaires et transversales. PAS de cartouche Pays / Direction / Établissement / Année.`;
+                sectionIVEntete = `6. En-tête : Image « entête générale » (fichier "entete.png") insérée EN PLEINE LARGEUR tout en haut du document via \\\\IfFileExists{entete.png}{\\\\includegraphics[width=\\\\linewidth]{entete.png}}{\\\\fbox{...}} (protection anti-blocage), suivie uniquement du titre « GRILLE DE CORRECTION -- [TYPE_EVAL] ([ANNEE]) », d'une règle horizontale, de la ligne Classe / Coef. / Durée et des compétences disciplinaires et transversales. PAS de cartouche Pays / Direction / Établissement / Année.`;
             } else {
                 sectionIVEntete = `6. En-tête : Cartouche institutionnel centré avec le PAYS en haut à gauche, la DIRECTION DÉPARTEMENTALE en haut à droite, puis le nom d'établissement, classe, cycle, type d'évaluation, compétences disciplinaires et transversales, période, coef, durée.`;
             }
