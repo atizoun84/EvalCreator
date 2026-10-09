@@ -458,6 +458,18 @@
             margin-top: 2px;
         }
 
+        /* Champs verrouillés automatiquement */
+        .form-select:disabled,
+        .form-control:disabled {
+            background-color: #eef3f8;
+            color: #4a5a6e;
+            cursor: not-allowed;
+            border-style: dashed;
+            border-color: #b9c8d8;
+            opacity: 1;
+            font-weight: 600;
+        }
+
         /* PWA Install Button */
         .install-banner {
             position: fixed;
@@ -1084,6 +1096,162 @@
                 font-size: 0.68rem;
             }
         }
+
+        /* ====== NUMÉROTATION STANDARD DEVOIRS SURVEILLÉS ====== */
+        .btn-num-standard {
+            background: linear-gradient(135deg, var(--accent) 0%, #b8944a 100%);
+            color: #0b2545;
+            border: 1px solid rgba(11, 37, 69, 0.25);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-num-standard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(201, 169, 97, 0.5);
+            color: #0b2545;
+        }
+        .btn-num-standard i {
+            color: #0b2545;
+            font-size: 0.95rem;
+        }
+        .question-numbers-display {
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, #eef3f8, #e3ecf5);
+            border-left: 3px solid var(--secondary);
+            border-radius: 6px;
+            line-height: 1.9;
+            display: none;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+        .question-numbers-display .qnum-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-weight: 700;
+            margin-right: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .question-numbers-display .qnum-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 2px 9px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 3px rgba(11, 37, 69, 0.25);
+        }
+        .auto-num-hint {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* ====== INDICATEUR VISUEL — NUMÉROTATION STANDARD ====== */
+        .num-applied-toast {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-25px) scale(0.94);
+            background: linear-gradient(135deg, var(--success) 0%, #3a9973 100%);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 12px 32px rgba(46, 125, 91, 0.45),
+                        0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+            z-index: 2050;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.32s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 92vw;
+        }
+        .num-applied-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .num-applied-toast i {
+            font-size: 1.15rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .num-applied-toast .toast-sub {
+            font-weight: 500;
+            opacity: 0.94;
+            font-size: 0.82rem;
+            letter-spacing: 0.2px;
+        }
+
+        @keyframes numBadgePulse {
+            0%   { transform: scale(1);   box-shadow: 0 1px 3px rgba(11, 37, 69, 0.25); }
+            40%  { transform: scale(1.22); box-shadow: 0 5px 14px rgba(46, 125, 91, 0.6); background: var(--success); }
+            100% { transform: scale(1);   box-shadow: 0 1px 3px rgba(11, 37, 69, 0.25); }
+        }
+        .question-numbers-display.flash .qnum-badge {
+            animation: numBadgePulse 0.6s ease-out both;
+        }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(1) { animation-delay: 0.02s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(2) { animation-delay: 0.07s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(3) { animation-delay: 0.12s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(4) { animation-delay: 0.17s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(5) { animation-delay: 0.22s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(6) { animation-delay: 0.27s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(7) { animation-delay: 0.32s; }
+        .question-numbers-display.flash .qnum-badge:nth-of-type(8) { animation-delay: 0.37s; }
+
+        .btn-num-standard.flash-btn {
+            animation: numBtnFlash 0.85s ease-out;
+        }
+        @keyframes numBtnFlash {
+            0%   { background: linear-gradient(135deg, var(--success) 0%, #3a9973 100%); color: #fff; transform: scale(1); }
+            35%  { background: linear-gradient(135deg, var(--success) 0%, #3a9973 100%); color: #fff; transform: scale(1.02); box-shadow: 0 8px 22px rgba(46, 125, 91, 0.5); }
+            100% { background: linear-gradient(135deg, var(--accent) 0%, #b8944a 100%); color: #0b2545; transform: scale(1); }
+        }
+        .btn-num-standard.flash-btn i {
+            animation: none;
+        }
+        .btn-num-standard.flash-btn::after {
+            content: " ✓";
+            color: #fff;
+            font-weight: 900;
+        }
+
+        /* ====== ÉTAT ACTIF DU BOUTON DE NUMÉROTATION STANDARD ====== */
+        .btn-num-standard.num-active {
+            background: linear-gradient(135deg, var(--success) 0%, #3a9973 100%);
+            color: #ffffff;
+            border-color: rgba(46, 125, 91, 0.65);
+            box-shadow: 0 6px 18px rgba(46, 125, 91, 0.35);
+        }
+        .btn-num-standard.num-active:hover {
+            box-shadow: 0 10px 26px rgba(46, 125, 91, 0.5);
+            color: #ffffff;
+        }
+        .btn-num-standard.num-active i {
+            color: #ffffff;
+        }
     </style>
 </head>
 <body onload="chargerDonnees()">
@@ -1367,6 +1535,14 @@
                                         </div>
                                     </div>
                                     <div class="row mt-2">
+                                        <div class="col-12">
+                                            <button type="button" class="btn-num-standard" onclick="appliquerNumerotationStandard('chimie')">
+                                                <i class="fas fa-list-ol"></i> Appliquer la numérotation standard (Devoir surveillé / Production scolaire)
+                                            </button>
+                                            <span class="auto-num-hint">Sélectionnez la classe puis cliquez : les nombres et numéros officiels (IGPM) seront insérés automatiquement.</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation (Chimie)</label>
                                             <input type="text" class="form-control" id="indicesPartie1Chimie" placeholder="Définitions, QCM...">
@@ -1374,6 +1550,7 @@
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
                                             <input type="number" class="form-control" id="nbQuestions1Chimie" value="3" min="1" max="8">
+                                            <div class="question-numbers-display" id="qnum_1_chimie"></div>
                                             <div class="form-check form-switch mt-1">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1Chimie">
                                                 <label class="form-check-label" for="sousQuestions1Chimie" style="font-size:0.75rem;">
@@ -1388,6 +1565,7 @@
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
                                             <input type="number" class="form-control" id="nbQuestions2Chimie" value="3" min="1" max="8">
+                                            <div class="question-numbers-display" id="qnum_2_chimie"></div>
                                             <div class="form-check form-switch mt-1">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2Chimie">
                                                 <label class="form-check-label" for="sousQuestions2Chimie" style="font-size:0.75rem;">
@@ -1442,6 +1620,14 @@
                                         </div>
                                     </div>
                                     <div class="row mt-2">
+                                        <div class="col-12">
+                                            <button type="button" class="btn-num-standard" onclick="appliquerNumerotationStandard('physique')">
+                                                <i class="fas fa-list-ol"></i> Appliquer la numérotation standard (Devoir surveillé / Production scolaire)
+                                            </button>
+                                            <span class="auto-num-hint">Sélectionnez la classe puis cliquez : les nombres et numéros officiels (IGPM) seront insérés automatiquement.</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation (Physique)</label>
                                             <input type="text" class="form-control" id="indicesPartie1Physique" placeholder="Définitions, Vrai/Faux...">
@@ -1449,6 +1635,7 @@
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
                                             <input type="number" class="form-control" id="nbQuestions1Physique" value="3" min="1" max="8">
+                                            <div class="question-numbers-display" id="qnum_1_physique"></div>
                                             <div class="form-check form-switch mt-1">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1Physique">
                                                 <label class="form-check-label" for="sousQuestions1Physique" style="font-size:0.75rem;">
@@ -1463,6 +1650,7 @@
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
                                             <input type="number" class="form-control" id="nbQuestions2Physique" value="3" min="1" max="8">
+                                            <div class="question-numbers-display" id="qnum_2_physique"></div>
                                             <div class="form-check form-switch mt-1">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2Physique">
                                                 <label class="form-check-label" for="sousQuestions2Physique" style="font-size:0.75rem;">
@@ -1521,6 +1709,15 @@
                                 <textarea class="form-control" id="tache" rows="2" placeholder="Ex: Expliquer les faits"></textarea>
                                 
                                 <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button type="button" class="btn-num-standard" onclick="appliquerNumerotationStandard('simple')">
+                                            <i class="fas fa-list-ol"></i> Appliquer la numérotation standard (Devoir surveillé / Production scolaire)
+                                        </button>
+                                        <span class="auto-num-hint">Sélectionnez la classe puis cliquez : les nombres et numéros officiels (IGPM) seront insérés automatiquement.</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation de ressources</label>
                                         <input type="text" class="form-control" id="indicesPartie1" placeholder="Indices pour le contenu (ex: Définitions, QCM, Vrai/Faux, Associations)">
@@ -1528,6 +1725,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 1)</label>
                                         <input type="number" class="form-control" id="nbQuestions1" value="3" min="1" max="8">
+                                        <div class="question-numbers-display" id="qnum_1_simple"></div>
                                         <div class="form-check form-switch mt-1">
                                             <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions1">
                                             <label class="form-check-label" for="sousQuestions1" style="font-size:0.78rem;">
@@ -1548,6 +1746,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 2)</label>
                                         <input type="number" class="form-control" id="nbQuestions2" value="3" min="1" max="8">
+                                        <div class="question-numbers-display" id="qnum_2_simple"></div>
                                         <div class="form-check form-switch mt-1">
                                             <input class="form-check-input" type="checkbox" role="switch" id="sousQuestions2">
                                             <label class="form-check-label" for="sousQuestions2" style="font-size:0.78rem;">
@@ -1781,6 +1980,9 @@
                             <li><i class="fas fa-check-circle text-success"></i> Numérotation hiérarchique : 1-1, 1-2, 2-1, 2-2...</li>
                             <li><i class="fas fa-check-circle text-success"></i> Bouton poussoir "Sous-questions" pour autoriser 1-1-a, 1-1-b si nécessaire</li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Les questions de la Partie 1 (Mobilisation) doivent être utiles à la Partie 2 (Résolution)</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>Cycle et Discipline s'ajustent automatiquement selon la classe choisie (sauf pour Bachotage, Évaluation formative et Travaux dirigés)</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>Bouton "Numérotation standard" pour insérer automatiquement les n° officiels IGPM (devoirs surveillés / productions scolaires)</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>Le bouton "Numérotation standard" fonctionne en mode poussoir : un 2ᵉ clic désactive et rend les champs à nouveau modifiables</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -2437,6 +2639,92 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
         }
         
         disciplineSelect.addEventListener('change', toggleDisciplineContainers);
+
+        // ============================================================
+        // COHÉRENCE AUTOMATIQUE CLASSE → CYCLE + DISCIPLINE
+        // (désactivée si le titre est Bachotage / Évaluation formative / Travaux dirigés)
+        // ============================================================
+        const classeSelect = document.getElementById('classe');
+        const cycleSelect = document.getElementById('cycle');
+        const titreEpreuveSelect = document.getElementById('titreEpreuve');
+        const CLASSES_PREMIER_CYCLE = ['6ème', '5ème'];
+        const DISCIPLINE_DOUBLE_VALUE = 'PHYSIQUE CHIMIE ET TECHNOLOGIE';
+        const CYCLE_PREMIER = '6ème et 5ème';
+        const CYCLE_SECOND = '4ème-3ème- 1ère- Tle';
+
+        // 🆕 Titres pour lesquels AUCUNE sélection automatique ne doit être appliquée
+        const TITRES_SANS_VERROUILLAGE = [
+            'ÉPREUVE DE BACHOTAGE',
+            'ÉVALUATION FORMATIVE',
+            'TRAVAUX DIRIGÉS'
+        ];
+
+        function appliquerCoherenceClasse() {
+            if (!classeSelect || !cycleSelect || !disciplineSelect) return;
+
+            const titre = titreEpreuveSelect ? titreEpreuveSelect.value : '';
+            const sansVerrouillage = TITRES_SANS_VERROUILLAGE.includes(titre);
+
+            const optionDouble = disciplineSelect.querySelector('option[value="' + DISCIPLINE_DOUBLE_VALUE + '"]');
+
+            // 🆕 Cas particulier : pas de sélection automatique pour ces titres
+            if (sansVerrouillage) {
+                // On déverrouille tout et on laisse l'utilisateur choisir librement
+                cycleSelect.disabled = false;
+                disciplineSelect.disabled = false;
+                if (optionDouble) optionDouble.disabled = false;
+                toggleDisciplineContainers();
+                return;
+            }
+
+            const classe = classeSelect.value;
+            const estPremierCycle = CLASSES_PREMIER_CYCLE.includes(classe);
+
+            if (estPremierCycle) {
+                // ===== PREMIER CYCLE (6ème / 5ème) =====
+                // Cycle verrouillé sur "Premier Cycle"
+                cycleSelect.value = CYCLE_PREMIER;
+                cycleSelect.disabled = true;
+
+                // Discipline : basculer vers un choix simple si nécessaire,
+                // puis désactiver l'option double (choix limité Physique OU Chimie)
+                if (disciplineSelect.value === DISCIPLINE_DOUBLE_VALUE) {
+                    disciplineSelect.value = 'Chimie et Technologie';
+                }
+                if (optionDouble) optionDouble.disabled = true;
+                disciplineSelect.disabled = false; // reste éditable
+            } else {
+                // ===== SECOND CYCLE (4ème → Terminale) =====
+                // Cycle verrouillé sur "Second Cycle"
+                cycleSelect.value = CYCLE_SECOND;
+                cycleSelect.disabled = true;
+
+                // Discipline : double partie obligatoire et verrouillée
+                if (optionDouble) optionDouble.disabled = false;
+                disciplineSelect.value = DISCIPLINE_DOUBLE_VALUE;
+                disciplineSelect.disabled = true;
+            }
+
+            // Mettre à jour l'affichage Simple / Double
+            toggleDisciplineContainers();
+        }
+
+        if (classeSelect) {
+            classeSelect.addEventListener('change', () => {
+                appliquerCoherenceClasse();
+                sauvegarderDonnees();
+                // 🆕 Rafraîchir les numérotations standard déjà visibles pour la nouvelle classe
+                if (typeof _refreshVisibleNumerotations === 'function') _refreshVisibleNumerotations();
+            });
+        }
+
+        // 🆕 Réagir au changement de titre d'épreuve
+        if (titreEpreuveSelect) {
+            titreEpreuveSelect.addEventListener('change', () => {
+                appliquerCoherenceClasse();
+                sauvegarderDonnees();
+            });
+        }
         
         // ============================================================
         // GESTION DYNAMIQUE DES IMAGES
@@ -2673,6 +2961,289 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
         }
 
         // ============================================================
+        // NUMÉROTATION STANDARD — DEVOIRS SURVEILLÉS / PRODUCTIONS SCOLAIRES
+        // Référentiel officiel IGPM — Formats des épreuves d'évaluation PCT
+        // ============================================================
+        // 🆕 Mémorisation du dernier référentiel appliqué par bloc
+        // null = numérotation standard non active pour ce bloc
+        const _appliedNumerotation = { simple: null, chimie: null, physique: null };
+
+        const CLASSES_PREMIER_CYCLE_NUM = ['6ème', '5ème'];
+        const CLASSES_43_NUM = ['4ème', '3ème'];
+        const CLASSES_SECOND_CYCLE_NUM = ['2nd D', '2nd C', '1ère D', '1ère C', 'Tle D', 'Tle C'];
+
+        // 🆕 Table de correspondance bloc → IDs des champs "Nombre de questions"
+        const _NUM_FIELD_IDS = {
+            simple:   { nb1: 'nbQuestions1',         nb2: 'nbQuestions2' },
+            chimie:   { nb1: 'nbQuestions1Chimie',   nb2: 'nbQuestions2Chimie' },
+            physique: { nb1: 'nbQuestions1Physique', nb2: 'nbQuestions2Physique' }
+        };
+
+        // 🆕 Table de correspondance bloc → IDs des affichages de badges
+        const _NUM_DISPLAY_IDS = {
+            simple:   { d1: 'qnum_1_simple',   d2: 'qnum_2_simple' },
+            chimie:   { d1: 'qnum_1_chimie',   d2: 'qnum_2_chimie' },
+            physique: { d1: 'qnum_1_physique', d2: 'qnum_2_physique' }
+        };
+
+        function _getReferentielDevoirSurveille(classe, discipline) {
+            // Premier cycle (6e / 5e) : 3 questions P1 (1.1-, 1.2-, 1.3-) et 6 questions P2 (2.1- à 2.6-)
+            if (CLASSES_PREMIER_CYCLE_NUM.includes(classe)) {
+                return {
+                    partie1: { count: 3, nums: ['1.1-', '1.2-', '1.3-'] },
+                    partie2: { count: 6, nums: ['2.1-', '2.2-', '2.3-', '2.4-', '2.5-', '2.6-'] }
+                };
+            }
+
+            // 4e / 3e : Chimie et Physique ont des référentiels distincts
+            if (CLASSES_43_NUM.includes(classe)) {
+                if (discipline === 'Chimie et Technologie') {
+                    return {
+                        partie1: { count: 1, nums: ['1-'] },
+                        partie2: { count: 2, nums: ['2.1-', '2.2-'] }
+                    };
+                }
+                // Physique et Technologie par défaut
+                return {
+                    partie1: { count: 2, nums: ['1.1-', '1.2-'] },
+                    partie2: { count: 4, nums: ['2.1-', '2.2-', '2.3-', '2.4-'] }
+                };
+            }
+
+            // Second cycle (2nd, 1ère, Tle) : Chimie et Physique identiques
+            if (CLASSES_SECOND_CYCLE_NUM.includes(classe)) {
+                return {
+                    partie1: { count: 4, nums: ['1-', '1.1.', '1.2.', '1.3.'] },
+                    partie2: { count: 8, nums: ['2-', '2.1-', '2.2-', '2.3-', '3-', '3.1-', '3.2-', '3.3-'] }
+                };
+            }
+
+            return null;
+        }
+
+        function _afficherNumsQuestions(containerId, nums) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            if (!nums || !nums.length) {
+                el.style.display = 'none';
+                el.innerHTML = '';
+                return;
+            }
+            el.style.display = 'flex';
+            el.innerHTML = '<span class="qnum-label">N° :</span>' +
+                nums.map(n => '<span class="qnum-badge">' + n + '</span>').join('');
+        }
+
+        // 🆕 Indicateur visuel : flash des badges de numérotation
+        function _flashQnum(containerId) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            el.classList.remove('flash');
+            void el.offsetWidth;
+            el.classList.add('flash');
+            setTimeout(() => el.classList.remove('flash'), 1000);
+        }
+
+        // 🆕 Indicateur visuel : toast flottant de confirmation (activation / désactivation)
+        function _showNumerotationToast(bloc, classe, mode) {
+            const isOff = (mode === 'off');
+            let toast = document.getElementById('pctNumToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'pctNumToast';
+                toast.className = 'num-applied-toast';
+                document.body.appendChild(toast);
+            }
+            const blocLabel = bloc === 'chimie' ? 'Chimie'
+                            : bloc === 'physique' ? 'Physique'
+                            : 'Discipline';
+
+            // Style inline pour distinguer visuellement l'extinction (sans toucher au CSS global)
+            if (isOff) {
+                toast.style.background = 'linear-gradient(135deg, #64748b 0%, #94a3b8 100%)';
+                toast.style.boxShadow = '0 12px 32px rgba(100, 116, 139, 0.45), 0 0 0 1px rgba(255,255,255,0.18) inset';
+            } else {
+                toast.style.background = '';
+                toast.style.boxShadow = '';
+            }
+
+            toast.innerHTML =
+                '<i class="fas ' + (isOff ? 'fa-toggle-off' : 'fa-check-circle') + '"></i>' +
+                '<span>' + (isOff ? 'Numérotation standard désactivée' : 'Numérotation standard appliquée') +
+                '<span class="toast-sub"> — ' + blocLabel + ' · Classe ' + classe + '</span></span>';
+
+            toast.classList.remove('show');
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+
+        // 🆕 Indicateur visuel : flash du bouton lui-même
+        function _flashNumButton(bloc) {
+            const buttons = document.querySelectorAll('.btn-num-standard');
+            buttons.forEach(btn => {
+                const onclickAttr = btn.getAttribute('onclick') || '';
+                if (onclickAttr.includes("'" + bloc + "'")) {
+                    btn.classList.remove('flash-btn');
+                    void btn.offsetWidth;
+                    btn.classList.add('flash-btn');
+                    setTimeout(() => btn.classList.remove('flash-btn'), 1000);
+                }
+            });
+        }
+
+        // 🆕 Met à jour l'apparence/label du bouton selon l'état actif ou non
+        function _updateNumButtonState(bloc, active) {
+            const buttons = document.querySelectorAll('.btn-num-standard');
+            buttons.forEach(btn => {
+                const onclickAttr = btn.getAttribute('onclick') || '';
+                if (onclickAttr.includes("'" + bloc + "'")) {
+                    if (active) {
+                        btn.classList.add('num-active');
+                        btn.innerHTML = '<i class="fas fa-toggle-on"></i> Numérotation standard active — cliquer pour désactiver';
+                    } else {
+                        btn.classList.remove('num-active');
+                        btn.innerHTML = '<i class="fas fa-list-ol"></i> Appliquer la numérotation standard (Devoir surveillé / Production scolaire)';
+                    }
+                }
+            });
+        }
+
+        // 🆕 Applique l'état "verrouillé" (disabled) ou "éditable" aux champs de nb questions
+        function _setNbQuestionsLocked(bloc, locked) {
+            const ids = _NUM_FIELD_IDS[bloc];
+            if (!ids) return;
+            [ids.nb1, ids.nb2].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = !!locked;
+            });
+        }
+
+        function _refreshVisibleNumerotations() {
+            const blocs = [
+                { displayId: 'qnum_1_simple', bloc: 'simple' },
+                { displayId: 'qnum_1_chimie', bloc: 'chimie' },
+                { displayId: 'qnum_1_physique', bloc: 'physique' }
+            ];
+            blocs.forEach(b => {
+                const el = document.getElementById(b.displayId);
+                if (el && el.style.display !== 'none' && el.innerHTML.trim() !== '') {
+                    appliquerNumerotationStandard(b.bloc, true);
+                }
+            });
+        }
+
+        /**
+         * 🆕 Bouton poussoir (toggle) :
+         *  - 1er clic : active la numérotation standard → les champs "Nombre de questions"
+         *    sont remplis automatiquement et verrouillés (lecture seule).
+         *  - 2e clic : désactive → les champs redeviennent éditables, badges masqués.
+         * L'appel interne avec silent=true (recalcul de classe) ne bascule PAS le mode.
+         */
+        function appliquerNumerotationStandard(bloc, silent) {
+            const classe = document.getElementById('classe').value;
+            const discipline = document.getElementById('discipline').value;
+            const ids = _NUM_FIELD_IDS[bloc];
+            const dis = _NUM_DISPLAY_IDS[bloc];
+
+            if (!ids || !dis) return;
+
+            try {
+                // ============================================================
+                // MODE TOGGLE : clic manuel sur un bloc déjà actif → DÉSACTIVATION
+                // ============================================================
+                if (!silent && _appliedNumerotation[bloc]) {
+                    _appliedNumerotation[bloc] = null;
+                    _afficherNumsQuestions(dis.d1, []);
+                    _afficherNumsQuestions(dis.d2, []);
+                    _setNbQuestionsLocked(bloc, false);   // 🔓 champs de nouveau éditables
+                    _updateNumButtonState(bloc, false);   // Restaure le libellé/icône d'origine
+                    _showNumerotationToast(bloc, classe, 'off');
+                    if (typeof sauvegarderDonnees === 'function') sauvegarderDonnees();
+                    return;
+                }
+
+                // ============================================================
+                // MODE APPLICATION (activation OU recalcul silencieux)
+                // ============================================================
+                let ref = null;
+                let disciplineCible = discipline;
+
+                if (bloc === 'simple') {
+                    ref = _getReferentielDevoirSurveille(classe, discipline);
+                } else if (bloc === 'chimie') {
+                    disciplineCible = 'Chimie et Technologie';
+                    ref = _getReferentielDevoirSurveille(classe, disciplineCible);
+                } else if (bloc === 'physique') {
+                    disciplineCible = 'Physique et Technologie';
+                    ref = _getReferentielDevoirSurveille(classe, disciplineCible);
+                }
+
+                if (!ref) {
+                    if (!silent) alert('Aucun référentiel de numérotation pour la classe ' + classe);
+                    return;
+                }
+
+                const nb1El = document.getElementById(ids.nb1);
+                const nb2El = document.getElementById(ids.nb2);
+                if (nb1El) nb1El.value = ref.partie1.count;
+                if (nb2El) nb2El.value = ref.partie2.count;
+
+                _afficherNumsQuestions(dis.d1, ref.partie1.nums);
+                _afficherNumsQuestions(dis.d2, ref.partie2.nums);
+
+                // 🔒 Verrouillage en lecture seule des champs de nombre de questions
+                _setNbQuestionsLocked(bloc, true);
+
+                // Mémorisation du référentiel appliqué
+                _appliedNumerotation[bloc] = {
+                    classe: classe,
+                    discipline: disciplineCible,
+                    partie1Nums: ref.partie1.nums.slice(),
+                    partie2Nums: ref.partie2.nums.slice()
+                };
+
+                // Indicateurs visuels uniquement lors d'un clic manuel
+                if (!silent) {
+                    _showNumerotationToast(bloc, classe, 'on');
+                    _flashQnum(dis.d1);
+                    _flashQnum(dis.d2);
+                    _flashNumButton(bloc);
+                    _updateNumButtonState(bloc, true);
+                } else {
+                    // Recalcul silencieux : on s'assure que le bouton est bien en état "actif"
+                    _updateNumButtonState(bloc, true);
+                }
+            } catch (e) {
+                console.warn('Erreur numérotation standard :', e);
+            }
+
+            if (typeof sauvegarderDonnees === 'function') sauvegarderDonnees();
+        }
+
+        function _clearAllNumerotationDisplays() {
+            ['qnum_1_simple', 'qnum_2_simple', 'qnum_1_chimie', 'qnum_2_chimie', 'qnum_1_physique', 'qnum_2_physique'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = 'none';
+                    el.innerHTML = '';
+                }
+            });
+            // 🆕 Déverrouillage des champs de nombre de questions
+            ['nbQuestions1', 'nbQuestions2',
+             'nbQuestions1Chimie', 'nbQuestions2Chimie',
+             'nbQuestions1Physique', 'nbQuestions2Physique'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = false;
+            });
+            // 🆕 Restauration visuelle des boutons
+            _updateNumButtonState('simple', false);
+            _updateNumButtonState('chimie', false);
+            _updateNumButtonState('physique', false);
+        }
+
+        // ============================================================
         // SAUVEGARDE AUTOMATIQUE
         // ============================================================
         const PCT_KEY_PREFIX = 'pct_';
@@ -2736,6 +3307,8 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
                 }
             }
             if (typeof toggleEnteteGenerale === 'function') toggleEnteteGenerale();
+            // Appliquer la cohérence Classe → Cycle + Discipline
+            if (typeof appliquerCoherenceClasse === 'function') appliquerCoherenceClasse();
         }
         
         // ============================================================
@@ -3039,6 +3612,32 @@ Applique ces caractéristiques lors de la rédaction du contexte dans ton épreu
                 }
             }
 
+            // ============================================================
+            // 🆕 NUMÉROTATION DYNAMIQUE IGPM POUR LE PROMPT
+            // Récupération des référentiels appliqués (bouton "Numérotation standard")
+            // ============================================================
+            const _numS = _appliedNumerotation.simple;
+            const _numC = _appliedNumerotation.chimie;
+            const _numP = _appliedNumerotation.physique;
+
+            const numP1Simple = _numS ? _numS.partie1Nums.join(', ') : '1-1, 1-2...';
+            const numP2Simple = _numS ? _numS.partie2Nums.join(', ') : '2-1, 2-2...';
+            const refSimpleTxt = _numS
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numS.classe}) :\n      Partie 1 → ${_numS.partie1Nums.join('  ')}\n      Partie 2 → ${_numS.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                : '';
+
+            const numP1Chimie = _numC ? _numC.partie1Nums.join(', ') : '1-1, 1-2...';
+            const numP2Chimie = _numC ? _numC.partie2Nums.join(', ') : '2-1, 2-2...';
+            const refChimieTxt = _numC
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numC.classe}, Chimie) :\n      Partie 1 → ${_numC.partie1Nums.join('  ')}\n      Partie 2 → ${_numC.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                : '';
+
+            const numP1Physique = _numP ? _numP.partie1Nums.join(', ') : '1-1, 1-2...';
+            const numP2Physique = _numP ? _numP.partie2Nums.join(', ') : '2-1, 2-2...';
+            const refPhysiqueTxt = _numP
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numP.classe}, Physique) :\n      Partie 1 → ${_numP.partie1Nums.join('  ')}\n      Partie 2 → ${_numP.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                : '';
+
             let prompt = `Tu es une intelligence artificielle experte en Physique-Chimie-Technologie (PCT), spécialisée dans la génération d'épreuves d'évaluation rigoureuses selon l'approche par compétences (APC).
 
 Tu possèdes les qualités suivantes :
@@ -3153,8 +3752,8 @@ Connaissances à mobiliser (Chimie) : ${connaissancesChimie}
 Contexte (Chimie) : ${contexteChimie}
 Support (Chimie) : ${supportChimie}
 Tâche (Chimie) : ${tacheChimie}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${nbQuestions1Chimie} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1Chimie})
-Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${nbQuestions2Chimie} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2Chimie})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${nbQuestions1Chimie} questions au premier niveau) - Numérotation: ${numP1Chimie} (${labelSousQ1Chimie})${refChimieTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${nbQuestions2Chimie} questions au premier niveau) - Numérotation: ${numP2Chimie} (${labelSousQ2Chimie})
 
 RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE A (CHIMIE) :
 ${regleSousQuestions(sousQ1Chimie)} (pour la Partie 1)
@@ -3168,8 +3767,8 @@ Connaissances à mobiliser (Physique) : ${connaissancesPhysique}
 Contexte (Physique) : ${contextePhysique}
 Support (Physique) : ${supportPhysique}
 Tâche (Physique) : ${tachePhysique}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${nbQuestions1Physique} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1Physique})
-Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2Physique} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2Physique})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${nbQuestions1Physique} questions au premier niveau) - Numérotation: ${numP1Physique} (${labelSousQ1Physique})${refPhysiqueTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2Physique} questions au premier niveau) - Numérotation: ${numP2Physique} (${labelSousQ2Physique})
 
 RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE B (PHYSIQUE) :
 ${regleSousQuestions(sousQ1Physique)} (pour la Partie 1)
@@ -3218,8 +3817,8 @@ Contexte (rédigé selon les 6 caractéristiques APC ci-dessus) : ${contexte}
 Support : ${support}
 ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + documentJoint : ""}
 Tâche : ${tache}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} questions au premier niveau) - Numérotation: 1-1, 1-2... (${labelSousQ1})
-Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions au premier niveau) - Numérotation: 2-1, 2-2... (${labelSousQ2})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} questions au premier niveau) - Numérotation: ${numP1Simple} (${labelSousQ1})${refSimpleTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions au premier niveau) - Numérotation: ${numP2Simple} (${labelSousQ2})
 
 RÈGLES DE SOUS-QUESTIONS :
 ${regleSousQuestions(sousQ1Simple)} (pour la Partie 1)
@@ -3256,6 +3855,14 @@ AUCUN BARÈME ni points.
         
         function resetForm() {
             if(confirm("Voulez-vous vraiment réinitialiser tout le formulaire ?")) {
+                // Réactiver les champs verrouillés automatiquement avant reset
+                if (cycleSelect) cycleSelect.disabled = false;
+                if (disciplineSelect) {
+                    disciplineSelect.disabled = false;
+                    const optionDouble = disciplineSelect.querySelector('option[value="' + DISCIPLINE_DOUBLE_VALUE + '"]');
+                    if (optionDouble) optionDouble.disabled = false;
+                }
+                
                 document.getElementById('promptForm').reset();
                 localStorage.removeItem('promptData_PCT_v2');
                 const keysToRemove = [];
@@ -3274,6 +3881,14 @@ AUCUN BARÈME ni points.
                 if(logoConfig) { logoConfig.style.display = 'none'; }
                 if(logoCustomSizeRow) { logoCustomSizeRow.style.display = 'none'; }
                 if (typeof toggleEnteteGenerale === 'function') toggleEnteteGenerale();
+                // 🆕 Effacer les affichages de numérotation standard + déverrouiller les champs
+                if (typeof _clearAllNumerotationDisplays === 'function') _clearAllNumerotationDisplays();
+                // 🆕 Effacer la mémorisation des référentiels IGPM appliqués (mode toggle remis à zéro)
+                _appliedNumerotation.simple = null;
+                _appliedNumerotation.chimie = null;
+                _appliedNumerotation.physique = null;
+                // Réappliquer la cohérence après reset
+                if (typeof appliquerCoherenceClasse === 'function') appliquerCoherenceClasse();
             }
         }
 
