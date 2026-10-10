@@ -1983,6 +1983,8 @@
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Cycle et Discipline s'ajustent automatiquement selon la classe choisie (sauf pour Bachotage, Évaluation formative et Travaux dirigés)</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Bouton "Numérotation standard" pour insérer automatiquement les n° officiels IGPM (devoirs surveillés / productions scolaires)</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Le bouton "Numérotation standard" fonctionne en mode poussoir : un 2ᵉ clic désactive et rend les champs à nouveau modifiables</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>En mode IGPM actif, la règle de sous-questions est remplacée par le référentiel officiel (aucune contradiction possible)</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>Quand les sous-questions sont activées, une sous-question peut à son tour être ventilée (i, ii, iii… ou a.1, a.2…) uniquement si nécessaire</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -3603,10 +3605,21 @@ Applique ces caractéristiques lors de la rédaction du contexte dans ton épreu
             const sousQ1Physique = document.getElementById('sousQuestions1Physique')?.checked || false;
             const sousQ2Physique = document.getElementById('sousQuestions2Physique')?.checked || false;
 
-            function regleSousQuestions(autorise) {
+            // 🆕 Règle de sous-questions : le 2e paramètre (igpmActif) prend le dessus
+            // pour éviter toute contradiction avec la numérotation officielle IGPM
+            // qui contient déjà des sous-questions (ex : 1- suivi de 1.1., 1.2., 1.3.).
+            // 🆕 Le mode "autorisé" permet désormais une ventilation supplémentaire d'une
+            // sous-question (a → i, ii, iii… ou a.1, a.2…) uniquement si nécessaire, sans
+            // créer de contradiction avec le comptage de premier niveau.
+            function regleSousQuestions(autorise, igpmActif) {
+                if (igpmActif) {
+                    return `- HIÉRARCHIE IMPOSÉE PAR LE RÉFÉRENTIEL OFFICIEL IGPM : la numérotation officielle (par exemple "1-" suivi de "1.1.", "1.2.", "1.3.") encode DÉJÀ la structure question principale / sous-question. Tu DOIS reproduire cette hiérarchie EXACTEMENT telle qu'elle est fournie : ne la modifie pas, ne la remplace pas, n'ajoute ni ne supprime aucune ligne, et n'y applique AUCUNE autre règle de sous-questions.`;
+                }
                 if (autorise) {
                     return `- SOUS-QUESTIONS AUTORISÉES UNIQUEMENT SI NÉCESSAIRE : lorsqu'une question exige plusieurs réponses distinctes, utiliser 1-1-a, 1-1-b, 1-1-c... (puis 1-2-a, 1-2-b... etc.).
-    - CONTRAINTE STRICTE : le nombre total de questions numérotées au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2...) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c...) NE COMPTENT PAS comme des questions supplémentaires et ne doivent être utilisées que lorsqu'elles sont réellement indispensables, sans en mettre trop pour dépasser le nombre de questions indiquées.`;
+    - VENTILATION POSSIBLE D'UNE SOUS-QUESTION : si une sous-question (a, b, c...) nécessite à son tour plusieurs réponses distinctes, elle peut être ventilée plus finement (par exemple i, ii, iii… ou a.1, a.2, a.3…). Cette ventilation N'EST PAS obligatoire : ne l'utilise que lorsqu'elle est réellement nécessaire pour rester clair et fidèle à la question posée.
+    - NE PAS FORCER ce niveau plus profond : si la sous-question se suffit à elle-même, elle reste une simple ligne a., b., c…
+    - CONTRAINTE STRICTE : le nombre total de questions numérotées au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2...) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c...) et leurs éventuelles ventilations internes NE COMPTENT PAS comme des questions supplémentaires.`;
                 } else {
                     return `- SOUS-QUESTIONS INTERDITES : ne pas utiliser de sous-questions (a, b, c...). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2...`;
                 }
@@ -3735,6 +3748,25 @@ ${logoPromptInstruction}`;
                 const labelSousQ2Chimie = sousQ2Chimie ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 const labelSousQ1Physique = sousQ1Physique ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 const labelSousQ2Physique = sousQ2Physique ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
+
+                // 🆕 Ajustements mode IGPM : masquer les libellés de sous-questions
+                // et remplacer la description "X questions au premier niveau" par une mention
+                // du référentiel officiel, pour éviter toute contradiction dans le prompt.
+                const lblP1Chimie = _numC ? '' : ` (${labelSousQ1Chimie})`;
+                const lblP2Chimie = _numC ? '' : ` (${labelSousQ2Chimie})`;
+                const lblP1Physique = _numP ? '' : ` (${labelSousQ1Physique})`;
+                const lblP2Physique = _numP ? '' : ` (${labelSousQ2Physique})`;
+
+                const descP1Chimie = _numC ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions1Chimie} questions au premier niveau`;
+                const descP2Chimie = _numC ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions2Chimie} questions au premier niveau`;
+                const descP1Physique = _numP ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions1Physique} questions au premier niveau`;
+                const descP2Physique = _numP ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions2Physique} questions au premier niveau`;
+
+                // 🆕 Règles effectives : si IGPM actif → règle IGPM, sinon règle classique
+                const regleP1ChimieEffective = regleSousQuestions(sousQ1Chimie, !!_numC);
+                const regleP2ChimieEffective = regleSousQuestions(sousQ2Chimie, !!_numC);
+                const regleP1PhysiqueEffective = regleSousQuestions(sousQ1Physique, !!_numP);
+                const regleP2PhysiqueEffective = regleSousQuestions(sousQ2Physique, !!_numP);
                 
                 prompt += `
 
@@ -3752,12 +3784,12 @@ Connaissances à mobiliser (Chimie) : ${connaissancesChimie}
 Contexte (Chimie) : ${contexteChimie}
 Support (Chimie) : ${supportChimie}
 Tâche (Chimie) : ${tacheChimie}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${nbQuestions1Chimie} questions au premier niveau) - Numérotation: ${numP1Chimie} (${labelSousQ1Chimie})${refChimieTxt}
-Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${nbQuestions2Chimie} questions au premier niveau) - Numérotation: ${numP2Chimie} (${labelSousQ2Chimie})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Chimie} (${descP1Chimie}) - Numérotation: ${numP1Chimie}${lblP1Chimie}${refChimieTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2Chimie} (${descP2Chimie}) - Numérotation: ${numP2Chimie}${lblP2Chimie}
 
 RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE A (CHIMIE) :
-${regleSousQuestions(sousQ1Chimie)} (pour la Partie 1)
-${regleSousQuestions(sousQ2Chimie)} (pour la Partie 2)
+${regleP1ChimieEffective} (pour la Partie 1)
+${regleP2ChimieEffective} (pour la Partie 2)
 
 ================================================================================
 PARTIE B - PHYSIQUE ET TECHNOLOGIE
@@ -3767,12 +3799,12 @@ Connaissances à mobiliser (Physique) : ${connaissancesPhysique}
 Contexte (Physique) : ${contextePhysique}
 Support (Physique) : ${supportPhysique}
 Tâche (Physique) : ${tachePhysique}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${nbQuestions1Physique} questions au premier niveau) - Numérotation: ${numP1Physique} (${labelSousQ1Physique})${refPhysiqueTxt}
-Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${nbQuestions2Physique} questions au premier niveau) - Numérotation: ${numP2Physique} (${labelSousQ2Physique})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1Physique} (${descP1Physique}) - Numérotation: ${numP1Physique}${lblP1Physique}${refPhysiqueTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2Physique} (${descP2Physique}) - Numérotation: ${numP2Physique}${lblP2Physique}
 
 RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE B (PHYSIQUE) :
-${regleSousQuestions(sousQ1Physique)} (pour la Partie 1)
-${regleSousQuestions(sousQ2Physique)} (pour la Partie 2)
+${regleP1PhysiqueEffective} (pour la Partie 1)
+${regleP2PhysiqueEffective} (pour la Partie 2)
 
 ---
 Génère le code LaTeX complet avec :
@@ -3801,6 +3833,14 @@ ${hasEntete ? '' : (hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le
                 const labelSousQ1 = sousQ1Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
                 const labelSousQ2 = sousQ2Simple ? "sous-questions a, b autorisées si nécessaire" : "sous-questions interdites (questions simples uniquement)";
 
+                // 🆕 Ajustements mode IGPM (mêmes règles que pour la double discipline)
+                const lblP1Simple = _numS ? '' : ` (${labelSousQ1})`;
+                const lblP2Simple = _numS ? '' : ` (${labelSousQ2})`;
+                const descP1Simple = _numS ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions1} questions au premier niveau`;
+                const descP2Simple = _numS ? 'structure et numérotation imposées par le référentiel IGPM ci-dessous' : `${nbQuestions2} questions au premier niveau`;
+                const regleP1SimpleEffective = regleSousQuestions(sousQ1Simple, !!_numS);
+                const regleP2SimpleEffective = regleSousQuestions(sousQ2Simple, !!_numS);
+
                 const ligneEnteteSimple = hasEntete
                     ? `Génère le code LaTeX complet avec l'en-tête : insertion de l'image entete.png en pleine largeur, suivie du titre "${titreEpreuve} (${anneeScolaire})", d'une règle et de la ligne Classe/Coef./Durée (PAS de cartouche Pays/Direction/Établissement)`
                     : `Génère le code LaTeX complet avec l'en-tête (PAYS en haut à gauche et DIRECTION DÉPARTEMENTALE en haut à droite)${hasLogo ? ', incluant le logo "' + logoFileName + '" à gauche du cartouche avec une taille de ' + logoSizeTexte : ''}`;
@@ -3817,12 +3857,12 @@ Contexte (rédigé selon les 6 caractéristiques APC ci-dessus) : ${contexte}
 Support : ${support}
 ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + documentJoint : ""}
 Tâche : ${tache}
-Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${nbQuestions1} questions au premier niveau) - Numérotation: ${numP1Simple} (${labelSousQ1})${refSimpleTxt}
-Partie 2 (Résolution de problème) : ${indicesPartie2} (${nbQuestions2} questions au premier niveau) - Numérotation: ${numP2Simple} (${labelSousQ2})
+Partie 1 (Mobilisation de ressources) : ${indicesPartie1} (${descP1Simple}) - Numérotation: ${numP1Simple}${lblP1Simple}${refSimpleTxt}
+Partie 2 (Résolution de problème) : ${indicesPartie2} (${descP2Simple}) - Numérotation: ${numP2Simple}${lblP2Simple}
 
 RÈGLES DE SOUS-QUESTIONS :
-${regleSousQuestions(sousQ1Simple)} (pour la Partie 1)
-${regleSousQuestions(sousQ2Simple)} (pour la Partie 2)
+${regleP1SimpleEffective} (pour la Partie 1)
+${regleP2SimpleEffective} (pour la Partie 2)
 
 ---
 ${ligneEnteteSimple}, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
