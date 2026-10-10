@@ -1820,8 +1820,8 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Espacement entre lignes</label>
                                         <select class="form-select" id="latexLineSpacing">
-                                            <option value="1.0" selected>Simple (1.0)</option>
-                                            <option value="1.2">Aéré (1.2)</option>
+                                            <option value="1.0">Simple (1.0)</option>
+                                            <option value="1.2" selected>Aéré (1.2)</option>
                                             <option value="1.5">Double (1.5)</option>
                                         </select>
                                     </div>
@@ -1985,8 +1985,6 @@
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Le bouton "Numérotation standard" fonctionne en mode poussoir : un 2ᵉ clic désactive et rend les champs à nouveau modifiables</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>En mode IGPM actif, la règle de sous-questions est remplacée par le référentiel officiel (aucune contradiction possible)</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Quand les sous-questions sont activées, une sous-question peut à son tour être ventilée (i, ii, iii… ou a.1, a.2…) uniquement si nécessaire</strong></li>
-                            <li><i class="fas fa-check-circle text-success"></i> <strong>Aucun titre devant les questions : la question démarre directement après son numéro</strong></li>
-                            <li><i class="fas fa-check-circle text-success"></i> <strong>Sous-questions UNIQUEMENT en lettres (a, b, c…), jamais en chiffres</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -3607,23 +3605,23 @@ Applique ces caractéristiques lors de la rédaction du contexte dans ton épreu
             const sousQ1Physique = document.getElementById('sousQuestions1Physique')?.checked || false;
             const sousQ2Physique = document.getElementById('sousQuestions2Physique')?.checked || false;
 
-            // 🆕 Règle stricte des sous-questions :
-            //  - Jamais de titre avant une question (elle démarre directement après le numéro)
-            //  - Sous-questions UNIQUEMENT en lettres (a, b, c...) — jamais en chiffres
-            //  - Uniquement si le bouton poussoir est activé (sauf mode IGPM)
+            // 🆕 Règle de sous-questions : le 2e paramètre (igpmActif) prend le dessus
+            // pour éviter toute contradiction avec la numérotation officielle IGPM
+            // qui contient déjà des sous-questions (ex : 1- suivi de 1.1., 1.2., 1.3.).
+            // 🆕 Le mode "autorisé" permet désormais une ventilation supplémentaire d'une
+            // sous-question (a → i, ii, iii… ou a.1, a.2…) uniquement si nécessaire, sans
+            // créer de contradiction avec le comptage de premier niveau.
             function regleSousQuestions(autorise, igpmActif) {
                 if (igpmActif) {
-                    return `- HIÉRARCHIE IMPOSÉE PAR LE RÉFÉRENTIEL OFFICIEL IGPM : la numérotation officielle (par exemple "1-" suivi de "1.1.", "1.2.", "1.3.") encode DÉJÀ la structure question principale / sous-question. Tu DOIS reproduire cette hiérarchie EXACTEMENT telle qu'elle est fournie, sans y ajouter AUCUNE sous-question supplémentaire (pas de a, b, c, ni de 1, 2, 3, ni de i, ii, iii).`;
+                    return `- HIÉRARCHIE IMPOSÉE PAR LE RÉFÉRENTIEL OFFICIEL IGPM : la numérotation officielle (par exemple "1-" suivi de "1.1.", "1.2.", "1.3.") encode DÉJÀ la structure question principale / sous-question. Tu DOIS reproduire cette hiérarchie EXACTEMENT telle qu'elle est fournie : ne la modifie pas, ne la remplace pas, n'ajoute ni ne supprime aucune ligne, et n'y applique AUCUNE autre règle de sous-questions.`;
                 }
                 if (autorise) {
-                    return `- SOUS-QUESTIONS AUTORISÉES UNIQUEMENT SI NÉCESSAIRE, ET EXCLUSIVEMENT EN LETTRES :
-    • Utiliser uniquement a., b., c., d.… — JAMAIS de chiffres (1, 2, 3, 4…), JAMAIS de chiffres romains (i, ii, iii…), JAMAIS de numérotation composée (a.1, a.2…).
-    • Format attendu : "1-1-  ..." puis éventuellement "a. ...", "b. ...", "c. ...".
-    • Ne l'utilise que lorsqu'une question exige réellement plusieurs réponses distinctes à énumérer.
-    • Si une sous-question se suffit à elle-même, elle reste une simple ligne a., b., c… — PAS de ventilation plus profonde.
-    • CONTRAINTE STRICTE : le nombre total de questions au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2…) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c…) NE COMPTENT PAS comme des questions supplémentaires.`;
+                    return `- SOUS-QUESTIONS AUTORISÉES UNIQUEMENT SI NÉCESSAIRE : lorsqu'une question exige plusieurs réponses distinctes, utiliser 1-1-a, 1-1-b, 1-1-c... (puis 1-2-a, 1-2-b... etc.).
+    - VENTILATION POSSIBLE D'UNE SOUS-QUESTION : si une sous-question (a, b, c...) nécessite à son tour plusieurs réponses distinctes, elle peut être ventilée plus finement (par exemple i, ii, iii… ou a.1, a.2, a.3…). Cette ventilation N'EST PAS obligatoire : ne l'utilise que lorsqu'elle est réellement nécessaire pour rester clair et fidèle à la question posée.
+    - NE PAS FORCER ce niveau plus profond : si la sous-question se suffit à elle-même, elle reste une simple ligne a., b., c…
+    - CONTRAINTE STRICTE : le nombre total de questions numérotées au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2...) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c...) et leurs éventuelles ventilations internes NE COMPTENT PAS comme des questions supplémentaires.`;
                 } else {
-                    return `- SOUS-QUESTIONS STRICTEMENT INTERDITES : ne pas utiliser de sous-questions (ni a, b, c…, ni 1, 2, 3…, ni i, ii, iii…). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2…`;
+                    return `- SOUS-QUESTIONS INTERDITES : ne pas utiliser de sous-questions (a, b, c...). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2...`;
                 }
             }
 
@@ -3680,7 +3678,7 @@ ${infosEpreuve}
     - Police : ${lFont}.
     - Couleur d'accent (titres/lignes) : ${lColor} (utiliser \\definecolor{accent}{HTML}{${lColor.replace('#','')}}).
     - Lignes de séparation : épaisseur de ${lRule} (\\hrule).
-    - Espacement : setstretch{${lSpacing}} (package setspace). L'interligne doit être RÉDUIT et COMPACT pour densifier le document.
+    - Espacement : setstretch{${lSpacing}} (package setspace).
     - Numérotation : ${lPageNum === 'bottom' ? 'Page X sur \\pageref{LastPage} en bas' : lPageNum === 'top' ? 'En haut de page' : 'Désactivée'}.
     - Filigrane : ${lWatermark !== 'none' ? 'Afficher "' + lWatermark + '" en gris clair' : 'Aucun'}.
 ${point4Entete}
@@ -3717,23 +3715,13 @@ ${point4Entete}
             prompt += `
 6. CONTRAINTES SUPPLEMENTAIRES :
     - Aucune ligne ou espace pour les réponses des élèves.
-    - Optimiser la taille pour tenir sur le minimum de pages (police compacte, marges réduites, interligne serré).
+    - Optimiser la taille pour tenir sur le minimum de pages (police compacte, marges réduites).
     - Tous les calculs et données chiffrées sont dans le support, jamais dans les questions.
     - Les questions sont uniquement des consignes d'action (calculer, déterminer, déduire, classer, associer, définir).
     - Le CONTEXTE doit respecter IMPÉRATIVEMENT les 6 caractéristiques énumérées ci-dessus : narrativité, caractère problématique, authenticité, sobriété, neutralité injonctive, ouverture.
     - NUMÉROTATION HIÉRARCHIQUE OBLIGATOIRE : Partie 1 = questions 1-1, 1-2, 1-3... ; Partie 2 = questions 2-1, 2-2, 2-3...
     - AUCUN BARÈME ni indication de points.
-    - AUCUN TITRE DEVANT LES QUESTIONS : chaque question démarre DIRECTEMENT par son texte, juste après son numéro. Ne jamais écrire un intitulé, un titre, un chapeau ou un libellé (ex. "Définition", "Calcul de la concentration", "Question 1", "Étude du mélange"…) avant l'énoncé. La première chose visible doit être le numéro, immédiatement suivi du texte de la question.
-    - FORMAT DE NUMÉROTATION ATTENDU (sans titre) :
-        1-1-  <texte de la question directement ici>
-        1-2-  <texte de la question directement ici>
-        2-1-  <texte de la question directement ici>
-        2-2-  <texte de la question directement ici>
-    - SOUS-QUESTIONS : UNIQUEMENT en lettres (a., b., c…), JAMAIS en chiffres ni en chiffres romains, et uniquement lorsque le bouton "Sous-questions" est activé (voir règles détaillées ci-dessous). En l'absence d'activation, aucune sous-question n'est tolérée.
     - IMPORTANT : Les questions de la Partie 1 (Mobilisation de ressources) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
-    - ORDRE DES SECTIONS IMPOSÉ DANS LE DOCUMENT : Contexte -> Support -> Tâche -> Partie 1 -> Partie 2. La TÂCHE doit OBLIGATOIREMENT venir APRÈS le SUPPORT, jamais avant.
-    - INTERLIGNE RÉDUIT : Utiliser un interligne COMPACT et SERRÉ (\\setstretch{${lSpacing}} avec valeur ≤ 1.0, ou \\linespread{0.95}). Réduire la hauteur des lignes et l'espacement vertical entre paragraphes pour densifier le document et éviter les débordements de page.
-    - AUCUN SAUT DE PAGE INTEMPESTIF : Ne JAMAIS utiliser \\newpage, \\clearpage ou \\pagebreak au milieu du contenu. Ajouter \\raggedbottom dans le préambule pour empêcher l'étirement vertical. Utiliser \\nopagebreak si nécessaire pour garder les énoncés de questions groupés. Ne pas créer de pages contenant uniquement quelques lignes, ni d'espaces vides en fin de page. Le contenu doit couler naturellement d'une page à l'autre.
 ${logoPromptInstruction}`;
 
             if (discipline === 'PHYSIQUE CHIMIE ET TECHNOLOGIE') {
@@ -3803,11 +3791,6 @@ RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE A (CHIMIE) :
 ${regleP1ChimieEffective} (pour la Partie 1)
 ${regleP2ChimieEffective} (pour la Partie 2)
 
-INTERDICTION ABSOLUE DANS LA PARTIE 1 (MOBILISATION - CHIMIE) :
-- Aucune sous-question numérotée (1, 2, 3, 4…) ; aucune sous-question en chiffres romains.
-- Aucun titre ni libellé devant chaque question.
-- Sous-questions exclusivement en lettres (a., b., c…) si elles sont autorisées.
-
 ================================================================================
 PARTIE B - PHYSIQUE ET TECHNOLOGIE
 ================================================================================
@@ -3823,11 +3806,6 @@ RÈGLES DE SOUS-QUESTIONS POUR LA PARTIE B (PHYSIQUE) :
 ${regleP1PhysiqueEffective} (pour la Partie 1)
 ${regleP2PhysiqueEffective} (pour la Partie 2)
 
-INTERDICTION ABSOLUE DANS LA PARTIE 1 (MOBILISATION - PHYSIQUE) :
-- Aucune sous-question numérotée (1, 2, 3, 4…) ; aucune sous-question en chiffres romains.
-- Aucun titre ni libellé devant chaque question.
-- Sous-questions exclusivement en lettres (a., b., c…) si elles sont autorisées.
-
 ---
 Génère le code LaTeX complet avec :
 ${ligneEnteteFinale}
@@ -3836,12 +3814,9 @@ ${hasEntete ? '' : (hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le
 - Une section B "PHYSIQUE ET TECHNOLOGIE" avec son propre contexte, support, tâche et ses deux parties (questions)
 - Les compétences et les paramètres de mise en forme s'appliquent à l'ensemble du document
 - Chaque partie doit être clairement indiquée (ex: \\section*{PARTIE A - CHIMIE ET TECHNOLOGIE})
-- Structure OBLIGATOIRE de chaque partie : Contexte A -> Support A -> Tâche A -> Partie 1 A (questions 1-1, 1-2...) -> Partie 2 A (questions 2-1, 2-2...), puis Contexte B -> Support B -> Tâche B -> Partie 1 B -> Partie 2 B. La TÂCHE vient TOUJOURS APRÈS le SUPPORT.
+- Structure: Contexte A -> Tâche A -> Support A -> Partie 1 A (questions 1-1, 1-2...) -> Partie 2 A (questions 2-1, 2-2...), puis Contexte B -> Tâche B -> Support B -> Partie 1 B -> Partie 2 B
 - Toutes les données numériques sont dans les supports respectifs, jamais dans les questions.
 - AUCUN BARÈME ni points.
-- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question, sans intitulé préalable.
-- AUCUNE sous-question numérotée (1, 2, 3, 4…) ni en chiffres romains (i, ii, iii…).
-- Sous-questions UNIQUEMENT en lettres (a., b., c…) et UNIQUEMENT si activées pour la partie concernée.
 - IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être conçues pour être utiles à la résolution des questions de la Partie 2.
 - Respecter strictement les règles de sous-questions définies ci-dessus pour chaque partie (autorisées ou interdites).`;
             } else {
@@ -3889,21 +3864,12 @@ RÈGLES DE SOUS-QUESTIONS :
 ${regleP1SimpleEffective} (pour la Partie 1)
 ${regleP2SimpleEffective} (pour la Partie 2)
 
-INTERDICTION ABSOLUE DANS LA PARTIE 1 (MOBILISATION DE RESSOURCES) :
-- Aucune sous-question numérotée (1, 2, 3, 4…) n'est tolérée.
-- Aucun titre ni libellé devant chaque question.
-- Si les sous-questions sont autorisées, elles doivent être EXCLUSIVEMENT en lettres (a., b., c…).
-- Chaque question 1-1, 1-2, 1-3… doit rester courte, directe et autonome.
-
 ---
 ${ligneEnteteSimple}, le contexte, le support, la tâche, puis la Partie 1 (questions 1-1, 1-2...) et la Partie 2 (questions 2-1, 2-2...).
 Toutes les données numériques sont dans le support, jamais dans les questions.
-Structure OBLIGATOIRE : Contexte -> Support -> Tâche -> Partie 1 -> Partie 2. La TÂCHE vient TOUJOURS APRÈS le SUPPORT.
+Structure: Contexte -> Tâche -> Support -> Partie 1 -> Partie 2.
 AUCUN BARÈME ni points.
-- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question.
 - IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
-- Partie 1 : AUCUNE sous-question numérotée (1, 2, 3, 4…) ; sous-questions en lettres (a., b., c…) uniquement si activées.
-- Partie 2 : idem — sous-questions en lettres uniquement si activées, sinon aucune.
 - Respecter strictement les règles de sous-questions définies ci-dessus (autorisées ou interdites).`;
             }
             
