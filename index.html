@@ -1985,7 +1985,7 @@
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Le bouton "Numérotation standard" fonctionne en mode poussoir : un 2ᵉ clic désactive et rend les champs à nouveau modifiables</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>En mode IGPM actif, la règle de sous-questions est remplacée par le référentiel officiel (aucune contradiction possible)</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Quand les sous-questions sont activées, une sous-question peut à son tour être ventilée (i, ii, iii… ou a.1, a.2…) uniquement si nécessaire</strong></li>
-                            <li><i class="fas fa-check-circle text-success"></i> <strong>Aucun titre devant les questions : la question démarre directement après son numéro</strong></li>
+                            <li><i class="fas fa-check-circle text-success"></i> <strong>Un numéro de groupe (ex. "2-", "3-") reste TOUJOURS NU : AUCUN titre, chapeau ou libellé après lui (règle absolue pour tous les types d'épreuves)</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Sous-questions UNIQUEMENT en lettres (a, b, c…), jamais en chiffres</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Titres de partie "Mobilisation de ressources" et "Résolution" en gras et soulignés</strong></li>
                             <li><i class="fas fa-check-circle text-success"></i> <strong>Après "Contexte :", saut de ligne obligatoire avant le texte du contexte</strong></li>
@@ -3635,22 +3635,25 @@ Applique ces caractéristiques lors de la rédaction du contexte dans ton épreu
             const sousQ2Physique = document.getElementById('sousQuestions2Physique')?.checked || false;
 
             // 🆕 Règle stricte des sous-questions :
-            //  - Jamais de titre avant une question (elle démarre directement après le numéro)
+            //  - Un numéro de groupe (ex. "2-", "3-") reste TOUJOURS NU (aucun texte après lui)
             //  - Sous-questions UNIQUEMENT en lettres (a, b, c...) — jamais en chiffres
             //  - Uniquement si le bouton poussoir est activé (sauf mode IGPM)
             function regleSousQuestions(autorise, igpmActif) {
                 if (igpmActif) {
-                    return `- HIÉRARCHIE IMPOSÉE PAR LE RÉFÉRENTIEL OFFICIEL IGPM : la numérotation officielle (par exemple "1-" suivi de "1.1.", "1.2.", "1.3.") encode DÉJÀ la structure question principale / sous-question. Tu DOIS reproduire cette hiérarchie EXACTEMENT telle qu'elle est fournie, sans y ajouter AUCUNE sous-question supplémentaire (pas de a, b, c, ni de 1, 2, 3, ni de i, ii, iii).`;
+                    return `- HIÉRARCHIE IMPOSÉE PAR LE RÉFÉRENTIEL OFFICIEL IGPM : la numérotation officielle (par exemple "2-" suivi de "2.1-", "2.2-", "2.3-" ou "3-" suivi de "3.1-", "3.2-", "3.3-") encode DÉJÀ la structure question principale / sous-question. Tu DOIS reproduire cette hiérarchie EXACTEMENT telle qu'elle est fournie, sans y ajouter AUCUNE sous-question supplémentaire (pas de a, b, c, ni de 1, 2, 3, ni de i, ii, iii).
+    ⚠️ RÈGLE ABSOLUE SUR LES NUMÉROS DE GROUPE : un numéro comme "2-" ou "3-" qui chapeaute des sous-questions DOIT apparaître SEUL, sans AUCUN texte, titre, chapeau ou libellé après lui. Un simple retour à la ligne introduit alors les sous-questions qui portent TOUT le contenu. Exemple CORRECT : "2-" seul sur sa ligne, suivi de "2.1- <texte>", "2.2- <texte>", "2.3- <texte>". Exemple INTERDIT : "2- Exploite les données du support." puis "2.1- ...".`;
                 }
                 if (autorise) {
                     return `- SOUS-QUESTIONS AUTORISÉES UNIQUEMENT SI NÉCESSAIRE, ET EXCLUSIVEMENT EN LETTRES :
+    • ⚠️ RÈGLE ABSOLUE SUR LES NUMÉROS DE GROUPE : si une question principale (ex. "2-", "3-") sert uniquement de REGROUPEMENT pour ses sous-questions (a., b., c.…), son numéro doit apparaître SEUL, SANS AUCUN TEXTE après lui. Aucun titre, chapeau ou libellé ne doit suivre ce numéro. Les sous-questions portent alors TOUT le contenu.
     • Utiliser uniquement a., b., c., d.… — JAMAIS de chiffres (1, 2, 3, 4…), JAMAIS de chiffres romains (i, ii, iii…), JAMAIS de numérotation composée (a.1, a.2…).
-    • Format attendu : "1-1-  ..." puis éventuellement "a. ...", "b. ...", "c. ...".
+    • Format attendu : "1-1-  <texte de la question>" ou, en cas de regroupement, "2-" seul sur sa ligne puis "a. <texte>", "b. <texte>", "c. <texte>".
     • Ne l'utilise que lorsqu'une question exige réellement plusieurs réponses distinctes à énumérer.
     • Si une sous-question se suffit à elle-même, elle reste une simple ligne a., b., c… — PAS de ventilation plus profonde.
-    • CONTRAINTE STRICTE : le nombre total de questions au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2…) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c…) NE COMPTENT PAS comme des questions supplémentaires.`;
+    • CONTRAINTE STRICTE : le nombre total de questions au PREMIER NIVEAU (1-1, 1-2, 2-1, 2-2…) doit rester EXACTEMENT celui demandé. Les sous-questions (a, b, c…) NE COMPTENT PAS comme des questions supplémentaires.
+    • FORME ÉDITORIALE OBLIGATOIRE : aucun titre, aucun chapeau, aucun libellé ne doit jamais apparaître après un numéro de groupe. Ceci s'applique à TOUS les types d'épreuves (Bachotage, Évaluation formative, Travaux dirigés, Productions ponctuelles, Productions scolaires), à toutes les disciplines et à tous les cycles.`;
                 } else {
-                    return `- SOUS-QUESTIONS STRICTEMENT INTERDITES : ne pas utiliser de sous-questions (ni a, b, c…, ni 1, 2, 3…, ni i, ii, iii…). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2…`;
+                    return `- SOUS-QUESTIONS STRICTEMENT INTERDITES : ne pas utiliser de sous-questions (ni a, b, c…, ni 1, 2, 3…, ni i, ii, iii…). Chaque question doit être posée en une seule consigne simple et claire, numérotée uniquement au format 1-1, 1-2, 2-1, 2-2… (SANS AUCUN TITRE devant l'énoncé, et SANS AUCUN TEXTE après un éventuel numéro de groupe).`;
                 }
             }
 
@@ -3665,19 +3668,19 @@ Applique ces caractéristiques lors de la rédaction du contexte dans ton épreu
             const numP1Simple = _numS ? _numS.partie1Nums.join(', ') : '1-1, 1-2...';
             const numP2Simple = _numS ? _numS.partie2Nums.join(', ') : '2-1, 2-2...';
             const refSimpleTxt = _numS
-                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numS.classe}) :\n      Partie 1 → ${_numS.partie1Nums.join('  ')}\n      Partie 2 → ${_numS.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numS.classe}) :\n      Partie 1 → ${_numS.partie1Nums.join('  ')}\n      Partie 2 → ${_numS.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier. Chaque numéro de groupe (ex. "2-", "3-") reste NU, sans aucun titre ni texte après lui.`
                 : '';
 
             const numP1Chimie = _numC ? _numC.partie1Nums.join(', ') : '1-1, 1-2...';
             const numP2Chimie = _numC ? _numC.partie2Nums.join(', ') : '2-1, 2-2...';
             const refChimieTxt = _numC
-                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numC.classe}, Chimie) :\n      Partie 1 → ${_numC.partie1Nums.join('  ')}\n      Partie 2 → ${_numC.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numC.classe}, Chimie) :\n      Partie 1 → ${_numC.partie1Nums.join('  ')}\n      Partie 2 → ${_numC.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier. Chaque numéro de groupe (ex. "2-", "3-") reste NU, sans aucun titre ni texte après lui.`
                 : '';
 
             const numP1Physique = _numP ? _numP.partie1Nums.join(', ') : '1-1, 1-2...';
             const numP2Physique = _numP ? _numP.partie2Nums.join(', ') : '2-1, 2-2...';
             const refPhysiqueTxt = _numP
-                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numP.classe}, Physique) :\n      Partie 1 → ${_numP.partie1Nums.join('  ')}\n      Partie 2 → ${_numP.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier.`
+                ? `\n   ⚠️ RÉFÉRENTIEL OFFICIEL IGPM (devoir surveillé / production scolaire — classe ${_numP.classe}, Physique) :\n      Partie 1 → ${_numP.partie1Nums.join('  ')}\n      Partie 2 → ${_numP.partie2Nums.join('  ')}\n      Utilise EXACTEMENT cette numérotation, sans la modifier. Chaque numéro de groupe (ex. "2-", "3-") reste NU, sans aucun titre ni texte après lui.`
                 : '';
 
             let prompt = `Tu es une intelligence artificielle experte en Physique-Chimie-Technologie (PCT), spécialisée dans la génération d'épreuves d'évaluation rigoureuses selon l'approche par compétences (APC).
@@ -3692,6 +3695,38 @@ Les questions doivent utiliser une numérotation HIÉRARCHIQUE :
 - Pour la Partie 1 : les questions seront numérotées 1-1, 1-2, 1-3, etc.
 - Pour la Partie 2 : les questions seront numérotées 2-1, 2-2, 2-3, etc.
 - Ne pas utiliser de barème ni de points dans l'épreuve.
+
+RÈGLE ABSOLUE — UN NUMÉRO DE GROUPE RESTE TOUJOURS NU :
+Lorsqu'un numéro (ex. "2-", "3-", "1-") sert uniquement à REGROUPER des sous-questions
+(ex. 2.1, 2.2, 2.3 ou 3.1, 3.2, 3.3), ce numéro doit apparaître SEUL, sans AUCUN texte,
+sans titre, sans chapeau, sans libellé, sans énoncé après lui. Un simple retour à la ligne
+introduit alors les sous-questions qui portent TOUT le contenu.
+
+Exemple CORRECT (à reproduire impérativement) :
+2-
+2.1- Calculer la masse molaire du chlorure de sodium.
+2.2- Calculer la concentration massique de la solution obtenue.
+2.3- Déduire la concentration molaire de cette solution.
+3-
+3.1- Écrire l'équation de dissolution du chlorure de sodium dans l'eau.
+3.2- Identifier les porteurs de charge responsables de la conductivité.
+3.3- Expliquer pourquoi la lampe du montage s'allume
+
+Exemple INTERDIT (ne jamais produire) :
+2- Exploite les données du support.
+2.1- Calculer la masse molaire du chlorure de sodium.
+2.2- Calculer la concentration massique de la solution obtenue.
+2.3- Déduire la concentration molaire de cette solution.
+3- Explique le phénomène observé.
+3.1- Écrire l'équation de dissolution du chlorure de sodium dans l'eau.
+3.2- Identifier les porteurs de charge responsables de la conductivité.
+3.3- Expliquer pourquoi la lampe du montage s'allume
+
+Cette règle est ABSOLUE et s'applique à TOUS les types d'épreuves (Bachotage, Évaluation
+formative, Travaux dirigés, Productions ponctuelles d'étape, Productions scolaires), à
+toutes les disciplines (Chimie, Physique, PCT double) et à tous les cycles (Premier et
+Second). Aucun titre, chapeau ou libellé ne doit JAMAIS apparaître après un numéro de
+groupe, quelle que soit la forme de l'épreuve.
 
 Ta tâche est de générer l'épreuve complète en respectant le canevas APC et les instructions de mise en forme suivantes.
 
@@ -3751,12 +3786,23 @@ ${point4Entete}
     - Le CONTEXTE doit respecter IMPÉRATIVEMENT les 6 caractéristiques énumérées ci-dessus : narrativité, caractère problématique, authenticité, sobriété, neutralité injonctive, ouverture.
     - NUMÉROTATION HIÉRARCHIQUE OBLIGATOIRE : Partie 1 = questions 1-1, 1-2, 1-3... ; Partie 2 = questions 2-1, 2-2, 2-3...
     - AUCUN BARÈME ni indication de points.
-    - AUCUN TITRE DEVANT LES QUESTIONS : chaque question démarre DIRECTEMENT par son texte, juste après son numéro. Ne jamais écrire un intitulé, un titre, un chapeau ou un libellé (ex. "Définition", "Calcul de la concentration", "Question 1", "Étude du mélange"…) avant l'énoncé. La première chose visible doit être le numéro, immédiatement suivi du texte de la question.
-    - FORMAT DE NUMÉROTATION ATTENDU (sans titre) :
-        1-1-  <texte de la question directement ici>
-        1-2-  <texte de la question directement ici>
-        2-1-  <texte de la question directement ici>
-        2-2-  <texte de la question directement ici>
+    - ⚠️ RÈGLE ABSOLUE SUR LES NUMÉROS DE GROUPE : lorsqu'un numéro (ex. "2-", "3-", "1-") sert uniquement à REGROUPER plusieurs sous-questions (2.1, 2.2, 2.3 / 3.1, 3.2, 3.3), ce numéro doit apparaître SEUL, SANS AUCUN TEXTE après lui (aucun titre, aucun chapeau, aucun libellé, aucun énoncé). Un simple retour à la ligne introduit les sous-questions qui portent TOUT le contenu. Cette règle est ABSOLUE et s'applique à TOUS les types d'épreuves, toutes les disciplines et tous les cycles.
+    - AUCUN TITRE DEVANT LES QUESTIONS : chaque question démarre DIRECTEMENT par son texte, juste après son numéro. Ne jamais écrire un intitulé, un titre, un chapeau ou un libellé (ex. "Définition", "Calcul de la concentration", "Question 1", "Étude du mélange"…) avant l'énoncé. La première chose visible doit être le numéro. EXCEPTION : lorsqu'un numéro de groupe (ex. "2-", "3-") chapeaute des sous-questions, ce numéro reste NU (aucun texte après lui) — les sous-questions portent alors tout le contenu.
+    - FORMAT DE NUMÉROTATION ATTENDU :
+        • Cas SANS sous-questions (question seule) :
+            1-1-  <texte de la question directement ici>
+            1-2-  <texte de la question directement ici>
+            2-1-  <texte de la question directement ici>
+            2-2-  <texte de la question directement ici>
+        • Cas AVEC sous-questions (le numéro de groupe reste NU) :
+            2-
+            2.1- <texte de la sous-question>
+            2.2- <texte de la sous-question>
+            2.3- <texte de la sous-question>
+            3-
+            3.1- <texte de la sous-question>
+            3.2- <texte de la sous-question>
+            3.3- <texte de la sous-question>
     - SOUS-QUESTIONS : UNIQUEMENT en lettres (a., b., c…), JAMAIS en chiffres ni en chiffres romains, et uniquement lorsque le bouton "Sous-questions" est activé (voir règles détaillées ci-dessous). En l'absence d'activation, aucune sous-question n'est tolérée.
     - IMPORTANT : Les questions de la Partie 1 (Mobilisation de ressources) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
     - ORDRE DES SECTIONS IMPOSÉ DANS LE DOCUMENT : Compétences évaluées (encadré) -> Contexte -> Support -> Tâche -> Partie 1 -> Partie 2. La TÂCHE doit OBLIGATOIREMENT venir APRÈS le SUPPORT, jamais avant.
@@ -3912,7 +3958,8 @@ ${hasEntete ? '' : (hasLogo ? '- Le LOGO "' + logoFileName + '" inséré dans le
 - Structure OBLIGATOIRE de chaque partie : Compétences (encadré unique en début de document) -> Contexte A -> Support A -> Tâche A -> Partie 1 A (questions 1-1, 1-2...) -> Partie 2 A (questions 2-1, 2-2...), puis Contexte B -> Support B -> Tâche B -> Partie 1 B -> Partie 2 B. La TÂCHE vient TOUJOURS APRÈS le SUPPORT.
 - Toutes les données numériques sont dans les supports respectifs, jamais dans les questions.
 - AUCUN BARÈME ni points.
-- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question, sans intitulé préalable.
+- ⚠️ RÈGLE ABSOLUE : un numéro de groupe (ex. "2-", "3-", "1-") qui chapeaute des sous-questions (2.1, 2.2, 2.3 / 3.1, 3.2, 3.3) reste TOUJOURS NU (aucun titre, chapeau ou libellé après lui). Les sous-questions portent TOUT le contenu. Cette règle s'applique à tous les types d'épreuves, toutes les disciplines et tous les cycles.
+- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question, ou reste NU s'il chapeaute des sous-questions.
 - AUCUNE sous-question numérotée (1, 2, 3, 4…) ni en chiffres romains (i, ii, iii…).
 - Sous-questions UNIQUEMENT en lettres (a., b., c…) et UNIQUEMENT si activées pour la partie concernée.
 - IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être conçues pour être utiles à la résolution des questions de la Partie 2.
@@ -3976,7 +4023,8 @@ ${ligneEnteteSimple}, puis IMMÉDIATEMENT l'encadré UNIQUE "Compétences évalu
 Toutes les données numériques sont dans le support, jamais dans les questions.
 Structure OBLIGATOIRE : Compétences évaluées (encadré unique) -> Contexte -> Support -> Tâche -> Partie 1 -> Partie 2. La TÂCHE vient TOUJOURS APRÈS le SUPPORT.
 AUCUN BARÈME ni points.
-- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question.
+- ⚠️ RÈGLE ABSOLUE : un numéro de groupe (ex. "2-", "3-", "1-") qui chapeaute des sous-questions (2.1, 2.2, 2.3 / 3.1, 3.2, 3.3) reste TOUJOURS NU (aucun titre, chapeau ou libellé après lui). Les sous-questions portent TOUT le contenu. Cette règle est valable pour TOUS les types d'épreuves.
+- AUCUN TITRE DEVANT LES QUESTIONS : le numéro est immédiatement suivi du texte de la question, ou reste NU s'il chapeaute des sous-questions.
 - IMPORTANT : Les questions de la Partie 1 (Mobilisation) doivent être utiles et nécessaires à la résolution des questions de la Partie 2.
 - Partie 1 : AUCUNE sous-question numérotée (1, 2, 3, 4…) ; sous-questions en lettres (a., b., c…) uniquement si activées.
 - Partie 2 : idem — sous-questions en lettres uniquement si activées, sinon aucune.
