@@ -1505,7 +1505,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-globe"></i> Contexte (Chimie)</label>
-                                            <textarea class="form-control" id="contexteChimie" rows="2" placeholder="Situation-problème en Chimie..."></textarea>
+                                            <textarea class="form-control" id="contexteChimie" rows="2" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                         </div>
                                     </div>
                                     <div class="row mt-2">
@@ -1590,7 +1590,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-globe"></i> Contexte (Physique)</label>
-                                            <textarea class="form-control" id="contextePhysique" rows="2" placeholder="Situation-problème en Physique..."></textarea>
+                                            <textarea class="form-control" id="contextePhysique" rows="2" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                         </div>
                                     </div>
                                     <div class="row mt-2">
@@ -1670,16 +1670,8 @@
                                 <label class="form-label mt-2"><i class="fas fa-book"></i> Connaissances / Techniques à mobiliser</label>
                                 <input type="text" class="form-control" id="connaissances" placeholder="Ex: Mélanges homogènes/hétérogènes, Séparation, Concentration massique et molaire">
                                 
-                                <label class="form-label mt-2 d-flex align-items-center justify-content-between">
-                                    <span><i class="fas fa-globe"></i> Contexte (situation-problème)</span>
-                                    <button type="button" class="btn btn-sm btn-outline-info rounded-circle ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#infoContexteModal"
-                                            title="Règles de rédaction du contexte"
-                                            style="width:26px;height:26px;padding:0;line-height:1;">
-                                        <i class="fas fa-info" style="font-size:0.75rem;"></i>
-                                    </button>
-                                </label>
-                                <textarea class="form-control" id="contexte" rows="3" placeholder="Décrivez une histoire avec un évènement perturbant posant un problème réel et motivant..."></textarea>
+                                <label class="form-label mt-2"><i class="fas fa-globe"></i> Contexte (situation-problème)</label>
+                                <textarea class="form-control" id="contexte" rows="3" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                 
                                 <div class="row mt-2">
                                     <div class="col-md-8">
@@ -4153,66 +4145,6 @@ AUCUN BARÈME ni points.
             installBanner.style.display = 'none';
         });
     </script>
-
-<!-- ====== MODAL INFO CONTEXTE ====== -->
-<div class="modal fade" id="infoContexteModal" tabindex="-1" aria-labelledby="infoContexteModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content" style="border-radius:14px;overflow:hidden;">
-      <div class="modal-header" style="background:linear-gradient(135deg,#0b2545,#134074);color:#fff;">
-        <h5 class="modal-title" id="infoContexteModalLabel">
-          <i class="fas fa-info-circle me-2"></i> Règles de rédaction du contexte
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body" style="padding:20px 24px;font-size:0.95rem;line-height:1.55;">
-
-        <p style="margin-bottom:12px;">
-          Le contexte de la situation-problème doit respecter <strong>7 caractéristiques</strong> :
-        </p>
-
-        <ol style="padding-left:20px;margin-bottom:16px;">
-          <li><strong>Narrativité</strong> : courte histoire mettant en scène des acteurs dans une situation concrète.</li>
-          <li><strong>Caractère problématique</strong> : expose un défi, un manque ou une contradiction à résoudre.</li>
-          <li><strong>Authenticité</strong> : situation vraisemblable, ancrée dans le réel ou le milieu de vie.</li>
-          <li><strong>Sobriété</strong> : texte concis, sans détails inutiles.</li>
-          <li><strong>Neutralité injonctive</strong> : purement descriptif (ni consigne, ni question).</li>
-          <li><strong>Ouverture</strong> : nécessite le recours aux supports (données, tableaux, schémas).</li>
-        </ol>
-
-        <div style="background:#fff4e5;border-left:4px solid #c98a2a;padding:12px 14px;border-radius:6px;margin-bottom:14px;">
-          <strong style="color:#8a5a00;"><i class="fas fa-exclamation-triangle me-1"></i> Caractéristique n°7 — RÈGLE ABSOLUE</strong>
-          <p style="margin:8px 0 6px;">Le contexte doit décrire un évènement de la <strong>VIE COURANTE</strong> :</p>
-          <p style="margin:0 0 8px;">
-            🏠 maison · 🛒 marché · 🏘️ quartier · 🌾 champ · 🚌 route · 🍲 cuisine ·
-            ⚕️ santé · 🚗 transport · 🔨 artisanat · 💼 commerce · 🌿 environnement · 👨‍👩‍👧 famille
-          </p>
-          <p style="margin:8px 0 4px;"><strong style="color:#b23a48;">Il est FORMELLEMENT INTERDIT</strong> de rédiger un contexte portant sur :</p>
-          <ul style="margin:4px 0 8px;padding-left:20px;">
-            <li>un évènement se déroulant dans le <strong>milieu scolaire</strong> (école, collège, lycée, salle de classe) ;</li>
-            <li>une activité ou un vécu en <strong>laboratoire</strong> de sciences ;</li>
-            <li>un <strong>cours, une leçon, un exercice ou un devoir</strong> ;</li>
-            <li>un <strong>élève</strong> ou un groupe d'élèves en situation d'apprentissage ;</li>
-            <li>une <strong>expérience scientifique scolaire</strong>.</li>
-          </ul>
-          <p style="margin:0;">
-            <i class="fas fa-users me-1"></i> Les acteurs doivent être des personnes de la vie courante :
-            ménagère, agriculteur, artisan, commerçant, chauffeur, infirmier, cuisinier…
-            <strong>et NON des élèves ou des enseignants.</strong>
-          </p>
-        </div>
-
-        <p style="margin-bottom:0;color:#64748b;font-size:0.85rem;">
-          <i class="fas fa-lightbulb me-1"></i>
-          Astuce : avant de saisir votre contexte, demandez-vous « est-ce que cela pourrait arriver à la maison, au marché ou dans mon quartier ? » Si la réponse est non, reformulez.
-        </p>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">J'ai compris</button>
-      </div>
-    </div>
-  </div>
-</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
