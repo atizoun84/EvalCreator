@@ -1531,6 +1531,22 @@ Pour chaque question (et pour chaque volet d'une question à plusieurs volets),
 la somme des points attribués aux 3 critères (Pertinence, Utilisation correcte des outils/ressources, Cohérence/Raisonnement) doit être rigoureusement égale au total de la question ou du volet, et chaque point attribué doit être un multiple de 0,25 STRICTEMENT POSITIF (jamais 0). Si un critère n'est pas concerné par la question, écrire « — » au lieu de 0.
 
 ------------------------------------------------------------
+III.bis. BASE DE MÉTHODES DE RÉSOLUTION (guide intelligent)
+------------------------------------------------------------
+
+Pour CHAQUE question, applique la règle suivante :
+
+  1️⃣ IDENTIFIE la famille de la question (calcul pH, mouvement, oxydoréduction...)
+  2️⃣ SI une méthode correspond ci-dessous → applique UNIQUEMENT cette méthode
+  3️⃣ SI aucune méthode ne correspond → applique la MÉTHODE GÉNÉRALE (en bas)
+  4️⃣ NE REFUSE JAMAIS de répondre à une question, même sans méthode répertoriée
+
+[SECTION_METHODES]
+
+📌 RAPPEL : Le nom exact de la grandeur peut changer (vitesse/accélération/intensité),
+mais la MÉTHODE reste la même. Identifie la FAMILLE, pas le mot exact.
+
+------------------------------------------------------------
 IV. PARAMÈTRES DE MISE EN FORME LaTeX
 ------------------------------------------------------------
 1. Document class : \`\\\\documentclass[10pt,a4paper,landscape]{article}\`
@@ -1934,6 +1950,11 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
             }
 
             let finalPrompt = defaultPromptTemplate;
+
+            // ═══ Injection de la section méthodes (depuis base_methodo.json) ═══
+            const sectionMethodes = genererSectionMethodes(classe);
+            finalPrompt = finalPrompt.replace('[SECTION_METHODES]', sectionMethodes);
+
             // Remplacement des blocs d'en-tête conditionnels (à faire AVANT les autres remplacements,
             // pour que les placeholders internes [PAYS], [ANNEE], etc. soient bien remplacés ensuite).
             finalPrompt = finalPrompt.replace('[SECTION_II_ENTETE]', sectionIIEntete);
@@ -1957,6 +1978,71 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
 
             const modal = new bootstrap.Modal(document.getElementById('promptModal'));
             modal.show();
+        }
+
+        // ═══ SECTION VII : BASE DE MÉTHODES ═══
+        let methodoData = null;
+
+        // Charger le JSON au démarrage
+        fetch('base_methodo.json')
+            .then(r => r.json())
+            .then(data => {
+                methodoData = data;
+                console.log('✅ base_methodo.json chargé');
+            })
+            .catch(err => console.error('❌ Erreur chargement base_methodo.json :', err));
+
+        // Génère la section compacte des méthodes selon la classe
+        function genererSectionMethodes(classe) {
+            if (!methodoData) return '[Base de méthodes non chargée — applique la méthode générale]';
+
+            // Déterminer le niveau (3ème vs 1ère/Tle)
+            const est3eme = /3|4/i.test(classe) && !/1ère|1ere|Tle|Terminale|2nde/i.test(classe);
+            const niveau = est3eme ? methodoData['3IEME'] : methodoData['1ERE_ET_TERMINALE'];
+
+            if (!niveau) return '[Niveau non trouvé dans la base]';
+
+            let texte = '';
+
+            // ═══ CHIMIE ═══
+            if (niveau.matieres && niveau.matieres.CHIMIE) {
+                texte += '─── CHIMIE ───\n';
+                for (let key in niveau.matieres.CHIMIE) {
+                    const m = niveau.matieres.CHIMIE[key];
+                    const titre = key.replace(/_/g, ' ').toUpperCase().padEnd(18, ' ');
+
+                    let etapes = [];
+                    if (m.etapes) {
+                        etapes = m.etapes;
+                    } else if (m.structure_reponse && m.structure_reponse['3_mode_operatoire']) {
+                        etapes = m.structure_reponse['3_mode_operatoire'].etapes_type_preparation_solution || [];
+                    }
+
+                    // Condenser : garder les 3 premiers mots de chaque étape
+                    const chemin = etapes.map(e => e.split(' ').slice(0, 4).join(' ')).join(' → ');
+                    texte += titre + ': ' + chemin + '\n';
+                }
+                texte += '\n';
+            }
+
+            // ═══ PHYSIQUE ═══
+            if (niveau.matieres && niveau.matieres.PHYSIQUE) {
+                texte += '─── PHYSIQUE ───\n';
+                for (let key in niveau.matieres.PHYSIQUE) {
+                    const m = niveau.matieres.PHYSIQUE[key];
+                    const titre = key.replace(/_/g, ' ').toUpperCase().padEnd(18, ' ');
+                    const etapes = m.etapes || [];
+                    const chemin = etapes.map(e => e.split(' ').slice(0, 4).join(' ')).join(' → ');
+                    texte += titre + ': ' + chemin + '\n';
+                }
+                texte += '\n';
+            }
+
+            // ═══ Méthode générale (fallback) ═══
+            texte += '─── MÉTHODE GÉNÉRALE (fallback) ───\n';
+            texte += 'Lire 2× → Identifier → Données → Formule littérale → AN → Calcul → Encadrer → Vérifier\n';
+
+            return texte;
         }
 
         function copyPromptToClipboard() {

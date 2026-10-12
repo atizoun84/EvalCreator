@@ -1,0 +1,503 @@
+{
+  "nom": "Base méthodologique PCT — par niveau",
+  "description": "Étapes générales de résolution selon la classe",
+  "source": "BASE GENPCT/procedure",
+  "date": "2026-10-12",
+  "3IEME": {
+    "niveau": "Classe de 3ème (BEPC)",
+    "matieres": {
+      "CHIMIE": {
+        "description_mode_operatoire": {
+          "titre": "Description du mode opératoire",
+          "quand_utiliser": "Pour toute question demandant de décrire un mode opératoire (préparation, dilution, titrage, filtration, précipitation, extraction, recristallisation...)",
+          "structure_reponse": {
+            "1_materiel": {
+              "titre": "Matériel",
+              "description": "Lister tout le matériel nécessaire",
+              "exemples": [
+                "Balance électronique",
+                "Fiole jaugée (préciser le volume : 50, 100, 250, 500 mL)",
+                "Pipette jaugée (préciser le volume)",
+                "Burette graduée",
+                "Béchers",
+                "Erlenmeyer",
+                "Pissette d'eau distillée",
+                "Agitateur en verre / baguette",
+                "Entonnoir + papier filtre",
+                "Ampoule à décanter",
+                "Chauffage / plaque chauffante",
+                "Thermomètre",
+                "Pince / support universel"
+              ]
+            },
+            "2_produits": {
+              "titre": "Produits",
+              "description": "Lister tous les produits chimiques utilisés",
+              "exemples": [
+                "Solution mère (préciser la concentration)",
+                "Soluté solide (préciser le nom)",
+                "Eau distillée",
+                "Indicateur coloré (BBT, hélianthine, phénolphtaléine...)",
+                "Acide / Base (préciser la concentration)",
+                "Réactif de précipitation",
+                "Solvant d'extraction (éther, cyclohexane...)"
+              ]
+            },
+            "3_mode_operatoire": {
+              "titre": "Mode opératoire",
+              "description": "Décrire les étapes dans l'ordre chronologique, à l'infinitif ou à l'impératif",
+              "regles": [
+                "Utiliser des verbes d'action à l'infinitif (verser, ajouter, agiter, compléter...)",
+                "Préciser les quantités exactes (masses, volumes, concentrations)",
+                "Préciser le matériel utilisé à chaque étape",
+                "Indiquer les précautions (sécurité, ordre des opérations)",
+                "Numéroter les étapes pour plus de clarté",
+                "Utiliser le vocabulaire technique exact (trait de jauge, équivalence, décantation...)"
+              ],
+              "etapes_type_preparation_solution": [
+                "Peser précisément la masse m de soluté à l'aide d'une balance électronique",
+                "Introduire le soluté dans une fiole jaugée de volume V approprié à l'aide d'un entonnoir",
+                "Ajouter environ la moitié du volume d'eau distillée",
+                "Boucher et agiter jusqu'à dissolution complète du solide",
+                "Compléter avec de l'eau distillée jusqu'au trait de jauge",
+                "Boucher et retourner plusieurs fois pour homogénéiser la solution"
+              ],
+              "etapes_type_dilution": [
+                "Prélever à la pipette jaugée le volume V1 de solution mère",
+                "Verser ce volume dans une fiole jaugée de volume V2 approprié",
+                "Ajouter de l'eau distillée jusqu'à environ la moitié de la fiole",
+                "Boucher et agiter",
+                "Compléter avec de l'eau distillée jusqu'au trait de jauge",
+                "Boucher et homogénéiser par retournement"
+              ],
+              "etapes_type_titrage": [
+                "Remplir la burette avec la solution titrante (rincer d'abord)",
+                "Ajuster le zéro de la burette",
+                "Prélever à la pipette jaugée un volume V précis de solution à titrer",
+                "Verser dans un erlenmeyer",
+                "Ajouter quelques gouttes d'indicateur coloré",
+                "Verser la solution titrante goutte à goutte en agitant",
+                "Repérer le changement de couleur (équivalence)",
+                "Noter le volume équivalent Ve versé",
+                "Répéter pour obtenir des mesures concordantes"
+              ],
+              "etapes_type_filtration": [
+                "Plier le papier filtre en quatre puis en cône",
+                "Placer le papier filtre dans l'entonnoir",
+                "Humidifier légèrement le filtre avec de l'eau distillée",
+                "Placer l'entonnoir sur un erlenmeyer ou un bécher",
+                "Verser le mélange à filtrer doucement le long d'une baguette",
+                "Récupérer le filtrat dans le récipient",
+                "Laver le résidu si nécessaire"
+              ],
+              "etapes_type_precipitation": [
+                "Verser la solution contenant l'ion à précipiter dans un bécher",
+                "Ajouter goutte à goutte le réactif précipitant en agitant",
+                "Observer la formation du précipité",
+                "Laisser reposer pour que le précipité se dépose",
+                "Filtrer le mélange sur papier filtre",
+                "Laver le précipité à l'eau distillée",
+                "Sécher le précipité (étuve ou à l'air)",
+                "Peser le précipité sec si nécessaire"
+              ],
+              "etapes_type_extraction": [
+                "Introduire la solution à extraire dans une ampoule à décanter",
+                "Ajouter le solvant d'extraction",
+                "Boucher et agiter en dégazant régulièrement",
+                "Laisser reposer jusqu'à séparation des deux phases",
+                "Récupérer la phase souhaitée dans un bécher",
+                "Répéter l'opération si nécessaire",
+                "Sécher la phase organique sur un desséchant si besoin"
+              ],
+              "etapes_type_recristallisation": [
+                "Dissoudre le solide impur dans le minimum de solvant chaud",
+                "Filtrer à chaud pour éliminer les impuretés insolubles",
+                "Laisser refroidir lentement pour cristalliser",
+                "Filtrer les cristaux formés",
+                "Laver les cristaux à l'eau glacée ou au solvant froid",
+                "Sécher les cristaux (étuve ou dessiccateur)",
+                "Peser les cristaux purs obtenus"
+              ]
+            }
+          },
+          "exemple_complet": {
+            "question": "Décrire le mode opératoire de préparation d'une solution de chlorure de sodium de concentration C = 0,1 mol/L et de volume V = 250 mL",
+            "reponse": {
+              "materiel": [
+                "Balance électronique",
+                "Fiole jaugée de 250 mL",
+                "Entonnoir",
+                "Béchers",
+                "Pissette d'eau distillée",
+                "Baguette en verre"
+              ],
+              "produits": [
+                "Chlorure de sodium (NaCl) solide",
+                "Eau distillée"
+              ],
+              "mode_operatoire": [
+                "Calculer la masse m de NaCl à peser : m = C × V × M",
+                "Peser précisément la masse m à l'aide de la balance électronique",
+                "Introduire le solide dans une fiole jaugée de 250 mL à l'aide d'un entonnoir",
+                "Ajouter environ 100 mL d'eau distillée",
+                "Boucher et agiter jusqu'à dissolution complète",
+                "Compléter avec de l'eau distillée jusqu'au trait de jauge",
+                "Boucher et homogénéiser la solution par retournement"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "1ERE_ET_TERMINALE": {
+    "niveau": "Classes de 1ère et Terminale (BAC)",
+    "matieres": {
+      "CHIMIE": {
+        "calcul_avec_equation": {
+          "titre": "Calcul exploitant une équation chimique",
+          "quand_utiliser": "Pour tout calcul où on exploite une équation de réaction",
+          "etapes": [
+            "Écrire l'équation ou les équations de la réaction",
+            "Bilan qualitatif (identifier réactifs et produits)",
+            "Bilan quantitatif (quantités de matière, concentrations, volumes)",
+            "Relation d'électroneutralité (REN)",
+            "Établissement de la formule finale (littérale)",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat final et conclusion si nécessaire"
+          ]
+        },
+        "calcul_de_pH": {
+          "titre": "Détermination du pH d'une solution",
+          "quand_utiliser": "Pour tout calcul de pH (acide fort/faible, base forte/faible, mélange)",
+          "etapes": [
+            "Identifier la nature de la solution (acide fort, acide faible, base forte, base faible)",
+            "Écrire l'équation de dissociation ou de réaction",
+            "Faire le bilan des espèces présentes",
+            "Écrire la relation d'électroneutralité (REN) si nécessaire",
+            "Écrire la condition d'équilibre (Ka, Ke) si nécessaire",
+            "Établir la formule littérale du pH adaptée au cas",
+            "Application numérique (A.N)",
+            "Calcul du pH",
+            "Résultat avec 1 ou 2 décimales et vérification (0 ≤ pH ≤ 14)"
+          ]
+        },
+        "calcul_de_concentration": {
+          "titre": "Détermination d'une concentration",
+          "quand_utiliser": "Pour calculer une concentration molaire ou massique",
+          "etapes": [
+            "Relever les données : masse, volume, masse molaire",
+            "Écrire la formule de la concentration : C = n/V",
+            "Calculer la quantité de matière : n = m/M",
+            "Établir la formule littérale finale",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (mol/L ou g/L)"
+          ]
+        },
+        "dilution": {
+          "titre": "Préparation d'une solution par dilution",
+          "quand_utiliser": "Pour préparer une solution fille à partir d'une solution mère",
+          "etapes": [
+            "Relever les données : C1, C2, V2 (ou V1)",
+            "Écrire la relation de dilution : C1V1 = C2V2",
+            "Isoler le volume à prélever : V1 = C2V2/C1",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (mL ou L)",
+            "Description du protocole : pipette jaugée + fiole jaugée + eau distillée"
+          ]
+        },
+        "titrage": {
+          "titre": "Exploitation d'un titrage acide-base",
+          "quand_utiliser": "Pour déterminer une concentration inconnue par titrage",
+          "etapes": [
+            "Écrire l'équation de la réaction de titrage",
+            "Repérer l'équivalence (changement de couleur, saut de pH, extremum)",
+            "Écrire la relation à l'équivalence : n(acide) = n(base)",
+            "Utiliser : C1V1 = C2V2",
+            "Établir la formule littérale de la concentration cherchée",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité et conclusion"
+          ]
+        },
+        "formule_brute": {
+          "titre": "Détermination d'une formule brute",
+          "quand_utiliser": "Pour trouver la formule brute à partir de pourcentages ou masses",
+          "etapes": [
+            "Relever les pourcentages massiques de chaque élément",
+            "Diviser chaque pourcentage par la masse molaire atomique",
+            "Diviser tous les résultats par le plus petit",
+            "Multiplier si nécessaire pour obtenir des entiers",
+            "Écrire la formule brute : CxHyOz",
+            "Vérifier avec la masse molaire si donnée"
+          ]
+        },
+        "equation_chimique": {
+          "titre": "Écriture et équilibrage d'une équation",
+          "quand_utiliser": "Pour écrire toute équation de réaction chimique",
+          "etapes": [
+            "Écrire les réactifs à gauche et les produits à droite",
+            "Identifier les éléments présents de chaque côté",
+            "Équilibrer les éléments un par un (C, H, O, puis autres)",
+            "Équilibrer les charges si ions",
+            "Vérifier l'équilibre final",
+            "Indiquer l'état physique : (s), (l), (g), (aq) si demandé"
+          ]
+        },
+        "oxydoreduction": {
+          "titre": "Écriture d'une réaction d'oxydoréduction",
+          "quand_utiliser": "Pour écrire une réaction redox complète",
+          "etapes": [
+            "Identifier l'oxydant et le réducteur",
+            "Écrire la demi-équation de réduction",
+            "Écrire la demi-équation d'oxydation",
+            "Équilibrer les électrons (multiplication)",
+            "Additionner les deux demi-équations",
+            "Simplifier (annuler électrons et espèces identiques)",
+            "Vérifier l'équilibre final"
+          ]
+        },
+        "combustion": {
+          "titre": "Écriture d'une équation de combustion",
+          "quand_utiliser": "Pour écrire la combustion complète d'un composé organique",
+          "etapes": [
+            "Écrire le squelette : composé + O2 → CO2 + H2O",
+            "Équilibrer le carbone (C → n CO2)",
+            "Équilibrer l'hydrogène (H → n/2 H2O)",
+            "Compter les oxygènes à droite",
+            "Ajuster le coefficient de O2 à gauche",
+            "Vérifier l'équilibre global"
+          ]
+        },
+        "polymerisation": {
+          "titre": "Écriture d'une équation de polymérisation",
+          "quand_utiliser": "Pour écrire la polymérisation d'un alcène",
+          "etapes": [
+            "Identifier le monomère (avec double liaison)",
+            "Écrire le monomère avec coefficient n",
+            "Ouvrir la double liaison",
+            "Relier les unités entre elles",
+            "Écrire le polymère entre parenthèses avec indice n",
+            "Vérifier la conservation des atomes"
+          ]
+        },
+        "oxydation_alcool": {
+          "titre": "Prévision du produit d'oxydation d'un alcool",
+          "quand_utiliser": "Pour déterminer le produit d'oxydation d'un alcool",
+          "etapes": [
+            "Identifier la classe de l'alcool (primaire, secondaire, tertiaire)",
+            "Appliquer la règle : primaire → aldéhyde puis acide ; secondaire → cétone ; tertiaire → pas d'oxydation",
+            "Écrire l'équation d'oxydation si demandée",
+            "Nommer le produit obtenu"
+          ]
+        }
+      },
+      "PHYSIQUE": {
+        "etude_mouvement": {
+          "titre": "Étude d'un mouvement",
+          "quand_utiliser": "Pour étudier le mouvement d'un solide",
+          "etapes": [
+            "Définir le système étudié (masse, caractéristiques)",
+            "Choisir le référentiel (terrestre supposé galiléen)",
+            "Choisir le repère adapté (cartésien, polaire, Frenet)",
+            "Faire le bilan des forces appliquées",
+            "Appliquer le théorème du centre d'inertie : ΣF = ma",
+            "Projeter sur les axes du repère",
+            "Établir les équations différentielles du mouvement",
+            "Résoudre pour trouver v(t) et x(t)",
+            "Utiliser les conditions initiales",
+            "Application numérique (A.N)",
+            "Résultat et conclusion sur la nature du mouvement"
+          ]
+        },
+        "determination_vitesse": {
+          "titre": "Détermination d'une vitesse",
+          "quand_utiliser": "Pour trouver la vitesse d'un solide en un point",
+          "etapes": [
+            "Définir le système et le référentiel",
+            "Faire le bilan des forces",
+            "Choisir la méthode : TEC ou v²B - v²A = 2ax ou conservation de Em",
+            "Établir la formule littérale",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (m/s) et conclusion"
+          ]
+        },
+        "theoreme_energie_cinetique": {
+          "titre": "Application du théorème de l'énergie cinétique",
+          "quand_utiliser": "Pour relier vitesses et travaux des forces",
+          "etapes": [
+            "Définir le système et le référentiel",
+            "Faire le bilan des forces et calculer leur travail",
+            "Écrire : ∆Ec = ΣW(forces)",
+            "Détailler : ½mv²B - ½mv²A = W1 + W2 + ...",
+            "Remplacer chaque travail par son expression",
+            "Établir la formule littérale",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (m/s ou J)"
+          ]
+        },
+        "energie_mecanique": {
+          "titre": "Calcul de l'énergie mécanique",
+          "quand_utiliser": "Pour déterminer Em et étudier sa conservation",
+          "etapes": [
+            "Écrire : Em = Ec + Ep",
+            "Détailler : Em = ½mv² + mgz (+ ½Kx² si ressort)",
+            "Vérifier la présence de frottements",
+            "Sans frottements : Em = constante (∆Em = 0)",
+            "Avec frottements : ∆Em = W(f) = -f × d",
+            "Établir la formule littérale",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (J) et interprétation"
+          ]
+        },
+        "loi_kepler": {
+          "titre": "Application des lois de Kepler",
+          "quand_utiliser": "Pour étudier le mouvement d'un satellite ou d'une planète",
+          "etapes": [
+            "Définir le système et le référentiel (géocentrique)",
+            "Faire le bilan des forces (force gravitationnelle)",
+            "Appliquer le TCI : F = ma",
+            "Projeter sur la base de Frenet (τ, n)",
+            "Écrire a_τ = 0 (mouvement uniforme)",
+            "Écrire a_n = GM/r² (force gravitationnelle)",
+            "Utiliser a_n = 4π²r/T² (mouvement circulaire)",
+            "Égaliser et isoler la relation demandée",
+            "Application numérique si nécessaire"
+          ]
+        },
+        "chute_libre": {
+          "titre": "Étude d'une chute libre",
+          "quand_utiliser": "Pour étudier un corps soumis uniquement à son poids",
+          "etapes": [
+            "Définir le système (solide de masse m)",
+            "Choisir le référentiel terrestre supposé galiléen",
+            "Choisir le repère (O, i, j)",
+            "Bilan des forces : poids P = mg uniquement",
+            "Appliquer le TCI : a = g",
+            "Écrire les composantes : ax = 0, ay = -g",
+            "Primitiver pour obtenir v(t)",
+            "Primitiver pour obtenir x(t), y(t)",
+            "Utiliser les conditions initiales",
+            "Établir l'équation de la trajectoire",
+            "Application numérique et résultat"
+          ]
+        },
+        "oscillateur_harmonique": {
+          "titre": "Étude d'un oscillateur harmonique",
+          "quand_utiliser": "Pour prouver qu'un système est un oscillateur harmonique",
+          "etapes": [
+            "Définir le système (solide + ressort)",
+            "Faire le bilan des forces",
+            "Appliquer le TCI : ΣF = ma",
+            "Projeter sur l'axe du mouvement",
+            "Écrire l'équation différentielle",
+            "Mettre sous la forme : ẍ + ω²x = 0",
+            "Identifier ω² = K/m",
+            "Conclure : mouvement rectiligne sinusoïdal",
+            "Déduire la période : T = 2π/ω"
+          ]
+        },
+        "force_frottement": {
+          "titre": "Détermination d'une force de frottement",
+          "quand_utiliser": "Pour trouver l'intensité d'une force de frottement",
+          "etapes": [
+            "Définir le système et le référentiel",
+            "Choisir le repère adapté",
+            "Faire le bilan des forces",
+            "Appliquer le TCI : ΣF = ma",
+            "Projeter sur l'axe du mouvement",
+            "Isoler la force de frottement",
+            "Établir la formule littérale",
+            "Application numérique (A.N)",
+            "Calcul",
+            "Résultat avec unité (N)"
+          ]
+        },
+        "choc": {
+          "titre": "Étude d'un choc",
+          "quand_utiliser": "Pour étudier la collision entre deux solides",
+          "etapes": [
+            "Définir le système {solide 1 + solide 2}",
+            "Écrire la conservation de la quantité de mouvement",
+            "Décomposer sur les axes (x, y)",
+            "Écrire les équations avant et après le choc",
+            "Résoudre le système d'équations",
+            "Vérifier avec la conservation d'énergie si choc élastique",
+            "Application numérique et résultat"
+          ]
+        },
+        "etablir_expression": {
+          "titre": "Établissement d'une expression littérale",
+          "quand_utiliser": "Pour démontrer une relation entre grandeurs physiques",
+          "etapes": [
+            "Identifier la grandeur à exprimer",
+            "Écrire les relations de base (théorèmes, définitions)",
+            "Substituer les unes dans les autres",
+            "Éliminer les grandeurs intermédiaires",
+            "Simplifier l'expression obtenue",
+            "Vérifier l'homogénéité (unités)",
+            "Présenter l'expression finale encadrée"
+          ]
+        },
+        "perte_contact": {
+          "titre": "Condition de perte de contact",
+          "quand_utiliser": "Pour déterminer quand un solide quitte une piste",
+          "etapes": [
+            "Définir le système et le référentiel",
+            "Choisir le repère (Frenet de préférence)",
+            "Bilan des forces : poids et réaction normale",
+            "Projeter sur la normale (n)",
+            "Écrire : P_n + R_n = ma_n",
+            "Détailler : mg cos α - R = mv²/r",
+            "Isoler R : R = m(g cos α - v²/r)",
+            "Condition de perte de contact : R = 0",
+            "Résoudre pour trouver la vitesse ou l'angle limite"
+          ]
+        },
+        "graphique": {
+          "titre": "Exploitation d'un graphique",
+          "quand_utiliser": "Pour tracer ou exploiter un graphe",
+          "etapes": [
+            "Préparer les axes (noms, unités)",
+            "Choisir les échelles adaptées",
+            "Placer les points expérimentaux",
+            "Tracer la courbe ou la droite moyenne",
+            "Déterminer la pente si droite (coefficient directeur)",
+            "Déterminer l'ordonnée à l'origine",
+            "Interpréter physiquement les résultats",
+            "Conclure sur la loi vérifiée"
+          ]
+        }
+      }
+    },
+    "methode_generale": {
+      "titre": "Méthode universelle pour toute question",
+      "etapes": [
+        "Lire la question 2 fois",
+        "Identifier la grandeur ou la notion demandée",
+        "Relever les données et unités",
+        "Choisir la formule ou le théorème adapté",
+        "Écrire la formule littérale (jamais de calcul direct)",
+        "Transformer pour isoler la grandeur cherchée",
+        "Application numérique (A.N)",
+        "Calcul avec attention aux unités",
+        "Encadrer le résultat avec son unité",
+        "Vérifier la cohérence"
+      ]
+    },
+    "conseils": [
+      "Toujours écrire la formule littérale AVANT le calcul",
+      "Indiquer systématiquement l'unité du résultat",
+      "Structurer : système → référentiel → repère → bilan → théorème → application",
+      "Justifier chaque étape par un théorème ou une relation",
+      "Encadrer ou souligner le résultat final",
+      "Vérifier la cohérence physique du résultat"
+    ]
+  }
+}
