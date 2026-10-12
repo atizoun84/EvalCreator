@@ -2670,7 +2670,9 @@ Rends-moi le code LaTeX complet mis à jour, en conservant tout le reste identiq
             if (!classeSelect || !cycleSelect || !disciplineSelect) return;
 
             const titre = titreEpreuveSelect ? titreEpreuveSelect.value : '';
-            const sansVerrouillage = TITRES_SANS_VERROUILLAGE.includes(titre);
+            // 🆕 Vérifie si le titre contient "PRODUCTION PONCTUELLE" (titre long)
+            const estProductionPonctuelle = titre.toUpperCase().includes('PRODUCTION PONCTUELLE');
+            const sansVerrouillage = TITRES_SANS_VERROUILLAGE.includes(titre) || estProductionPonctuelle;
 
             const optionDouble = disciplineSelect.querySelector('option[value="' + DISCIPLINE_DOUBLE_VALUE + '"]');
 
