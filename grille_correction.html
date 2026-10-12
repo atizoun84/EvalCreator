@@ -1154,6 +1154,111 @@ ERREUR sur Overleaf (pdflatex). Tu dois impérativement :
   - Utiliser \\\\documentclass[10pt,a4paper,landscape]{article} et non standalone.
 
 ------------------------------------------------------------
+0. RÈGLES DE RÉDACTION UNIVERSELLES (À APPLIQUER SYSTÉMATIQUEMENT)
+------------------------------------------------------------
+
+⚠️ CES RÈGLES SONT OBLIGATOIRES POUR TOUTES LES QUESTIONS, TOUTES LES CLASSES.
+
+━━━ RÈGLE 1 : ANNONCER CE QU'ON VEUT FAIRE (EN GRAS - OBLIGATOIRE) ━━━
+
+⚠️ OBLIGATION ABSOLUE : Avant CHAQUE réponse, commence TOUJOURS par une
+annonce en LaTeX GRAS de l'action à réaliser.
+
+Format OBLIGATOIRE : \\textbf{[Verbe d'action] [objet de l'action]}
+
+Exemples corrects :
+  • \\textbf{Déterminons la vitesse du solide (S) au point B.}
+  • \\textbf{Calculons la concentration molaire C₀ de la solution.}
+  • \\textbf{Établissons l'expression de l'énergie mécanique.}
+  • \\textbf{Montrons que la vitesse après choc vaut V' = 5,16 m/s.}
+  • \\textbf{Écrivons l'équation de la réaction de titrage.}
+  • \\textbf{Déterminons la nature de la trajectoire du solide.}
+  • \\textbf{Prenons position par rapport à l'affirmation de Jacques.}
+
+⚠️ RÈGLES STRICTES :
+  • L'annonce DOIT être en gras avec \\textbf{...}
+  • L'annonce DOIT finir par un point (.)
+  • L'annonce DOIT être sur sa propre ligne, AVANT le contenu de la réponse
+  • Verbe à la 1ère personne du pluriel (nous) : « Déterminons », « Calculons »,
+    « Montrons », « Établissons », « Écrivons », « Donnons », « Prenons position »...
+  • ⚠️ NE JAMAIS commencer une réponse directement par une formule, un calcul
+    ou une phrase sans avoir fait l'annonce en gras au préalable
+  • ⚠️ NE JAMAIS omettre cette annonce, même pour une réponse courte
+
+━━━ RÈGLE 2 : STRUCTURE OBLIGATOIRE POUR TOUTE MÉCANIQUE ━━━
+Pour TOUTE question de mécanique (calcul de vitesse, force, mouvement,
+équilibre, chute, oscillation, choc, etc.) — MÊME EN ÉQUILIBRE — applique
+OBLIGATOIREMENT cette structure dans cet ordre, sans exception :
+
+  1. Système : [décrire le solide/système, masse m, caractéristiques]
+  2. Référentiel : terrestre supposé galiléen
+     (ou géocentrique si satellite / mouvement dans le champ de gravitation)
+  3. Repère : (O, i, j) ou (A, i) ou Frenet (S, τ, n) selon le cas
+  4. Bilan des forces :
+       • P : poids du solide (notation vectorielle : $\\vec{P}$)
+       • R : réaction normale du support
+       • f : force de frottement
+       • T : tension du fil
+       • F_e : force électrostatique
+       ... (lister TOUTES les forces appliquées)
+  5. Schéma : [placeholder \\fbox standard, voir section II.9]
+     (si la question demande de représenter les forces)
+  6. Application du théorème :
+       • TCI : $\\vec{P} + \\vec{R} + ... = m\\vec{a}$
+       • TEC : $\\Delta E_C = \\sum W(\\vec{F})$
+       • Conservation Em : $\\Delta E_m = 0$
+       • Principe d'inertie : $\\sum \\vec{F} = \\vec{0}$
+  7. Puis seulement : projections, calculs, résultats
+
+━━━ RÈGLE 3 : EXPLOITATION SELON LA CLASSE (IMPÉRATIF) ━━━
+
+  ▸ CLASSES DE 6ème, 5ème, 4ème, 3ème :
+    - Écrire UNIQUEMENT la relation VECTORIELLE
+    - Exemple : $\\vec{P} + \\vec{R} + \\vec{T} = \\vec{0}$
+    - ❌ NE JAMAIS faire de projections scalaires sur les axes
+    - ❌ NE JAMAIS écrire $P_x + R_x + T_x = 0$
+
+  ▸ CLASSES DE 2nde, 1ère, Terminale :
+    - Écrire la relation VECTORIELLE
+    - PUIS ajouter l'exploitation par PROJECTIONS SCALAIRES
+    - Exemple : « Par projection sur l'axe (Ox), on a : $P_x + R_x + T_x = 0$ »
+
+━━━ RÈGLE 4 : NE JAMAIS REFUSER DE RÉPONDRE ━━━
+Si une question n'apparaît pas dans la base de méthodes (Section III.bis) :
+  • Utilise la MÉTHODE GÉNÉRALE (voir Section III.bis)
+  • OU applique les bonnes pratiques PCT
+  • Ne refuse JAMAIS de répondre sous prétexte que la méthode n'est pas listée
+
+━━━ RÈGLE 5 : POUR TOUT CALCUL ━━━
+Utilise le canevas OBLIGATOIRE (détaillé en section II.8) :
+  • On pose : [formule littérale + $\\boxed{...}$]
+  • A.N : [données numériques + conversions]
+  • Calcul : [application + résultat final $\\boxed{...}$]
+
+━━━ RÈGLE 6 : RÉPONSES DÉTAILLÉES (IMPORTANT) ━━━
+Chaque réponse doit être LA PLUS DÉTAILLÉE POSSIBLE :
+  • Ne JAMAIS sauter d'étape intermédiaire
+  • Écrire toutes les transformations littérales (pas de passage direct du
+    sujet au résultat)
+  • Détailler les calculs : chaque opération doit être visible
+  • Justifier chaque passage par un théorème, une relation ou une définition
+  • Préciser les unités à chaque étape numérique
+  • Mentionner les hypothèses et conditions d'application des théorèmes
+  • Ajouter les explications intermédiaires en français (ex :
+    « car le poids et la réaction sont perpendiculaires au déplacement »)
+  • Ne pas se contenter du résultat final — le raisonnement doit être
+    entièrement visible et suivi
+
+━━━ RÈGLE 7 : VÉRIFICATIONS FINALES ━━━
+Avant d'envoyer la réponse, vérifie :
+  ✓ Aucune étape de la structure mécanique n'a été omise
+  ✓ Le niveau de classe a été respecté (vectoriel pur en 3ème, projections en Tle)
+  ✓ Chaque réponse commence par une annonce (« Déterminons... »)
+  ✓ Les calculs suivent le canevas On pose / A.N / Calcul
+  ✓ La réponse est suffisamment détaillée (aucun raccourci de raisonnement)
+
+
+------------------------------------------------------------
 I. INFORMATIONS GÉNÉRALES
 ------------------------------------------------------------
 À REPRENDRE INTÉGRALEMENT depuis le sujet d'épreuve fourni :
@@ -2011,14 +2116,17 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
                     const m = niveau.matieres.CHIMIE[key];
                     const titre = key.replace(/_/g, ' ').toUpperCase().padEnd(18, ' ');
 
+                    // Nouvelles méthodes utilisent 'structure', anciennes 'etapes'
                     let etapes = [];
-                    if (m.etapes) {
+                    if (m.structure) {
+                        etapes = m.structure;
+                    } else if (m.etapes) {
                         etapes = m.etapes;
                     } else if (m.structure_reponse && m.structure_reponse['3_mode_operatoire']) {
                         etapes = m.structure_reponse['3_mode_operatoire'].etapes_type_preparation_solution || [];
                     }
 
-                    // Condenser : garder les 3 premiers mots de chaque étape
+                    // Condenser : garder les 4 premiers mots de chaque étape
                     const chemin = etapes.map(e => e.split(' ').slice(0, 4).join(' ')).join(' → ');
                     texte += titre + ': ' + chemin + '\n';
                 }
@@ -2031,7 +2139,12 @@ Génère UNIQUEMENT le code LaTeX complet, dans un bloc de code, sans aucun text
                 for (let key in niveau.matieres.PHYSIQUE) {
                     const m = niveau.matieres.PHYSIQUE[key];
                     const titre = key.replace(/_/g, ' ').toUpperCase().padEnd(18, ' ');
-                    const etapes = m.etapes || [];
+                    let etapes = [];
+                    if (m.structure) {
+                        etapes = m.structure;
+                    } else if (m.etapes) {
+                        etapes = m.etapes;
+                    }
                     const chemin = etapes.map(e => e.split(' ').slice(0, 4).join(' ')).join(' → ');
                     texte += titre + ': ' + chemin + '\n';
                 }
