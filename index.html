@@ -1284,6 +1284,54 @@
 .ct-modal .btn-ct-insert:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 .ct-modal .btn-ct-close { border-radius: 8px; padding: 8px 22px; font-weight: 500; }
 .ct-empty { text-align: center; padding: 30px 10px; color: #8896aa; font-style: italic; font-size: .9rem; }
+
+/* ====== Bouton Préparer le contexte ====== */
+.btn-prepare-ctx {
+  border: 1px solid #1a3a6e;
+  background: linear-gradient(135deg,#f0f5ff,#e0eaff);
+  color: #0b2545; font-weight: 600;
+  padding: 3px 12px; font-size: 0.78rem;
+  border-radius: 16px; transition: all .2s;
+  margin-left: 8px; cursor: pointer; vertical-align: middle;
+}
+.btn-prepare-ctx:hover {
+  background: #1a3a6e; color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(26,58,110,.3);
+}
+.btn-prepare-ctx i { margin-right: 4px; }
+.btn-prepare-ctx.done { background: #28a745; color: #fff; border-color: #28a745; }
+
+/* ====== Bouton Choisir Types de questions ====== */
+.btn-idx-choose {
+  border: 1px solid #c9a227;
+  background: linear-gradient(135deg,#fdfbf6 0%,#f5efde 100%);
+  color: #0b2545; font-weight: 600;
+  padding: 3px 12px; font-size: 0.78rem;
+  border-radius: 16px; transition: all .2s;
+  cursor: pointer;
+}
+.btn-idx-choose:hover { background: #c9a227; color: #fff; transform: translateY(-1px); }
+.btn-idx-choose i { margin-right: 4px; }
+
+/* ====== Modale Types de questions ====== */
+.idx-modal .modal-content { border:none;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(11,37,69,.35); }
+.idx-modal .modal-header { background:linear-gradient(135deg,#0b2545,#1a3a6e);color:#fff;border-bottom:3px solid #c9a227;padding:16px 22px; }
+.idx-modal .modal-title { font-weight:700;font-size:1.05rem; }
+.idx-modal .modal-title i { color:#c9a227;margin-right:8px; }
+.idx-modal .btn-close { filter:invert(1) brightness(2);opacity:.85; }
+.idx-modal .modal-body { padding:18px 22px;background:#fafbfc; }
+.idx-modal .idx-cat { margin-bottom:14px; }
+.idx-modal .idx-cat-title { font-size:.78rem;font-weight:700;color:#0b2545;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px dashed #c9a227;padding-bottom:4px; }
+.idx-modal .idx-item { display:flex;align-items:flex-start;gap:8px;padding:7px 10px;margin-bottom:3px;border-radius:8px;background:#fff;border:1px solid #e8ecf2;font-size:.87rem;cursor:pointer;transition:all .15s; }
+.idx-modal .idx-item:hover { border-color:#c9a227;background:#fdfbf6; }
+.idx-modal .idx-item input { margin-top:3px;flex-shrink:0;cursor:pointer;accent-color:#c9a227; }
+.idx-modal .idx-item label { cursor:pointer;margin:0;flex:1;line-height:1.35; }
+.idx-modal .idx-counter { font-size:.8rem;color:#556074;padding:6px 4px;border-top:1px dashed #d0d7e2;margin-top:8px; }
+.idx-modal .modal-footer { background:#fff;border-top:1px solid #e8ecf2;padding:14px 22px; }
+.idx-modal .btn-idx-insert { background:linear-gradient(135deg,#0b2545,#1a3a6e);color:#fff;font-weight:600;border-radius:8px;padding:8px 22px;border:none; }
+.idx-modal .btn-idx-insert:hover { transform:translateY(-1px);box-shadow:0 5px 15px rgba(11,37,69,.35); }
+.idx-modal .btn-idx-insert:disabled { opacity:.5;cursor:not-allowed;transform:none; }
 </style>
 
 <!-- PCT_CT_PATCH_START -->
@@ -1526,6 +1574,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label"><i class="fas fa-signal"></i> Niveau de difficulté</label>
+                                    <select class="form-select" id="niveauDifficulte">
+                                        <option value="Facile 😊">Facile 😊</option>
+                                        <option value="Moyen 😐" selected>Moyen 😐</option>
+                                        <option value="Élevé 😰">Élevé 😰</option>
+                                        <option value="Expert 🧠">Expert 🧠</option>
+                                    </select>
+                                </div>
+                            </div>
                             
                             <!-- Section double discipline -->
                             <div id="doubleDisciplineContainer" style="display: none;">
@@ -1549,7 +1608,7 @@
 </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label"><i class="fas fa-globe"></i> Contexte (Chimie)</label>
+                                            <label class="form-label"><i class="fas fa-globe"></i> Contexte (Chimie)</label> <button type="button" class="btn-prepare-ctx" data-ctx="contexteChimie" data-con="connaissancesChimie" style="display:none;" title="Insérer dans le contexte une mission basée sur les connaissances"><i class="fas fa-wand-magic-sparkles"></i> Préparer le contexte</button>
                                             <textarea class="form-control" id="contexteChimie" rows="2" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                         </div>
                                     </div>
@@ -1590,7 +1649,16 @@
                                     <div class="row mt-2">
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation (Chimie)</label>
-                                            <input type="text" class="form-control" id="indicesPartie1Chimie" placeholder="Définitions, QCM...">
+                                            <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie1Chimie" data-target="indicesPartie1Chimie">
+      <label class="form-check-label" for="saisie_indicesPartie1Chimie"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie1Chimie"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie1Chimie" placeholder="Définitions, QCM..." readonly>
+</div>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
@@ -1605,7 +1673,16 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label"><i class="fas fa-puzzle-piece"></i> Partie 2 – Résolution (Chimie)</label>
-                                            <input type="text" class="form-control" id="indicesPartie2Chimie" placeholder="Calculs, résolution...">
+                                            <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie2Chimie" data-target="indicesPartie2Chimie">
+      <label class="form-check-label" for="saisie_indicesPartie2Chimie"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie2Chimie"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie2Chimie" placeholder="Calculs, résolution..." readonly>
+</div>
                                         </div>
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
@@ -1644,7 +1721,7 @@
 </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label"><i class="fas fa-globe"></i> Contexte (Physique)</label>
+                                            <label class="form-label"><i class="fas fa-globe"></i> Contexte (Physique)</label> <button type="button" class="btn-prepare-ctx" data-ctx="contextePhysique" data-con="connaissancesPhysique" style="display:none;" title="Insérer dans le contexte une mission basée sur les connaissances"><i class="fas fa-wand-magic-sparkles"></i> Préparer le contexte</button>
                                             <textarea class="form-control" id="contextePhysique" rows="2" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                         </div>
                                     </div>
@@ -1685,7 +1762,16 @@
                                     <div class="row mt-2">
                                         <div class="col-md-6">
                                             <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation (Physique)</label>
-                                            <input type="text" class="form-control" id="indicesPartie1Physique" placeholder="Définitions, Vrai/Faux...">
+                                            <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie1Physique" data-target="indicesPartie1Physique">
+      <label class="form-check-label" for="saisie_indicesPartie1Physique"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie1Physique"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie1Physique" placeholder="Définitions, Vrai/Faux..." readonly>
+</div>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Nb questions (Partie 1)</label>
@@ -1700,7 +1786,16 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label"><i class="fas fa-puzzle-piece"></i> Partie 2 – Résolution (Physique)</label>
-                                            <input type="text" class="form-control" id="indicesPartie2Physique" placeholder="Calculs, résolution...">
+                                            <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie2Physique" data-target="indicesPartie2Physique">
+      <label class="form-check-label" for="saisie_indicesPartie2Physique"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie2Physique"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie2Physique" placeholder="Calculs, résolution..." readonly>
+</div>
                                         </div>
                                         <div class="col-md-3 mt-2">
                                             <label class="form-label">Nb questions (Partie 2)</label>
@@ -1735,7 +1830,7 @@
   <input type="text" class="form-control ct-input" id="connaissances" placeholder="Ex: Mélanges homogènes/hétérogènes, Séparation, Concentration massique et molaire" readonly>
 </div>
                                 
-                                <label class="form-label mt-2"><i class="fas fa-globe"></i> Contexte (situation-problème)</label>
+                                <label class="form-label mt-2"><i class="fas fa-globe"></i> Contexte (situation-problème)</label> <button type="button" class="btn-prepare-ctx" data-ctx="contexte" data-con="connaissances" style="display:none;" title="Insérer dans le contexte une mission basée sur les connaissances"><i class="fas fa-wand-magic-sparkles"></i> Préparer le contexte</button>
                                 <textarea class="form-control" id="contexte" rows="3" placeholder="Décrivez une situation de la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat...). Interdit : milieu scolaire, laboratoire, cours, élèves en situation d'apprentissage."></textarea>
                                 
                                 <div class="row mt-2">
@@ -1785,7 +1880,16 @@
                                 <div class="row mt-3">
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-layer-group"></i> Partie 1 – Mobilisation de ressources</label>
-                                        <input type="text" class="form-control" id="indicesPartie1" placeholder="Indices pour le contenu (ex: Définitions, QCM, Vrai/Faux, Associations)">
+                                        <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie1" data-target="indicesPartie1">
+      <label class="form-check-label" for="saisie_indicesPartie1"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie1"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie1" placeholder="Indices pour le contenu (ex: Définitions, QCM, Vrai/Faux, Associations)" readonly>
+</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 1)</label>
@@ -1806,7 +1910,16 @@
                                 <div class="row mt-2">
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-puzzle-piece"></i> Partie 2 – Résolution de problème</label>
-                                        <input type="text" class="form-control" id="indicesPartie2" placeholder="Indices pour le contenu (ex: Classification, Calculs à partir des données du support)">
+                                        <div class="ct-input-group">
+  <div class="ct-toggle-row">
+    <div class="form-check">
+      <input class="form-check-input idx-mode-toggle" type="checkbox" id="saisie_indicesPartie2" data-target="indicesPartie2">
+      <label class="form-check-label" for="saisie_indicesPartie2"><i class="fas fa-pen"></i> Saisie</label>
+    </div>
+    <button type="button" class="btn-idx-choose" data-target="indicesPartie2"><i class="fas fa-list-check"></i> Choisir</button>
+  </div>
+  <input type="text" class="form-control idx-input" id="indicesPartie2" placeholder="Indices pour le contenu (ex: Classification, Calculs à partir des données du support)" readonly>
+</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label"><i class="fas fa-hashtag"></i> Nombre de questions (Partie 2)</label>
@@ -3930,6 +4043,7 @@ n) RESPECT DES MARGES PHYSIQUES : Vérifier qu'aucun élément (figure, tableau,
 ${logoPromptInstruction}`;
 
             if (discipline === 'PHYSIQUE CHIMIE ET TECHNOLOGIE') {
+                const niveauDifficulte = document.getElementById('niveauDifficulte') ? document.getElementById('niveauDifficulte').value : 'Moyen 😐';
                 const connaissancesChimie = document.getElementById('connaissancesChimie').value || "Mélanges, solutions, concentrations, séparation";
                 const contexteChimie = document.getElementById('contexteChimie').value || "Situation-problème en Chimie";
                 const supportChimie = document.getElementById('supportChimie').value || "Tableau de données chimiques";
@@ -3985,7 +4099,7 @@ ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + 
 ================================================================================PARTIE A - CHIMIE ET TECHNOLOGIE
 ================================================================================
 
-Connaissances à mobiliser (Chimie) : ${connaissancesChimie}
+Niveau de difficulté : ${niveauDifficulte}\nConnaissances à mobiliser (Chimie) : ${connaissancesChimie}
 Contexte (Chimie) : ${contexteChimie}
 Support (Chimie) : ${supportChimie}
 Tâche (Chimie) : ${tacheChimie}
@@ -4005,7 +4119,7 @@ INTERDICTION ABSOLUE DANS LA PARTIE 1 (MOBILISATION - CHIMIE) :
 PARTIE B - PHYSIQUE ET TECHNOLOGIE
 ================================================================================
 
-Connaissances à mobiliser (Physique) : ${connaissancesPhysique}
+Niveau de difficulté : ${niveauDifficulte}\nConnaissances à mobiliser (Physique) : ${connaissancesPhysique}
 Contexte (Physique) : ${contextePhysique}
 Support (Physique) : ${supportPhysique}
 Tâche (Physique) : ${tachePhysique}
@@ -4075,7 +4189,7 @@ Compétences disciplinaires évaluées :
 ${competencesDisciplinairesTexte}
 Compétences transversales évaluées : 
 ${competencesTransversalesTexte}
-Connaissances : ${connaissances}
+Niveau de difficulté : ${niveauDifficulte}\nConnaissances : ${connaissances}
 Contexte (rédigé selon les 6 caractéristiques APC ci-dessus) : ${contexte}
 Support : ${support}
 ${documentJoint !== "Aucun document joint" ? "Document joint à exploiter : " + documentJoint : ""}
@@ -4258,7 +4372,12 @@ AUCUN BARÈME ni points.
     const sel = Array.from(document.querySelectorAll('#ctList input[type="checkbox"]:checked'))
       .map(c => c.getAttribute('data-val').replace(/&quot;/g,'"'));
     const inp = document.getElementById(target);
-    if(inp) inp.value = sel.join(', ');
+    if(inp) {
+      inp.value = sel.join(', ');
+      inp.setAttribute('data-from-chooser', 'true');
+      const pbtn = document.querySelector('.btn-prepare-ctx[data-con="' + target + '"]');
+      if(pbtn) pbtn.style.display = '';
+    }
     bootstrap.Modal.getInstance(document.getElementById('ctChooserModal')).hide();
   }
 
@@ -4266,8 +4385,9 @@ AUCUN BARÈME ni points.
     if(e.target.classList.contains('ct-mode-toggle')){
       const inp = document.getElementById(e.target.getAttribute('data-target'));
       const btn = document.querySelector(`.btn-ct-choose[data-target="${e.target.getAttribute('data-target')}"]`);
-      if(e.target.checked){ inp.removeAttribute('readonly'); inp.focus(); if(btn) btn.style.display='none'; }
-      else { inp.setAttribute('readonly', true); if(btn) btn.style.display=''; }
+      const pbtn = document.querySelector('.btn-prepare-ctx[data-con="' + e.target.getAttribute('data-target') + '"]');
+      if(e.target.checked){ inp.removeAttribute('readonly'); inp.focus(); if(btn) btn.style.display='none'; if(pbtn) pbtn.style.display='none'; }
+      else { inp.setAttribute('readonly', true); if(btn) btn.style.display=''; if(pbtn && inp.getAttribute('data-from-chooser') === 'true') pbtn.style.display=''; }
     }
     if(e.target.id === 'classe'){
       const m = document.getElementById('ctChooserModal');
@@ -4393,7 +4513,209 @@ AUCUN BARÈME ni points.
     });
   }
 })();
+
+/* ====== Bouton Préparer le contexte ====== */
+(function(){
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.btn-prepare-ctx');
+    if(!btn) return;
+    e.preventDefault();
+
+    const ctxId = btn.getAttribute('data-ctx');
+    const conId = btn.getAttribute('data-con');
+    const ctxField = document.getElementById(ctxId);
+    const conField = document.getElementById(conId);
+    if(!ctxField || !conField) return;
+
+    const con = conField.value.trim();
+    if(!con){
+      alert('⚠️ Aucune connaissance sélectionnée.');
+      return;
+    }
+
+    const classeSel = document.getElementById('classe');
+    const classe = classeSel ? classeSel.value : '';
+
+    const instruction =
+`[MISSION — Construire une SITUATION-PROBLÈME RÉALISTE de vie courante]
+
+Classe : ${classe}
+
+📚 CONNAISSANCES ET TECHNIQUES À MOBILISER NATURELLEMENT :
+${con}
+
+⚠️ RÈGLES STRICTES À RESPECTER :
+1. Rédiger un contexte ancré dans la VIE COURANTE (maison, marché, quartier, champ, cuisine, santé, transport, artisanat, usine...)
+2. Mettre en scène un PERSONNAGE crédible (prénom africain), un LIEU concret, un ENJEU clair
+3. Les connaissances ne doivent JAMAIS être listées explicitement dans le contexte
+4. Vocabulaire de la vie courante — INTERDIT : élève, cours, leçon, professeur, exercice
+5. Le contexte doit susciter naturellement des questions mobilisant ces connaissances
+6. Longueur : 4 à 6 phrases maximum
+7. Aucun tableau, aucune formule, aucun calcul dans le contexte
+
+🎯 OBJECTIF : Décrire une situation concrète que le personnage cherche à comprendre ou à résoudre, en s'appuyant implicitement sur les connaissances listées.`;
+
+    ctxField.value = instruction;
+    ctxField.focus();
+    ctxField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const orig = btn.innerHTML;
+    btn.classList.add('done');
+    btn.innerHTML = '<i class="fas fa-check"></i> Préparé !';
+    setTimeout(() => {
+      btn.classList.remove('done');
+      btn.innerHTML = orig;
+    }, 2500);
+  });
+})();
+
+/* ====== Types de questions — Modale ====== */
+(function(){
+  // ═══ Types pour MOBILISATION DES RESSOURCES (Partie 1) ═══
+  const TYPES_MOBILISATION = [
+    {cat:'Questions fermées / courtes', items:[
+      'QCM (Questions à Choix Multiples)',
+      'Questions directes (réponse courte)',
+      'Vrai / Faux',
+      'Texte à trous'
+    ]},
+    {cat:'Structuration des connaissances', items:[
+      'Questions d\'appariement (deux listes à faire correspondre par flèches)',
+      'Classement / Tri',
+      'Schéma à compléter / légender'
+    ]},
+    {cat:'Compréhension & réflexion', items:[
+      'Questions de réflexion (analyse, justification)',
+      'Étude de document (tableau, graphique)'
+    ]}
+  ];
+
+  // ═══ Types pour RÉSOLUTION DE PROBLÈMES (Partie 2) ═══
+  const TYPES_RESOLUTION = [
+    {cat:'Application directe', items:[
+      'Calcul numérique',
+      'Étude de document (tableau, graphique)'
+    ]},
+    {cat:'Démarche scientifique', items:[
+      'Questions de démarche scientifique de résolution de problème',
+      'Expérience à décrire (protocole, observation)'
+    ]},
+    {cat:'Synthèse', items:[
+      'Problème de synthèse'
+    ]}
+  ];
+  let idxTarget = null;
+
+  function renderTypes(typesList){
+    const list = document.getElementById('idxList');
+    if(!list) return;
+    list.innerHTML = typesList.map(cat => `
+      <div class="idx-cat">
+        <div class="idx-cat-title">${cat.cat}</div>
+        ${cat.items.map((t,i) => {
+          const id = 'idx_' + cat.cat.replace(/\W/g,'') + '_' + i;
+          return `<div class="idx-item"><input type="checkbox" id="${id}" data-val="${t.replace(/"/g,'&quot;')}"><label for="${id}">${t}</label></div>`;
+        }).join('')}
+      </div>`).join('');
+    updateCount();
+  }
+  function updateCount(){
+    const n = document.querySelectorAll('#idxList input[type=checkbox]:checked').length;
+    const cEl = document.getElementById('idxCount');
+    const bEl = document.getElementById('idxInsertBtn');
+    if(cEl) cEl.textContent = n;
+    if(bEl) bEl.disabled = (n === 0);
+  }
+  function openModal(target){
+    idxTarget = target;
+    const inp = document.getElementById(target);
+    const current = (inp && inp.value) ? inp.value.split(',').map(s=>s.trim()) : [];
+    
+    // Déterminer la partie selon la cible
+    const isPartie1 = target.toLowerCase().includes('partie1');
+    const isPartie2 = target.toLowerCase().includes('partie2');
+    
+    let typesList, titre;
+    if(isPartie1){
+      typesList = TYPES_MOBILISATION;
+      titre = 'Types de questions — MOBILISATION DES RESSOURCES';
+    } else if(isPartie2){
+      typesList = TYPES_RESOLUTION;
+      titre = 'Types de questions — RÉSOLUTION DE PROBLÈMES';
+    } else {
+      // Par défaut : mobilisation
+      typesList = TYPES_MOBILISATION;
+      titre = 'Types de questions';
+    }
+    
+    // Mettre à jour le titre de la modale
+    const titreEl = document.querySelector('#idxChooserModal .modal-title');
+    if(titreEl){
+      titreEl.innerHTML = '<i class="fas fa-list-check"></i> ' + titre;
+    }
+    
+    renderTypes(typesList);
+    // Cocher les items déjà présents
+    document.querySelectorAll('#idxList input[type=checkbox]').forEach(cb => {
+      if(current.some(c => c.includes(cb.getAttribute('data-val').replace(/&quot;/g,'"').split(' ')[0]))) cb.checked = true;
+    });
+    updateCount();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('idxChooserModal')).show();
+  }
+  function insertSelection(){
+    if(!idxTarget) return;
+    const sel = Array.from(document.querySelectorAll('#idxList input[type=checkbox]:checked'))
+                     .map(c => c.getAttribute('data-val').replace(/&quot;/g,'"'));
+    const inp = document.getElementById(idxTarget);
+    if(inp) inp.value = sel.join(', ');
+    bootstrap.Modal.getInstance(document.getElementById('idxChooserModal')).hide();
+  }
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-idx-choose');
+    if(btn){ e.preventDefault(); openModal(btn.getAttribute('data-target')); }
+  });
+  document.addEventListener('change', e => {
+    if(e.target.classList.contains('idx-mode-toggle')){
+      const target = e.target.getAttribute('data-target');
+      const inp = document.getElementById(target);
+      const btn = document.querySelector('.btn-idx-choose[data-target="' + target + '"]');
+      if(e.target.checked){
+        inp.removeAttribute('readonly'); inp.focus();
+        if(btn) btn.style.display = 'none';
+      } else {
+        inp.setAttribute('readonly', true);
+        if(btn) btn.style.display = '';
+      }
+    }
+    if(e.target.closest('#idxList')) updateCount();
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const b = document.getElementById('idxInsertBtn');
+    if(b) b.addEventListener('click', insertSelection);
+  });
+})();
 </script>
 
+
+<!-- ═══ Modale Types de questions ═══ -->
+<div class="modal fade idx-modal" id="idxChooserModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-list-check"></i> Types de questions à générer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <div id="idxList"></div>
+        <div class="idx-counter"><span id="idxCount">0</span> type(s) sélectionné(s)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius:8px;padding:8px 22px;font-weight:500;"><i class="fas fa-times"></i> Fermer</button>
+        <button type="button" class="btn btn-idx-insert" id="idxInsertBtn" disabled><i class="fas fa-check"></i> Insérer</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
