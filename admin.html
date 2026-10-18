@@ -714,6 +714,12 @@
     .users-modal-footer { padding: 14px 20px 18px 20px; }
   }
 </style>
+<style>
+/* GenPCT Z-INDEX FIX GLOBAL — corrige le bug "modale invisible sous backdrop" */
+.modal { z-index: 2147483000 !important; }
+.modal-backdrop { z-index: 2147482999 !important; }
+.modal.show { display: block !important; opacity: 1 !important; }
+</style>
 </head>
 <body>
 
@@ -1835,6 +1841,31 @@ Bonne préparation d'épreuves ! 🎓
         if (backdrops.length > 0 && openModals.length === 0) cleanupBackdrops('watchdog');
     }, 500);
     console.log('[backdrop-fix] actif (v2)');
+})();
+</script>
+
+<!-- GenPCT Z-INDEX FIX — override global : nettoie backdrops avant chaque ouverture -->
+<script>
+(function(){
+    if (typeof bootstrap === 'undefined' || !bootstrap.Modal) return;
+    var origShow = bootstrap.Modal.prototype.show;
+    bootstrap.Modal.prototype.show = function(){
+        document.querySelectorAll('.modal-backdrop').forEach(function(b){ b.remove(); });
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        var res = origShow.apply(this, arguments);
+        // Force z-index après affichage (sécurité)
+        setTimeout(function(){
+            var openModals = document.querySelectorAll('.modal.show');
+            var openBackdrops = document.querySelectorAll('.modal-backdrop');
+            openModals.forEach(function(m){ m.style.zIndex = '2147483000'; });
+            openBackdrops.forEach(function(b){ b.style.zIndex = '2147482999'; });
+        }, 10);
+        console.log('[zindex-fix] modale ouverte — nettoyage préventif OK');
+        return res;
+    };
+    console.log('[zindex-fix] override Modal.show actif');
 })();
 </script>
 </body>
