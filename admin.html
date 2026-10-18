@@ -1807,5 +1807,35 @@ Bonne préparation d'épreuves ! 🎓
 
 })();
 </script>
+
+<!-- GenPCT : Nettoyage anti-backdrop (fix rideau sombre) -->
+<script>
+(function(){
+    function cleanupBackdrops(reason){
+        var backdrops = document.querySelectorAll('.modal-backdrop');
+        if (backdrops.length > 0) {
+            backdrops.forEach(function(b){ b.remove(); });
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            console.log('[backdrop-fix] nettoyage (' + reason + ') — ' + backdrops.length + ' backdrop(s) supprimé(s)');
+        }
+    }
+    document.addEventListener('hidden.bs.modal', function(){ setTimeout(function(){ cleanupBackdrops('hidden.bs.modal'); }, 30); });
+    document.addEventListener('hide.bs.modal', function(){ setTimeout(function(){ cleanupBackdrops('hide.bs.modal'); }, 30); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setTimeout(function(){ cleanupBackdrops('Escape'); }, 150); });
+    document.addEventListener('click', function(e){
+        if (e.target.closest('[data-bs-dismiss="modal"]') || (e.target.classList && e.target.classList.contains('modal'))) {
+            setTimeout(function(){ cleanupBackdrops('click dismiss'); }, 150);
+        }
+    });
+    setInterval(function(){
+        var backdrops = document.querySelectorAll('.modal-backdrop');
+        var openModals = document.querySelectorAll('.modal.show');
+        if (backdrops.length > 0 && openModals.length === 0) cleanupBackdrops('watchdog');
+    }, 500);
+    console.log('[backdrop-fix] actif (v2)');
+})();
+</script>
 </body>
 </html>
