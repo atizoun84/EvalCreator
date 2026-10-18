@@ -3780,6 +3780,7 @@ afficher un encadré compact intitulé « Compétences évaluées » :
 \\end{center}
 
 CONTRAINTES IMPÉRATIVES :
+⚠️ RÈGLE DE NOTATION DES UNITÉS (OBLIGATOIRE) : Écris toutes les unités physiques et chimiques avec un POINT de multiplication et un EXPOSANT NÉGATIF, JAMAIS avec une barre oblique. Exemples CORRECTS : g.L⁻¹, mol.L⁻¹, kg.m⁻³, m.s⁻¹, A.m⁻², J.kg⁻¹.K⁻¹, C.mol⁻¹, N.m⁻¹, W.m⁻², kWh.m⁻². Exemples INTERDITS : g/L, mol/L, m/s, km/h, kg/m³, N/m. En LaTeX, utilise g.L^{-1}, mol.L^{-1}, m.s^{-1}, kg.m^{-3}. Applique cette règle dans TOUS les calculs, résultats, unités de mesure, données du support et du contexte.
 - Cet encadré doit apparaître UNE SEULE FOIS, juste après l'en-tête (Classe/Coef./Durée) et AVANT la section Contexte.
 - Utiliser un \\fbox avec minipage 0.95\\linewidth pour un rendu compact et élégant.
 - Ne PAS répéter ce bloc dans les autres sections du document.
@@ -4077,6 +4078,7 @@ ${point4Entete}
             
             prompt += `
 6. CONTRAINTES SUPPLEMENTAIRES :
+⚠️ RÈGLE DE NOTATION DES UNITÉS (OBLIGATOIRE) : Écris toutes les unités physiques et chimiques avec un POINT de multiplication et un EXPOSANT NÉGATIF, JAMAIS avec une barre oblique. Exemples CORRECTS : g.L⁻¹, mol.L⁻¹, kg.m⁻³, m.s⁻¹, A.m⁻², J.kg⁻¹.K⁻¹, C.mol⁻¹, N.m⁻¹, W.m⁻², kWh.m⁻². Exemples INTERDITS : g/L, mol/L, m/s, km/h, kg/m³, N/m. En LaTeX, utilise g.L^{-1}, mol.L^{-1}, m.s^{-1}, kg.m^{-3}. Applique cette règle dans TOUS les calculs, résultats, unités de mesure, données du support et du contexte.
     - Aucune ligne ou espace pour les réponses des élèves.
     - Optimiser la taille pour tenir sur le minimum de pages (police compacte, marges réduites, interligne serré).
     - Tous les calculs et données chiffrées sont dans le support, jamais dans les questions.
@@ -4333,7 +4335,9 @@ AUCUN BARÈME ni points.
 - Appliquer toutes les améliorations précises de mise en forme pour l'impression listées ci-dessus.`;
             }
             
-            prompt += "\n\nGénère uniquement le code LaTeX complet sans texte superflu.";
+            prompt += "\n\n⚠️ RÈGLE DE NOTATION DES UNITÉS (OBLIGATOIRE) : Écris toutes les unités physiques et chimiques avec un POINT de multiplication et un EXPOSANT NÉGATIF, JAMAIS avec une barre oblique. Exemples CORRECTS : g.L⁻¹, mol.L⁻¹, kg.m⁻³, m.s⁻¹, A.m⁻², J.kg⁻¹.K⁻¹, C.mol⁻¹, N.m⁻¹, W.m⁻², kWh.m⁻². Exemples INTERDITS : g/L, mol/L, m/s, km/h, kg/m³, N/m. En LaTeX, utilise g.L^{-1}, mol.L^{-1}, m.s^{-1}, kg.m^{-3}. Applique cette règle dans TOUS les calculs, résultats, unités de mesure, données du support et du contexte.";
+
+        prompt += "\n\nGénère uniquement le code LaTeX complet sans texte superflu.";
 
 // ⚠️ CONTRÔLE FINAL OBLIGATOIRE — FORCE LE NOMBRE EXACT DE QUESTIONS
 try {
