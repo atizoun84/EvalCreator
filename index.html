@@ -4068,7 +4068,28 @@ ${point4Entete}
                 }
                 prompt += `Pour la PARTIE A (CHIMIE), inclure les images selon les spécifications suivantes :\n${imagesChimieStr || 'Aucune image.'}\n`;
                 prompt += `Pour la PARTIE B (PHYSIQUE), inclure les images selon les spécifications suivantes :\n${imagesPhysiqueStr || 'Aucune image.'}\n`;
-                prompt += `Pour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=...,height=...]{nom_fichier} \\caption{légende} \\end{figure}. Respecter le nom de fichier .png, la disposition et la taille demandées. Pour les dispositions groupées (grille/mosaïque), utiliser des mini-pages ou des sous-figures (subcaption) pour organiser les images selon le type de grille demandé.`;
+                prompt += `⚠️⚠️⚠️ RÈGLE NON NÉGOCIABLE POUR LES IMAGES ⚠️⚠️⚠️
+Tu as l'INTERDICTION ABSOLUE d'utiliser \includegraphics tout seul.
+Pour CHAQUE image demandée dans le support, tu DOIS IMPÉRATIVEMENT utiliser exactement cette structure, sans rien changer :
+
+\begin{figure}[H]
+\centering
+\IfFileExists{nom_fichier.png}{
+    \includegraphics[width=LARGEUR,height=HAUTEUR]{nom_fichier.png}
+}{
+    \fbox{\begin{minipage}{LARGEUR}
+        \centering \tiny
+        \textbf{Fichier : nom_fichier.png} \\
+        \textit{Dessinez ici : RÉDIGE ICI UNE DESCRIPTION DÉTAILLÉE DU SCHÉMA À RÉALISER}
+    \end{minipage}}
+}
+\end{figure}
+
+Instructions pour remplir cette structure :
+1. Remplace "nom_fichier.png" par le nom réel fourni (ex: image1.png).
+2. Remplace LARGEUR et HAUTEUR par les dimensions demandées (ex: 0.5\linewidth).
+3. Remplace "RÉDIGE ICI..." par une consigne précise expliquant ce que l'élève doit dessiner.
+4. NE SAUTE SURTOUT PAS cette règle. Le cadre avec le texte en \tiny est OBLIGATOIRE.`;
             } else {
                 let imagesSimpleStr = '';
                 if (document.getElementById('hasImagesSimple').checked) {
@@ -4076,9 +4097,30 @@ ${point4Entete}
                     imagesSimpleStr = formatImageDataForPrompt(dataSimple, 'IMAGES');
                 }
                 if (document.getElementById('hasImagesSimple').checked) {
-                    prompt += `Inclure les images selon les spécifications suivantes :\n${imagesSimpleStr}\nPour chaque figure, utiliser \\begin{figure}[H] \\centering \\includegraphics[width=...,height=...]{nom_fichier} \\caption{légende} \\end{figure}. Respecter le nom de fichier .png, la disposition et la taille demandées. Pour les dispositions groupées (grille/mosaïque), utiliser des mini-pages ou des sous-figures (subcaption) pour organiser les images selon le type de grille demandé.`;
+                    prompt += `Inclure les images selon les spécifications suivantes :\n${imagesSimpleStr}\n⚠️⚠️⚠️ RÈGLE NON NÉGOCIABLE POUR LES IMAGES ⚠️⚠️⚠️
+Tu as l'INTERDICTION ABSOLUE d'utiliser \\includegraphics tout seul.
+Pour CHAQUE image demandée dans le support, tu DOIS IMPÉRATIVEMENT utiliser exactement cette structure, sans rien changer :
+
+\\begin{figure}[H]
+\\centering
+\\IfFileExists{nom_fichier.png}{
+    \\includegraphics[width=LARGEUR,height=HAUTEUR]{nom_fichier.png}
+}{
+    \\fbox{\\begin{minipage}{LARGEUR}
+        \\centering \\tiny
+        \\textbf{Fichier : nom_fichier.png} \\\\
+        \\textit{Dessinez ici : RÉDIGE ICI UNE DESCRIPTION DÉTAILLÉE DU SCHÉMA À RÉALISER}
+    \\end{minipage}}
+}
+\\end{figure}
+
+Instructions pour remplir cette structure :
+1. Remplace "nom_fichier.png" par le nom réel fourni (ex: image1.png).
+2. Remplace LARGEUR et HAUTEUR par les dimensions demandées (ex: 0.5\\linewidth).
+3. Remplace "RÉDIGE ICI..." par une consigne précise expliquant ce que l'élève doit dessiner.
+4. NE SAUTE SURTOUT PAS cette règle. Le cadre avec le texte en \\tiny est OBLIGATOIRE.`;
                 } else {
-                    prompt += `Aucune image requise.`;
+                    prompt += `Aucune image requise. Il est strictement interdit d'insérer un environnement \\begin{figure} ou \\includegraphics dans cette épreuve.`;
                 }
             }
             
@@ -4597,7 +4639,7 @@ try {
         if (!newWorker) return;
         
         newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          if (newWorker.state === 'installed') {
             console.log('[AutoUpdate] Nouvelle version prête');
             showUpdateBanner();
           }

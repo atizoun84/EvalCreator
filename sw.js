@@ -4,7 +4,7 @@
 // ============================================================
 
 // ⚠️ INCRÉMENTER CETTE VERSION À CHAQUE DÉPLOIEMENT
-const APP_VERSION = '1.0.13';
+const APP_VERSION = '1.0.17';
 const CACHE_NAME = `int-ia-pct-v${APP_VERSION}`;
 
 const ASSETS = [
