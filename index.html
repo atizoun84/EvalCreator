@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>GenPCT - Générateur d'Épreuve PCT</title>
+    <meta name="theme-color" content="#075E54" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./logoapp.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./index-BXE88m3k.js"></script>
+    <link rel="stylesheet" crossorigin href="./index-Cde8qbI1.css">
+  </head>
+  <body>
+    <!-- HEADER MODERNE -->
+    <header class="app-header">
+      <div class="header-content">
+        <button id="burger-btn" class="icon-btn" aria-label="Ouvrir le menu">☰</button>
+        
+        <div class="header-brand">
+          <div class="brand-title-row">
+            <span class="flag-icon">🇧🇯</span>
+            <h1 class="app-title">GenPCT</h1>
+          </div>
+          <p class="app-subtitle">Générateur d'épreuves PCT/APC</p>
+        </div>
+
+        <div class="header-right">
+          <div class="header-status">
+            <div id="status-net" class="status-badge offline" title="État du réseau">
+              <span class="dot"></span>
+              <span class="label">Hors ligne</span>
+            </div>
+            <div id="status-cloud" class="status-badge disconnected" title="Synchronisation Cloud">
+              <svg class="cloud-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+              <span class="label">Déconnecté</span>
+            </div>
+          </div>
+
+          <div id="header-user" class="header-user" style="display:none;">
+            <div class="header-user-avatar" id="header-avatar">U</div>
+            <button id="header-logout" class="header-logout" title="Se déconnecter" aria-label="Se déconnecter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DRAWER (Menu latéral) -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+    <nav id="drawer" class="drawer">
+      <div class="drawer-header">
+        <h2>Menu GenPCT</h2>
+      </div>
+      <div class="drawer-nav">
+        <a href="#/" class="nav-link">🏠 Accueil / Générateur</a>
+        <a href="#/" id="nav-special-prompt" class="nav-link">🔧 Prompt spécial modif LaTeX</a>
+        <a href="#/grille" class="nav-link">📝 Corrigé & Grille</a>
+        <a href="#/admin" class="nav-link" id="nav-admin" style="display:none;">⚙️ Administration</a>
+      </div>
+      <div class="drawer-footer">
+        <div id="user-profile" class="user-profile" style="display:none;">
+          <div class="avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <span id="user-name">Utilisateur</span>
+            <span id="user-role">Licence Active</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn btn-danger btn-block" style="display:none;">Déconnexion</button>
+      </div>
+    </nav>
+
+    <!-- CONTENU PRINCIPAL -->
+    <main id="app" class="app-main"></main>
+
+    <!-- FOOTER OBLIGATOIRE -->
+    <footer class="app-footer">
+      <p>Conçu par Atizoun Plateny AMOUSSOU / ATIZOUN DIGICOM</p>
+      <p>Email : atizoun@gmail.com – Tél : 01 97 74 40 35</p>
+    </footer>
+
+  </body>
+</html>
